@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import RINGS from "vanta/dist/vanta.rings.min";
 import * as THREE from "three";
 
+import Navbar from "./Navbar";
+
 export default function Header() {
   const [vantaEffect, setVantaEffect] = useState(0);
   const vantaRef = useRef(null);
@@ -32,12 +34,15 @@ export default function Header() {
   }, [vantaEffect]);
 
   return (
-    <div className="min-h-screen w-full relative " style={{ height: "120vh" }}>
+    <div
+      id="header"
+      className="min-h-screen w-full relative "
+      style={{ height: "120vh" }}
+    >
       {/* Vanta Animated Background */}
-      <div
-        className="absolute top-0 left-0 h-full w-full z-0"
-        ref={vantaRef}
-      ></div>
+      <div className="absolute top-0 left-0 h-full w-full z-0" ref={vantaRef}>
+        <Navbar />
+      </div>
     </div>
   );
 }
