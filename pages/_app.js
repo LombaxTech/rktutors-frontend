@@ -7,6 +7,8 @@ import useCustomAuth from "../customHooks/useCustomAuth";
 import LoadingPage from "../components/LoadingPage";
 import Navbar from "../components/Navbar";
 
+import Head from "next/head";
+
 const theme = extendTheme({
   components: {
     Steps,
@@ -18,6 +20,11 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ChakraProvider theme={theme}>
+      <Head>
+        <title>RKTutors</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+
       {/* Loading */}
       {loading && <LoadingPage />}
 
