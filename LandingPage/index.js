@@ -7,12 +7,14 @@ import FAQ from "./components/FAQ";
 import ContactUs from "./components/ContactUs";
 import Footer from "./components/Footer";
 
+import data from "./data/data.json";
+
 export default function index() {
   return (
     <div>
       <Header />
       <AboutUs />
-      <HowItWorks />
+      <HowItWorks data={data.HowItWorks} />
       <FAQ />
       <ContactUs />
       <Footer />
