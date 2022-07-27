@@ -3,6 +3,7 @@ import RINGS from "vanta/dist/vanta.rings.min";
 import * as THREE from "three";
 
 import Navbar from "./Navbar";
+import HeroSection from "./HeroSection";
 
 export default function Header() {
   const [vantaEffect, setVantaEffect] = useState(0);
@@ -42,6 +43,7 @@ export default function Header() {
       {/* Vanta Animated Background */}
       <div className="absolute top-0 left-0 h-full w-full z-0" ref={vantaRef}>
         <Navbar />
+        <HeroSection />
       </div>
     </div>
   );
