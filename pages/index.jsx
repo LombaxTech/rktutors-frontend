@@ -10,7 +10,10 @@ export default function Home() {
     return (
       <div>
         <div>should be a landing page here</div>
-        <button class="btn btn-primary" onClick={() => router.push("/login")}>
+        <button
+          className="btn btn-primary"
+          onClick={() => router.push("/login")}
+        >
           Go to login
         </button>
         <div className="h-screen bg-red-400">hello</div>
@@ -24,7 +27,10 @@ export default function Home() {
       <div className="flex-1 bg-orange-300">
         <div className="h-screen bg-blue-200">hello</div>
         <div className="h-screen bg-green-200">hello</div>
-        <button class="btn btn-primary" onClick={() => router.push("/login")}>
+        <button
+          className="btn btn-primary"
+          onClick={() => router.push("/login")}
+        >
           Go to login
         </button>
       </div>
