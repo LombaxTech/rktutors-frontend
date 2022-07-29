@@ -139,6 +139,9 @@ export default function Login() {
               >
                 Sign in
               </Button>
+              <Link color={"blue.400"} href="/signup">
+                Create a new account
+              </Link>
             </Stack>
           </Stack>
         </Box>
