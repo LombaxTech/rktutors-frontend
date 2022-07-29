@@ -9,6 +9,8 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseClient";
@@ -18,13 +20,21 @@ const auth = getAuth(firebaseApp);
 export default function ResetPassword() {
   const [email, setEmail] = useState("");
 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const sendResetEmail = async () => {
+    setSuccessMessage("");
+    setErrorMessage("");
+
     try {
       console.log(email);
       await sendPasswordResetEmail(auth, email);
       console.log("sent email");
+      setSuccessMessage("Email Sent");
     } catch (error) {
       console.log(error);
+      setErrorMessage(error.message);
     }
   };
 
@@ -74,6 +84,18 @@ export default function ResetPassword() {
           >
             Request Reset
           </Button>
+          {successMessage && (
+            <Alert status="success">
+              <AlertIcon />
+              {successMessage}
+            </Alert>
+          )}
+          {errorMessage && (
+            <Alert status="error">
+              <AlertIcon />
+              {errorMessage}
+            </Alert>
+          )}
         </Stack>
       </Stack>
     </Flex>
