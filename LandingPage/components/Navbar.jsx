@@ -12,6 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
+import { useRouter } from "next/router";
+
 import Link from "next/link";
 const Links = [
   {
@@ -48,6 +50,8 @@ const NavLink = ({ children }) => (
 );
 
 export default function Navbar() {
+  const router = useRouter();
+
   const [scrollPosition, setScrollPosition] = useState(0);
   const [scrollLimit, setScrollLimit] = useState(true);
 
@@ -129,6 +133,7 @@ export default function Navbar() {
               backgroundImage:
                 "linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)",
             }}
+            onClick={() => router.push("/login")}
           >
             login
           </button>
