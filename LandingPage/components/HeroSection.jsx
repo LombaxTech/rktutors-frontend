@@ -7,6 +7,7 @@ export default function HeroSection() {
            text-white text-6xl font-semibold
         backdrop-blur-xl p-8 rounded-3xl
          bg-opacity-50
+         border-white border-2
         "
       style={{ backgroundColor: "#202428" }}
     >
