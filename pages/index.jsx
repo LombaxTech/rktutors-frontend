@@ -8,10 +8,10 @@ export default function Home() {
   const { user, loading } = useCustomAuth();
 
   // Landing page
-  if (!user) return <LandingPage />;
+  if (!loading && !user) return <LandingPage />;
 
   // default app
-  if (user)
+  if (!loading && user) {
     return (
       <div className="flex-1 bg-orange-300">
         <div className="h-screen bg-blue-200">hello</div>
@@ -24,4 +24,5 @@ export default function Home() {
         </button>
       </div>
     );
+  }
 }
