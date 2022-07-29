@@ -127,6 +127,12 @@ export default function Navbar() {
             </Link>
           ))}
           <button
+            className="btn btn-outline  text-teal-400 "
+            onClick={() => router.push("/signup")}
+          >
+            Sign Up
+          </button>
+          <button
             className="btn bg-teal-400 outline-none border-none"
             style={{
               backgroundColor: "#5ca9fb",
