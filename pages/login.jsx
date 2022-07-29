@@ -15,7 +15,10 @@ import {
   useColorModeValue,
   Alert,
   AlertIcon,
+  IconButton,
 } from "@chakra-ui/react";
+
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 import { firebaseApp } from "../firebase/firebaseClient";
 import {
@@ -67,8 +70,18 @@ export default function Login() {
       bg={useColorModeValue("gray.50", "gray.800")}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Log in to your Account</Heading>
+        <Stack align={"center"} background={""}>
+          <div className="flex items-center gap-8">
+            <IconButton
+              vairant="solid"
+              bg={"linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)"}
+              color={"white"}
+              weight="bold"
+              icon={<ArrowBackIcon weight="bold" />}
+              onClick={() => router.push("/")}
+            />
+            <Heading fontSize={"4xl"}>Log in</Heading>
+          </div>
         </Stack>
         {errorMessage && (
           <Alert status="error">

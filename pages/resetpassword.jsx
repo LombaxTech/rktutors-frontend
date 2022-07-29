@@ -11,13 +11,21 @@ import {
   useColorModeValue,
   Alert,
   AlertIcon,
+  IconButton,
 } from "@chakra-ui/react";
+
+import { ArrowBackIcon } from "@chakra-ui/icons";
+
+import { useRouter } from "next/router";
+
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { firebaseApp } from "../firebase/firebaseClient";
 
 const auth = getAuth(firebaseApp);
 
 export default function ResetPassword() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -43,8 +51,23 @@ export default function ResetPassword() {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
+      flexDirection="column"
       bg={useColorModeValue("gray.50", "gray.800")}
     >
+      <div className="flex items-center gap-8">
+        <IconButton
+          vairant="solid"
+          bg={"linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)"}
+          color={"white"}
+          weight="bold"
+          icon={<ArrowBackIcon weight="bold" />}
+          onClick={() => router.push("/login")}
+        />
+        <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
+          Forgot your password?
+        </Heading>
+      </div>
+
       <Stack
         spacing={4}
         w={"full"}
@@ -55,9 +78,6 @@ export default function ResetPassword() {
         p={6}
         my={12}
       >
-        <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
-          Forgot your password?
-        </Heading>
         <Text
           fontSize={{ base: "sm", sm: "md" }}
           color={useColorModeValue("gray.800", "gray.400")}
@@ -75,7 +95,8 @@ export default function ResetPassword() {
         </FormControl>
         <Stack spacing={6}>
           <Button
-            bg={"blue.400"}
+            // bg={"blue.400"}
+            bg={"linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)"}
             color={"white"}
             _hover={{
               bg: "blue.500",
