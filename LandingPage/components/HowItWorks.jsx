@@ -4,7 +4,10 @@ import { FaSearch } from "react-icons/fa";
 
 export default function HowItWorks(props) {
   return (
-    <div className="start-today flex gap-12 px-16 mt-16 pb-12">
+    <div
+      id="how-it-works"
+      className="start-today flex gap-12 px-16 mt-16 pb-12"
+    >
       <div className="w-1/2 sm:hidden">
         <img
           src="img/steps.svg"

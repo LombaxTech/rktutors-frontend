@@ -31,6 +31,7 @@ const Section = ({ icon, title, text }) => (
 export default function AboutUs() {
   return (
     <div
+      id="about-us"
       className="flex flex-col items-center pt-16 w-full min-h-screen "
       style={{ backgroundColor: "#F6F6F6" }}
     >
