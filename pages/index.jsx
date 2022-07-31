@@ -12,17 +12,12 @@ export default function Home() {
 
   // default app
   if (!loading && user) {
-    return (
-      <div className="flex-1 bg-orange-300">
-        <div className="h-screen bg-blue-200">hello</div>
-        <div className="h-screen bg-green-200">hello</div>
-        <button
-          className="btn btn-primary"
-          onClick={() => router.push("/login")}
-        >
-          Go to login
-        </button>
-      </div>
-    );
+    if (user.type === "student") {
+      return <div>studnet</div>;
+    }
+
+    if (user.type === "tutor") {
+      return <div>tutor</div>;
+    }
   }
 }
