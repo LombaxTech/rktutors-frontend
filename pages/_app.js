@@ -18,7 +18,7 @@ const theme = extendTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  const { user, loading } = useCustomAuth();
+  const { user, userLoading } = useCustomAuth();
 
   useEffect(() => {
     const threeScript = document.createElement("script");
@@ -43,13 +43,13 @@ function MyApp({ Component, pageProps }) {
       </Head>
 
       {/* Loading */}
-      {loading && <LoadingPage />}
+      {userLoading && <LoadingPage />}
 
       {/* No user */}
-      {!loading && !user && <Component {...pageProps} />}
+      {!userLoading && !user && <Component {...pageProps} />}
 
       {/* User */}
-      {!loading && user && (
+      {!userLoading && user && (
         <div className="max-h-screen min-h-screen flex flex-col">
           <Navbar />
           <div className="flex-1 overflow-y-auto flex flex-col">

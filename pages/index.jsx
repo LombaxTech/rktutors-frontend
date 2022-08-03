@@ -7,13 +7,13 @@ import TutorHome from "../components/Tutor/TutorHome";
 
 export default function Home() {
   const router = useRouter();
-  const { user, loading } = useCustomAuth();
+  const { user, userLoading } = useCustomAuth();
 
   // Landing page
-  if (!loading && !user) return <LandingPage />;
+  if (!userLoading && !user) return <LandingPage />;
 
   // default app
-  if (!loading && user) {
+  if (!userLoading && user) {
     if (user.type === "student") {
       return <div>studnet</div>;
     }

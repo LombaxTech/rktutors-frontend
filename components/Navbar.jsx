@@ -44,7 +44,7 @@ const Links = ["Dashboard", "Projects", "Team"];
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, loading } = useCustomAuth();
+  const { user, userLoading } = useCustomAuth();
   const signout = async () => {
     try {
       await signOut(auth);

@@ -11,7 +11,7 @@ export default function useCustomAuth() {
   const [authUser, authUserLoading, authUserError] = useAuthState(auth);
 
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
 
   useEffect(() => {
     async function init() {
@@ -20,7 +20,7 @@ export default function useCustomAuth() {
       //   If no one is logged in
       if (!authUserLoading && !authUser) {
         setUser(null);
-        setLoading(false);
+        setUserLoading(false);
       }
 
       //   If there is a user logged in
@@ -30,22 +30,22 @@ export default function useCustomAuth() {
         try {
           onSnapshot(userRef, (userSnapshot) => {
             setUser({ id: userSnapshot.id, ...userSnapshot.data() });
-            setLoading(false);
+            setUserLoading(false);
           });
         } catch (error) {
           setUser(null);
-          setLoading(false);
+          setUserLoading(false);
         }
       }
 
       if (!authUserLoading && !authUserError) {
         setUser(null);
-        setLoading(false);
+        setUserLoading(false);
       }
     }
 
     init();
   }, [authUser, authUserLoading]);
 
-  return { user, loading };
+  return { user, userLoading };
 }
