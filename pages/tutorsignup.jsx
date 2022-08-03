@@ -23,6 +23,12 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 import { useRouter } from "next/router";
 
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { firebaseApp, db } from "../firebase/firebaseClient";
+import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+
+const auth = getAuth(firebaseApp);
+
 export default function TutorSignup() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
