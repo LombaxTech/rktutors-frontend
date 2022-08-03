@@ -15,7 +15,7 @@ export default function useCustomAuth() {
 
   useEffect(() => {
     async function init() {
-      setLoading(true);
+      setUserLoading(true);
 
       //   If no one is logged in
       if (!authUserLoading && !authUser) {
