@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 
 import LandingPage from "../LandingPage";
 
+import TutorHome from "../components/Tutor/TutorHome";
+
 export default function Home() {
   const router = useRouter();
   const { user, loading } = useCustomAuth();
@@ -17,7 +19,7 @@ export default function Home() {
     }
 
     if (user.type === "tutor") {
-      return <div>tutor</div>;
+      return <TutorHome />;
     }
   }
 }
