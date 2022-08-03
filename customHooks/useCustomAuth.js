@@ -29,7 +29,7 @@ export default function useCustomAuth() {
 
         try {
           onSnapshot(userRef, (userSnapshot) => {
-            setUser({ id: userSnapshot.id, ...userSnapshot.data() });
+            setUser({ ...authUser, ...userSnapshot.data() });
             setUserLoading(false);
           });
         } catch (error) {
