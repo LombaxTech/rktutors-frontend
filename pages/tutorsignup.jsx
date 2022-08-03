@@ -38,8 +38,7 @@ export default function TutorSignup() {
     setErrorMessage("");
     setSuccessMessage("");
 
-    console.log({ fullName, email, password });
-    return;
+    // console.log({ fullName, email, password });
 
     try {
       // Create Auth User
@@ -56,6 +55,14 @@ export default function TutorSignup() {
         type: "tutor",
         fullName,
         createdAt: serverTimestamp(),
+
+        active: false,
+        googleAccount: {
+          setup: false,
+        },
+        stripeConnectedAccount: {
+          setup: false,
+        },
         // TODO: Fill in more details
       };
 
