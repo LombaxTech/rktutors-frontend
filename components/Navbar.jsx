@@ -93,20 +93,24 @@ export default function Navbar() {
           <Flex alignItems={"center"}>
             <HStack
               as={"nav"}
-              spacing={8}
+              spacing={14}
               display={{ base: "none", md: "flex" }}
             >
               {user.type === "student" &&
                 StudentLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    {link.title}
+                    <a className="upperccase font-medium tracking-wide">
+                      {link.title}
+                    </a>
                   </Link>
                 ))}
 
               {user.type === "tutor" &&
                 TutorLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    {link.title}
+                    <a className="upperccase font-medium tracking-wide">
+                      {link.title}
+                    </a>
                   </Link>
                 ))}
 
