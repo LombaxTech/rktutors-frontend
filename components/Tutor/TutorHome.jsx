@@ -44,6 +44,7 @@ const SetupAccount = () => {
 
   if (user) {
     let googleSetUp = user.googleAccount.setup;
+    let stripeSetUp = user.stripeConnectedAccount.setup;
     return (
       <div className=" bg-white shadow-lg p-8 prose flex flex-col gap-8">
         <div className="flex">
@@ -70,7 +71,9 @@ const SetupAccount = () => {
                 <li class={`step ${googleSetUp ? "step-primary" : ""}`}>
                   Set up Google Permissions
                 </li>
-                <li class="step ">Set up payments</li>
+                <li class={`step ${stripeSetUp ? "step-primary" : ""}`}>
+                  Set up payments
+                </li>
                 <li class="step">Complete</li>
               </ul>
             </div>
@@ -96,15 +99,17 @@ const SetupAccount = () => {
             </div>
             <div className="flex justify-between items-center text-xl font-semibold uppercase">
               <div className="flex gap-6 items-center">
-                <FaCheckCircle style={{ color: "#E5E6E6" }} />
+                <FaCheckCircle
+                  style={{ color: stripeSetUp ? "#570DF8" : "#E5E6E6" }}
+                />
                 Set up Payments
               </div>
               <button
                 className="btn btn-primary flex gap-4"
-                disabled={loading}
+                disabled={loading || stripeSetUp}
                 onClick={setupStripePermissions}
               >
-                Start now
+                {stripeSetUp ? "Completed" : "Start Now"}
               </button>
             </div>
           </div>
