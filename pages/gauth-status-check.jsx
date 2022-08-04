@@ -49,6 +49,12 @@ export default function gauthStatusCheck() {
 
             await updateDoc(userDocRef, updateDetails);
             console.log("account updated");
+
+            // user google n stripe need to be setup for account to be active
+            if (user.stripeConnectedAccount.setup) {
+              await updateDoc(userDocRef, { active: true });
+            }
+
             setLoading(false);
           }
         } catch (error) {
