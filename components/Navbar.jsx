@@ -99,7 +99,7 @@ export default function Navbar() {
               {user.type === "student" &&
                 StudentLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    <a className="upperccase font-medium tracking-wide">
+                    <a className="uppercase font-medium tracking-wide">
                       {link.title}
                     </a>
                   </Link>
@@ -108,7 +108,7 @@ export default function Navbar() {
               {user.type === "tutor" &&
                 TutorLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    <a className="upperccase font-medium tracking-wide">
+                    <a className="uppercase font-medium tracking-wide">
                       {link.title}
                     </a>
                   </Link>
