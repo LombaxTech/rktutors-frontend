@@ -126,23 +126,21 @@ export default function Navbar() {
               {link.title}
             </Link>
           ))}
-          <button
-            className="btn btn-outline  text-teal-400 "
-            onClick={() => router.push("/signup")}
-          >
-            Sign Up
-          </button>
-          <button
-            className="btn bg-teal-400 outline-none border-none"
-            style={{
-              backgroundColor: "#5ca9fb",
-              backgroundImage:
-                "linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)",
-            }}
-            onClick={() => router.push("/login")}
-          >
-            login
-          </button>
+          <Link href="/signup">
+            <button className="btn btn-outline  text-teal-400 ">Sign Up</button>
+          </Link>
+          <Link href="/login">
+            <button
+              className="btn bg-teal-400 outline-none border-none"
+              style={{
+                backgroundColor: "#5ca9fb",
+                backgroundImage:
+                  "linear-gradient(to right, #5ca9fb 0%, #38b2ac 100%)",
+              }}
+            >
+              login
+            </button>
+          </Link>
         </HStack>
       </Flex>
 
