@@ -27,6 +27,8 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { firebaseApp, db } from "../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
+import axios from "axios";
+
 const auth = getAuth(firebaseApp);
 
 export default function TutorSignup() {
@@ -56,6 +58,12 @@ export default function TutorSignup() {
       console.log("created user");
       console.log(userCred);
 
+      let accountRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/stripe/connected-account`
+      );
+      accountRes = accountRes.data;
+      const connectedAccountId = accountRes.id;
+
       // create firestore user
       let firestoreUserDetails = {
         type: "tutor",
@@ -67,7 +75,9 @@ export default function TutorSignup() {
           setup: false,
         },
         stripeConnectedAccount: {
+          id: connectedAccountId,
           setup: false,
+          remaining_requirements: [],
         },
         // TODO: Fill in more details
       };
