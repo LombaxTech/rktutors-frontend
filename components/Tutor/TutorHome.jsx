@@ -29,6 +29,19 @@ const SetupAccount = () => {
     }
   };
 
+  const setupStripePermissions = async () => {
+    try {
+      let linkRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/stripe/onboarding/${user.stripeConnectedAccount.id}`
+      );
+      linkRes = linkRes.data;
+      const { url } = linkRes;
+      router.push(url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (user) {
     let googleSetUp = user.googleAccount.setup;
     return (
@@ -86,7 +99,11 @@ const SetupAccount = () => {
                 <FaCheckCircle style={{ color: "#E5E6E6" }} />
                 Set up Payments
               </div>
-              <button className="btn btn-primary flex gap-4" disabled={loading}>
+              <button
+                className="btn btn-primary flex gap-4"
+                disabled={loading}
+                onClick={setupStripePermissions}
+              >
                 Start now
               </button>
             </div>
