@@ -45,6 +45,9 @@ const SetupAccount = () => {
   if (user) {
     let googleSetUp = user.googleAccount.setup;
     let stripeSetUp = user.stripeConnectedAccount.setup;
+
+    console.log({ googleSetUp, stripeSetUp });
+
     return (
       <div className=" bg-white shadow-lg p-8 prose flex flex-col gap-8">
         <div className="flex">
@@ -58,23 +61,37 @@ const SetupAccount = () => {
           </div>
           <div className="w-6/12">
             <div className=" mx-auto">
-              <Alert status="warning" className="flex justify-center">
-                <AlertIcon />
-                Your account is not active yet
-              </Alert>
+              {(!googleSetUp || !stripeSetUp) && (
+                <Alert status="warning" className="flex justify-center">
+                  <AlertIcon />
+                  Your account is not active yet
+                </Alert>
+              )}
+              {googleSetUp && stripeSetUp && (
+                <Alert status="success" className="flex justify-center">
+                  <AlertIcon />
+                  Account is active
+                </Alert>
+              )}
             </div>
             <div className="text-3xl my-8 font-bold text-center">
               Complete the following steps to <br /> activate your account
             </div>
             <div className="flex justify-center">
-              <ul class="steps ">
-                <li class={`step ${googleSetUp ? "step-primary" : ""}`}>
+              <ul className="steps">
+                <li className={`step ${googleSetUp ? "step-primary" : ""}`}>
                   Set up Google Permissions
                 </li>
-                <li class={`step ${stripeSetUp ? "step-primary" : ""}`}>
+                <li className={`step ${stripeSetUp ? "step-primary" : ""}`}>
                   Set up payments
                 </li>
-                <li class="step">Complete</li>
+                <li
+                  className={`step ${
+                    stripeSetUp && googleSetUp ? "step-primary" : ""
+                  }`}
+                >
+                  Complete
+                </li>
               </ul>
             </div>
           </div>
