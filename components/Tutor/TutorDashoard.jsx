@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import {
   Alert,
   AlertIcon,
@@ -22,16 +21,38 @@ import { useRouter } from "next/router";
 
 import useCustomAuth from "../../customHooks/useCustomAuth";
 
-import SetupAccount from "./SetupAccount";
-import TutorDashboard from "./TutorDashoard";
-
-export default function TutorHome() {
-  const { user, userLoading } = useCustomAuth();
-
-  if (user && !user.active) {
-    return <SetupAccount />;
-  }
-  if (user && user.active) return <TutorDashboard />;
+export default function TutorDashoard() {
+  return (
+    <div className="flex-1 p-8 bg-gray-200">
+      <div className="flex gap-8">
+        <SocialProfileWithImage />
+        <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md">
+          <div className="img w-6/12 flex justify-center items-center">
+            <img src="img/no-data.svg" alt="" className="h-40" />
+          </div>
+          <div className="content w-6/12 flex flex-col gap-4">
+            <h1 className="text-3xl font-semibold uppercase">Bookings</h1>
+            <hr></hr>
+            <h1 className="text-xl font-normal ">0 Bookings Today</h1>
+            <h1 className="text-xl font-normal ">5 Bookings Upcoming</h1>
+            <div className="flex flex-col gap-4 w-5/12 mt-4">
+              <button className="btn btn-primary">View All Bookings</button>
+              <button className="btn btn-primary">Booking Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex gap-8 mt-8">
+        <div className="bg-white shadow-md p-8 min-w-[270px] max-w-[270px] rounded-md">
+          <h1 className="text-3xl font-semibold uppercase text-center">
+            Quick Links
+          </h1>
+          <hr></hr>
+        </div>
+        <MessagesSection />
+      </div>
+    </div>
+  );
 }
 
 const MessagesSection = () => {
@@ -52,7 +73,9 @@ const MessagesSection = () => {
   );
 };
 
-function SocialProfileWithImage({ user }) {
+function SocialProfileWithImage() {
+  const { user } = useCustomAuth();
+
   if (user)
     return (
       <Box
