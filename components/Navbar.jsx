@@ -29,15 +29,15 @@ import { firebaseApp } from "../firebase/firebaseClient";
 const auth = getAuth(firebaseApp);
 
 const StudentLinks = [
-  { title: "Tutors", href: "tutors" },
-  { title: "Bookings", href: "bookings" },
-  { title: "Messages", href: "chats" },
+  { title: "Tutors", href: "/tutors" },
+  { title: "Bookings", href: "/bookings" },
+  { title: "Messages", href: "/chats" },
 ];
 
 const TutorLinks = [
-  { title: "Bookings", href: "bookings" },
-  { title: "Requests", href: "booking-requests" },
-  { title: "Messages", href: "chats" },
+  { title: "Bookings", href: "/bookings" },
+  { title: "Requests", href: "/booking-requests" },
+  { title: "Messages", href: "/chats" },
 ];
 
 const Links = ["Dashboard", "Projects", "Team"];
