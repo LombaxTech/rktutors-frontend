@@ -48,6 +48,7 @@ export default function Navbar() {
   const signout = async () => {
     try {
       await signOut(auth);
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
