@@ -126,6 +126,7 @@ export default function Navbar() {
                   <Avatar
                     size={"sm"}
                     src={user.profilePictureUrl ? user.profilePictureUrl : ""}
+                    name={user.fullName}
                   />
                 </MenuButton>
 
