@@ -157,7 +157,7 @@ export default function Chat() {
       // note: update chats last message and read status
       await updateDoc(doc(db, "chats", chatId), {
         lastMessage: m,
-        [`read.${user.uid}`]: false,
+        [`read.${partner.id}`]: false,
       });
       console.log("updated last message and read status");
 
