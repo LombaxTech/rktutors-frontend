@@ -133,6 +133,7 @@ export default function Chat() {
               }),
             },
           ],
+          userIds: [user.uid, partner.id],
           read: {
             [user.uid]: true,
             [partner.id]: true,
