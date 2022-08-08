@@ -124,7 +124,7 @@ export default function Navbar() {
                   minW={0}
                 >
                   <Avatar
-                    size={"sm"}
+                    size={"md"}
                     src={user.profilePictureUrl ? user.profilePictureUrl : ""}
                     name={user.fullName}
                   />
