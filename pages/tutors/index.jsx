@@ -197,7 +197,7 @@ function TutorProfile({ tutor }) {
             <Button
               flex={1}
               fontSize={"sm"}
-              rounded={"full"}
+              rounded={"md"}
               _focus={{
                 bg: "gray.200",
               }}
@@ -211,7 +211,7 @@ function TutorProfile({ tutor }) {
           <Button
             flex={1}
             fontSize={"sm"}
-            rounded={"full"}
+            rounded={"md"}
             bg={"blue.400"}
             color={"white"}
             boxShadow={
