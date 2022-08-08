@@ -68,6 +68,7 @@ export default function TutorSignup() {
       let firestoreUserDetails = {
         type: "tutor",
         fullName,
+        email,
         createdAt: serverTimestamp(),
 
         active: false,
