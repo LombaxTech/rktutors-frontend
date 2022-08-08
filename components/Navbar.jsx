@@ -136,7 +136,7 @@ export default function Navbar() {
                       <MenuItem>My Profile</MenuItem>
                     </Link>
                   )}
-                  <Link href={"profile-settings"}>
+                  <Link href={"/profile-settings"}>
                     <MenuItem>Settings</MenuItem>
                   </Link>
                   <MenuItem onClick={signout}>Logout</MenuItem>
