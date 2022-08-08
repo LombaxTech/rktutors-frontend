@@ -29,12 +29,14 @@ import { firebaseApp } from "../firebase/firebaseClient";
 const auth = getAuth(firebaseApp);
 
 const StudentLinks = [
+  { title: "Home", href: "/" },
   { title: "Tutors", href: "/tutors" },
   { title: "Bookings", href: "/bookings" },
   { title: "Messages", href: "/chats" },
 ];
 
 const TutorLinks = [
+  { title: "Home", href: "/" },
   { title: "Bookings", href: "/bookings" },
   { title: "Requests", href: "/booking-requests" },
   { title: "Messages", href: "/chats" },
