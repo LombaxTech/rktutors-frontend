@@ -80,6 +80,7 @@ export default function TutorPage() {
                 class="mask mask-star bg-yellow-500"
                 checked
               />
+              <div className="font-semibold ml-2">(46)</div>
             </div>
             <div className="flex flex-col gap-4">
               <button className="btn btn-secondary">Book Lesson</button>
@@ -90,54 +91,23 @@ export default function TutorPage() {
             <div className="flex flex-col gap-4 w-3/4 mx-auto">
               <div className="text-4xl font-bold">Subjects Offered</div>
               <div className="flex gap-4 flex-wrap">
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Mathematics GCSE
-                </Tag>
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Mathematics A-Level
-                </Tag>
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Physics GCSE
-                </Tag>
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Physics A-Level
-                </Tag>
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Physics A-Level
-                </Tag>
-                <Tag size={"lg"} variant="solid" colorScheme="blue">
-                  Physics A-Level
-                </Tag>
+                {tutor.profile.teachingSubjects &&
+                  tutor.profile.teachingSubjects.map((subject) => (
+                    <Tag size={"lg"} variant="solid" colorScheme="blue">
+                      {`${subject.subject} ${subject.level}`}
+                    </Tag>
+                  ))}
               </div>
               <hr className="my-6" />
               <div className="text-4xl font-bold">About Me</div>
-              <div className="">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Beatae, dolorem? Inventore repellat, quo ex voluptas aspernatur
-                officiis? Error voluptates laboriosam, officiis repellendus
-                corrupti animi distinctio recusandae nostrum impedit facilis
-                dolorum, iusto, alias laborum reiciendis! Illo cupiditate
-                perspiciatis quisquam ipsum quos!
-              </div>
+              <div className="">{tutor.profile.aboutMe}</div>
               <hr className="my-6" />
               <div className="text-4xl font-bold">About My Lessons</div>
-              <div className="">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Beatae, dolorem? Inventore repellat, quo ex voluptas aspernatur
-                officiis? Error voluptates laboriosam, officiis repellendus
-                corrupti animi distinctio recusandae nostrum impedit facilis
-                dolorum, iusto, alias laborum reiciendis! Illo cupiditate
-                perspiciatis quisquam ipsum quos!
-              </div>
+              <div className="">{tutor.profile.aboutMyLessons}</div>
               <hr className="my-6" />
               <div className="text-4xl font-bold">Reviews</div>
               <div className="">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Beatae, dolorem? Inventore repellat, quo ex voluptas aspernatur
-                officiis? Error voluptates laboriosam, officiis repellendus
-                corrupti animi distinctio recusandae nostrum impedit facilis
-                dolorum, iusto, alias laborum reiciendis! Illo cupiditate
-                perspiciatis quisquam ipsum quos!
+                {tutor.reviews ? "Reviews..." : "No Reviews Found"}
               </div>
             </div>
           </div>
