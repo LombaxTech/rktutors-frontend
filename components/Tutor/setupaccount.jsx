@@ -5,6 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 
 import axios from "axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import useCustomAuth from "../../customHooks/useCustomAuth";
 
@@ -43,10 +44,12 @@ const SetupAccount = () => {
   };
 
   if (user) {
-    let googleSetUp = user.googleAccount.setup;
+    let googleSetUp = user.googleAccount?.setup;
     let stripeSetUp = user.stripeConnectedAccount.setup;
+    let profileSetUp = user.profile?.setup;
 
     console.log({ googleSetUp, stripeSetUp });
+    console.log(profileSetUp);
 
     return (
       <div className="flex-1 p-8 bg-gray-200">
@@ -62,13 +65,13 @@ const SetupAccount = () => {
             </div>
             <div className="w-6/12">
               <div className=" mx-auto">
-                {(!googleSetUp || !stripeSetUp) && (
+                {(!googleSetUp || !stripeSetUp || !profileSetUp) && (
                   <Alert status="warning" className="flex justify-center">
                     <AlertIcon />
                     Your account is not active yet
                   </Alert>
                 )}
-                {googleSetUp && stripeSetUp && (
+                {googleSetUp && stripeSetUp && profileSetUp && (
                   <Alert status="success" className="flex justify-center">
                     <AlertIcon />
                     Account is active
@@ -80,6 +83,9 @@ const SetupAccount = () => {
               </div>
               <div className="flex justify-center">
                 <ul className="steps">
+                  <li className={`step ${profileSetUp ? "step-primary" : ""}`}>
+                    Set up your Profile
+                  </li>
                   <li className={`step ${googleSetUp ? "step-primary" : ""}`}>
                     Set up Google Permissions
                   </li>
@@ -88,7 +94,9 @@ const SetupAccount = () => {
                   </li>
                   <li
                     className={`step ${
-                      stripeSetUp && googleSetUp ? "step-primary" : ""
+                      stripeSetUp && googleSetUp && profileSetUp
+                        ? "step-primary"
+                        : ""
                     }`}
                   >
                     Complete
@@ -100,6 +108,22 @@ const SetupAccount = () => {
           <hr className="my-3" />
           <div className="flex justify-center">
             <div className="flex flex-col gap-8">
+              <div className="flex justify-between gap-8 items-center text-xl font-semibold uppercase">
+                <div className="flex gap-6 items-center">
+                  <FaCheckCircle
+                    style={{ color: profileSetUp ? "#570DF8" : "#E5E6E6" }}
+                  />{" "}
+                  Set up your Profile
+                </div>
+                <Link href={`/profile-setup`}>
+                  <button
+                    className="btn btn-primary flex gap-4"
+                    disabled={loading || profileSetUp}
+                  >
+                    {profileSetUp ? "Completed" : "Start Now"}
+                  </button>
+                </Link>
+              </div>
               <div className="flex justify-between gap-8 items-center text-xl font-semibold uppercase">
                 <div className="flex gap-6 items-center">
                   <FaCheckCircle
