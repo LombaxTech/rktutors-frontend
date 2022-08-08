@@ -18,8 +18,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseClient";
 
+import Link from "next/link";
 import useCustomAuth from "../../customHooks/useCustomAuth";
-
 import { useRouter } from "next/router";
 
 export default function Chat() {
@@ -80,33 +80,6 @@ export default function Chat() {
 
     if (router.isReady && user && !userLoading) init();
   }, [router.isReady, user, userLoading]);
-
-  function timeConverter(UNIX_timestamp) {
-    var a = new Date(UNIX_timestamp * 1000);
-    var months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    var year = a.getFullYear();
-    var month = months[a.getMonth()];
-    var date = a.getDate();
-    var hour = a.getHours();
-    var min = a.getMinutes();
-    var sec = a.getSeconds();
-    var time =
-      date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
-    return time;
-  }
 
   const sendMessage = async (data) => {
     const { message } = data;
@@ -188,10 +161,24 @@ export default function Chat() {
   const UserProfile = () => {
     return (
       <div className="bg-white p-10 rounded-md shadow-md min-w-[200px] flex flex-col gap-4 items-center ">
-        {partner && (
+        {partner && partner.type === "tutor" && (
+          <>
+            <Link href={`/tutors/${partner.id}`}>
+              <Avatar
+                className={"cursor-pointer"}
+                src={partner.profilePictureUrl}
+                size={"xl"}
+                name={partner.fullName}
+              />
+            </Link>
+            <div className="text-xl font-semibold">{partner.fullName}</div>
+            <button className="btn btn-secondary">Book Lesson</button>
+          </>
+        )}
+        {partner && partner.type === "student" && (
           <>
             <Avatar
-              className=""
+              className={""}
               src={partner.profilePictureUrl}
               size={"xl"}
               name={partner.fullName}
