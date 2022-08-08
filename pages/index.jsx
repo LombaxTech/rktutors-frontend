@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import LandingPage from "../LandingPage";
 
 import TutorHome from "../components/Tutor/TutorHome";
+import StudentHome from "../components/Student/StudentHome";
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function Home() {
   // default app
   if (!userLoading && user) {
     if (user.type === "student") {
-      return <div>studnet</div>;
+      return <StudentHome />;
     }
 
     if (user.type === "tutor") {
