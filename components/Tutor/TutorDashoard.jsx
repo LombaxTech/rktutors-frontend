@@ -1,24 +1,7 @@
 import { useState } from "react";
-import {
-  Alert,
-  AlertIcon,
-  Spinner,
-  Heading,
-  Avatar,
-  Box,
-  Center,
-  Image,
-  Flex,
-  Text,
-  Stack,
-  Button,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { FaCheckCircle } from "react-icons/fa";
+import { Avatar, Box, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
-import axios from "axios";
-import { useRouter } from "next/router";
-
+import Link from "next/link";
 import useCustomAuth from "../../customHooks/useCustomAuth";
 
 export default function TutorDashoard() {
@@ -119,7 +102,9 @@ function SocialProfileWithImage() {
             <span className="text-lg">Welcome back </span> <br />
             <span className="text-2xl font-medium">{user.fullName}</span>
           </div>
-          <button className="btn btn-primary">Account Settings</button>
+          <Link href="/profile-settings">
+            <button className="btn btn-primary">Account Settings</button>
+          </Link>
         </Box>
       </Box>
     );
