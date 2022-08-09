@@ -1,5 +1,8 @@
 import TypeAnimation from "react-type-animation";
 
+import { useContext } from "react";
+import { ChatsContext } from "../context/ChatsContext";
+
 import {
   Box,
   Flex,
@@ -47,6 +50,7 @@ const Links = ["Dashboard", "Projects", "Team"];
 export default function Navbar() {
   const router = useRouter();
   const { user, userLoading } = useCustomAuth();
+  const { chats } = useContext(ChatsContext);
   const signout = async () => {
     try {
       await signOut(auth);
@@ -58,7 +62,14 @@ export default function Navbar() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  if (user)
+  if (user) {
+    let chatsUnread;
+    if (chats) {
+      chats.forEach((chat) => {
+        if (!chat.read[user.uid]) chatsUnread = true;
+      });
+    }
+
     return (
       <Box
         bg={useColorModeValue("gray.100", "gray.900")}
@@ -111,8 +122,11 @@ export default function Navbar() {
               {user.type === "tutor" &&
                 TutorLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    <a className="uppercase font-medium tracking-wide">
-                      {link.title}
+                    <a className="uppercase font-medium tracking-wide flex items-center gap-1">
+                      <div className="">{link.title}</div>
+                      {link.title === "Messages" && chatsUnread && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      )}
                     </a>
                   </Link>
                 ))}
@@ -169,4 +183,5 @@ export default function Navbar() {
         ) : null}
       </Box>
     );
+  }
 }
