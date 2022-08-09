@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ChatsContext } from "../../context/ChatsContext";
 
 import { Avatar } from "@chakra-ui/react";
 
@@ -13,35 +14,8 @@ import { DateTime } from "luxon";
 
 export default function Chats() {
   const { user, userLoading } = useCustomAuth();
-  const [chats, setChats] = useState([]);
 
-  useEffect(() => {
-    async function init() {
-      try {
-        let chatsRef = query(
-          collection(db, "chats"),
-          where("userIds", "array-contains", user.uid)
-        );
-
-        onSnapshot(chatsRef, (chatsSnapshot) => {
-          let chats = [];
-
-          chatsSnapshot.forEach((chatDoc) => {
-            chats.push({ id: chatDoc.id, ...chatDoc.data() });
-          });
-
-          console.log(chats);
-          setChats(chats);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (!userLoading && user) {
-      init();
-    }
-  }, [user, userLoading]);
+  const { chats } = useContext(ChatsContext);
 
   return (
     <div className="p-8">

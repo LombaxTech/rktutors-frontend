@@ -1,6 +1,7 @@
 import "../styles/globals.scss";
 
 import { useEffect } from "react";
+import { ChatsProvider } from "../context/ChatsContext";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
@@ -36,28 +37,33 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Head>
-        <title>RKTutors</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+    <ChatsProvider>
+      <ChakraProvider theme={theme}>
+        <Head>
+          <title>RKTutors</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
 
-      {/* Loading */}
-      {userLoading && <LoadingPage />}
+        {/* Loading */}
+        {userLoading && <LoadingPage />}
 
-      {/* No user */}
-      {!userLoading && !user && <Component {...pageProps} />}
+        {/* No user */}
+        {!userLoading && !user && <Component {...pageProps} />}
 
-      {/* User */}
-      {!userLoading && user && (
-        <div className="max-h-screen min-h-screen flex flex-col">
-          <Navbar />
-          <div className="flex-1 overflow-y-auto flex flex-col">
-            <Component {...pageProps} />
+        {/* User */}
+        {!userLoading && user && (
+          <div className="max-h-screen min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex-1 overflow-y-auto flex flex-col">
+              <Component {...pageProps} />
+            </div>
           </div>
-        </div>
-      )}
-    </ChakraProvider>
+        )}
+      </ChakraProvider>
+    </ChatsProvider>
   );
 }
 
