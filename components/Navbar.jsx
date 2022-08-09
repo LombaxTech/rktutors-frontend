@@ -113,8 +113,11 @@ export default function Navbar() {
               {user.type === "student" &&
                 StudentLinks.map((link) => (
                   <Link key={link} href={link.href}>
-                    <a className="uppercase font-medium tracking-wide">
-                      {link.title}
+                    <a className="uppercase font-medium tracking-wide flex items-center gap-1">
+                      <div className="">{link.title}</div>
+                      {link.title === "Messages" && chatsUnread && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      )}
                     </a>
                   </Link>
                 ))}
