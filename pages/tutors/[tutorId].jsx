@@ -19,11 +19,13 @@ import { db } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
 import useCustomAuth from "../../customHooks/useCustomAuth";
+import { smallBigString } from "../../helperFunctions";
 import { useRouter } from "next/router";
 
 export default function TutorPage() {
   const router = useRouter();
 
+  const { user, userLoading } = useCustomAuth();
   const [tutor, setTutor] = useState(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function TutorPage() {
     if (router.isReady) init();
   }, [router.isReady]);
 
-  if (tutor)
+  if (tutor && user)
     return (
       <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex">
         <div className="flex-1 flex bg-white rounded-md shadow-md">
@@ -84,7 +86,13 @@ export default function TutorPage() {
             </div>
             <div className="flex flex-col gap-4">
               <button className="btn btn-secondary">Book Lesson</button>
-              <button className="btn btn-accent">Send Message</button>
+              <Link
+                href={`/chats/${smallBigString(user.uid, tutor.id)}?partnerId=${
+                  tutor.id
+                }`}
+              >
+                <button className="btn btn-accent">Send Message</button>
+              </Link>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-8 flex flex-col">
