@@ -41,7 +41,7 @@ const NavLink = ({ children }) => (
     rounded={"md"}
     _hover={{
       textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
+      bg: "gray.200",
     }}
     href={"#"}
   >
@@ -78,16 +78,8 @@ export default function Navbar() {
   return (
     <Box
       zIndex={100}
-      bg={
-        scrollLimit
-          ? useColorModeValue("rgba(0,0,0, 0.2)", "transparent")
-          : useColorModeValue("white", "white")
-      }
-      color={
-        scrollLimit
-          ? useColorModeValue("white", "white")
-          : useColorModeValue("black", "black")
-      }
+      bg={scrollLimit ? "rgba(0,0,0, 0.2)" : "white"}
+      color={scrollLimit ? "white" : "black"}
       // color={{ base: "red.300", lg: "blue.200" }}
       px={12}
       py={3}

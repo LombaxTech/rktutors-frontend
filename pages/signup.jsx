@@ -91,12 +91,7 @@ export default function Signup() {
   };
 
   return (
-    <Flex
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
+    <Flex minH={"100vh"} align={"center"} justify={"center"} bg="gray.50">
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"} textAlign={"center"}>
@@ -130,12 +125,7 @@ export default function Signup() {
             {successMessage}
           </Alert>
         )}
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}
-        >
+        <Box rounded={"lg"} bg="white" boxShadow={"lg"} p={8}>
           <Stack spacing={4}>
             <FormControl isRequired>
               <FormLabel>Full Name</FormLabel>

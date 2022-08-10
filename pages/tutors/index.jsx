@@ -133,7 +133,7 @@ function TutorProfile({ tutor }) {
     <Box
       maxW={"320px"}
       w={"full"}
-      bg={useColorModeValue("white", "gray.900")}
+      bg="white"
       boxShadow={"xl"}
       rounded={"md"}
       p={6}
@@ -153,36 +153,17 @@ function TutorProfile({ tutor }) {
         </Heading>
 
         <Stack align={"center"} justify={"center"} direction={"row"} my={4}>
-          <Badge
-            px={2}
-            py={1}
-            bg={useColorModeValue("gray.50", "gray.800")}
-            fontWeight={"400"}
-          >
+          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
             Math A Level
           </Badge>
-          <Badge
-            px={2}
-            py={1}
-            bg={useColorModeValue("gray.50", "gray.800")}
-            fontWeight={"400"}
-          >
+          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
             Math GCSE
           </Badge>
-          <Badge
-            px={2}
-            py={1}
-            bg={useColorModeValue("gray.50", "gray.800")}
-            fontWeight={"400"}
-          >
+          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
             Physics GCSE
           </Badge>
         </Stack>
-        <Text
-          textAlign={"center"}
-          color={useColorModeValue("gray.700", "gray.400")}
-          px={3}
-        >
+        <Text textAlign={"center"} bg="gray.700" px={3}>
           Actress, musician, songwriter and artist. PM for work inquires or me
           in your posts
         </Text>

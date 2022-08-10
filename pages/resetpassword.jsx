@@ -52,7 +52,7 @@ export default function ResetPassword() {
       align={"center"}
       justify={"center"}
       flexDirection="column"
-      bg={useColorModeValue("gray.50", "gray.800")}
+      bg="gray.50"
     >
       <div className="flex items-center gap-8">
         <IconButton
@@ -72,16 +72,13 @@ export default function ResetPassword() {
         spacing={4}
         w={"full"}
         maxW={"md"}
-        bg={useColorModeValue("white", "gray.700")}
+        bg="white"
         rounded={"xl"}
         boxShadow={"lg"}
         p={6}
         my={12}
       >
-        <Text
-          fontSize={{ base: "sm", sm: "md" }}
-          color={useColorModeValue("gray.800", "gray.400")}
-        >
+        <Text fontSize={{ base: "sm", sm: "md" }} color="gray.800">
           You&apos;ll get an email with a reset link
         </Text>
         <FormControl id="email">
