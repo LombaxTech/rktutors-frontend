@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ChatsContext } from "../../context/ChatsContext";
 import { Avatar, Box, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Link from "next/link";
@@ -39,21 +40,50 @@ export default function TutorDashoard() {
 }
 
 const MessagesSection = () => {
-  return (
-    <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md h-full">
-      <div className="img w-6/12 flex justify-center items-center">
-        <img src="img/messages.svg" alt="" className="h-52" />
-      </div>
-      <div className="content w-6/12 flex flex-col gap-4">
-        <h1 className="text-3xl font-semibold uppercase">Messages</h1>
-        <hr></hr>
-        <h1 className="text-xl font-normal ">No Unread Messages</h1>
-        <div className="">
-          <button className="btn btn-secondary ">Inbox</button>
+  const { chats } = useContext(ChatsContext);
+  const { user, userLoading } = useCustomAuth();
+
+  if (user && chats) {
+    const unreadChats = chats.filter((chat) => !chat.read[user.uid]);
+    const unreadChatsExist = unreadChats.length > 0;
+    const unreadChatsLength = unreadChats.length;
+
+    console.log(unreadChats);
+
+    return (
+      <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md h-full">
+        <div className="img w-6/12 flex justify-center items-center">
+          {unreadChatsExist && (
+            <img src="img/mail-arrived.svg" alt="" className="h-52" />
+          )}
+          {!unreadChatsExist && (
+            <img src="img/messages.svg" alt="" className="h-52" />
+          )}
+        </div>
+        <div className="content w-6/12 flex flex-col gap-4">
+          <h1 className="text-3xl font-semibold uppercase">Messages</h1>
+          <hr></hr>
+          {!unreadChatsExist && (
+            <h1 className="text-xl font-normal ">You're all caught up!</h1>
+          )}
+          {unreadChatsExist && (
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              <h1 className="text-xl font-normal ">
+                You have {unreadChatsLength} unread chat
+                {unreadChatsLength === 1 ? "" : "s"}
+              </h1>
+            </div>
+          )}
+          <div className="">
+            <Link href={`/chats`}>
+              <button className="btn btn-secondary ">Inbox</button>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 function SocialProfileWithImage() {
