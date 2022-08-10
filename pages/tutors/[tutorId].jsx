@@ -100,8 +100,8 @@ export default function TutorPage() {
               <div className="text-4xl font-bold">Subjects Offered</div>
               <div className="flex gap-4 flex-wrap">
                 {tutor.profile.teachingSubjects &&
-                  tutor.profile.teachingSubjects.map((subject) => (
-                    <Tag size={"lg"} variant="solid" colorScheme="blue">
+                  tutor.profile.teachingSubjects.map((subject, i) => (
+                    <Tag size={"lg"} variant="solid" colorScheme="blue" key={i}>
                       {`${subject.subject} ${subject.level}`}
                     </Tag>
                   ))}

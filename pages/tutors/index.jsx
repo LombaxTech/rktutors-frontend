@@ -118,7 +118,8 @@ export default function Tutors() {
         </h1>
         {/* tutor profiles */}
         <div className="flex gap-8 flex-wrap justify-center">
-          {tutors && tutors.map((tutor) => <TutorProfile tutor={tutor} />)}
+          {tutors &&
+            tutors.map((tutor, i) => <TutorProfile tutor={tutor} key={i} />)}
         </div>
       </div>
     </div>

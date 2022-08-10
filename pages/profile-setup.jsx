@@ -130,8 +130,8 @@ export default function ProfileSetup() {
                   </button>
                 </div>
                 <div className="flex gap-4 flex-wrap my-6">
-                  {subjects.map((subject) => (
-                    <div>
+                  {subjects.map((subject, i) => (
+                    <div key={i}>
                       <Tag
                         variant="outline"
                         // colorScheme="blue"

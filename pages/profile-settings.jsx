@@ -152,8 +152,8 @@ const TutoringSubjects = ({ user }) => {
     <div id="tutoring-subjects" className="mt-8">
       <h1 className="text-2xl font-semibold mb-2">Subjects You Teach</h1>
       <div className="flex gap-4 flex-wrap my-6">
-        {user.profile.teachingSubjects.map((subject) => (
-          <div>
+        {user.profile.teachingSubjects.map((subject, i) => (
+          <div key={i}>
             <Tag
               variant="outline"
               // colorScheme="blue"

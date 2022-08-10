@@ -24,7 +24,9 @@ export default function Chats() {
       {/* Chats */}
       <div className="flex flex-col items-center mt-4 w-7/12 shadow-md mx-auto">
         {chats.length === 0 && <NoChats />}
-        {chats && user && chats.map((chat) => <Chat chat={chat} user={user} />)}
+        {chats &&
+          user &&
+          chats.map((chat, i) => <Chat chat={chat} user={user} key={i} />)}
       </div>
     </div>
   );

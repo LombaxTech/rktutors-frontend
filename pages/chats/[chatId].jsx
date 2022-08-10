@@ -202,10 +202,11 @@ export default function Chat() {
           {/* Messages */}
           {messages && user && partner && (
             <ul className="space-y-2">
-              {messages.map((msg) => {
-                if (msg.senderId == user.uid) return <MyMessage msg={msg} />;
+              {messages.map((msg, i) => {
+                if (msg.senderId == user.uid)
+                  return <MyMessage msg={msg} key={i} />;
                 if (msg.senderId == partner.id)
-                  return <YourMessage msg={msg} />;
+                  return <YourMessage msg={msg} key={i} />;
               })}
               <div ref={lastMessageRef}></div>
             </ul>

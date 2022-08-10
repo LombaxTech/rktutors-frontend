@@ -29,7 +29,7 @@ export default function HowItWorks(props) {
           <div className="list-style">
             {props.data
               ? props.data.Why.map((d, i) => (
-                  <div className="mb-8">
+                  <div className="mb-8" key={i}>
                     <div className="flex  items-center mb-6">
                       <div
                         className="text-white rounded-full w-[40px] h-[40px]
