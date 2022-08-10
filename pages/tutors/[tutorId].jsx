@@ -55,31 +55,31 @@ export default function TutorPage() {
               size={"2xl"}
             />
             <h1 className="text-2xl font-semibold">{tutor.fullName}</h1>
-            <div class="rating w-8/12 mx-auto">
+            <div className="rating w-8/12 mx-auto">
               <input
                 type="radio"
                 name="rating-1"
-                class="mask mask-star bg-yellow-500"
+                className="mask mask-star bg-yellow-500"
               />
               <input
                 type="radio"
                 name="rating-1"
-                class="mask mask-star bg-yellow-500"
+                className="mask mask-star bg-yellow-500"
               />
               <input
                 type="radio"
                 name="rating-1"
-                class="mask mask-star bg-yellow-500"
+                className="mask mask-star bg-yellow-500"
               />
               <input
                 type="radio"
                 name="rating-1"
-                class="mask mask-star bg-yellow-500"
+                className="mask mask-star bg-yellow-500"
               />
               <input
                 type="radio"
                 name="rating-1"
-                class="mask mask-star bg-yellow-500"
+                className="mask mask-star bg-yellow-500"
                 checked
               />
               <div className="font-semibold ml-2">(46)</div>

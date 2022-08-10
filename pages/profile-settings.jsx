@@ -47,14 +47,14 @@ const General = ({ user }) => {
     <div id="general" className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold">General</h1>
       <div className="flex items-center w-5/12">
-        <label class="label">
-          <span class="label-text">Name: </span>
+        <label className="label">
+          <span className="label-text">Name: </span>
         </label>
         <Input placeholder={user.fullName} isReadOnly />
       </div>
       <div className="flex items-center w-5/12">
-        <label class="label">
-          <span class="label-text">Email: </span>
+        <label className="label">
+          <span className="label-text">Email: </span>
         </label>
         <Input placeholder={user.email} isReadOnly />
       </div>
@@ -72,14 +72,14 @@ const Password = ({ user }) => {
     <div id="password" className="flex flex-col gap-4 mt-8">
       <h1 className="text-2xl font-semibold">Password</h1>
       <div className="flex items-center w-6/12">
-        <label class="label">
-          <span class="label-text">Old Password: </span>
+        <label className="label">
+          <span className="label-text">Old Password: </span>
         </label>
         <Input type="password" />
       </div>
       <div className="flex items-center w-6/12">
-        <label class="label">
-          <span class="label-text">New Password: </span>
+        <label className="label">
+          <span className="label-text">New Password: </span>
         </label>
         <Input type="password" />
       </div>
