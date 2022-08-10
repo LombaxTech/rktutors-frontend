@@ -64,7 +64,7 @@ const MessagesSection = () => {
           <h1 className="text-3xl font-semibold uppercase">Messages</h1>
           <hr></hr>
           {!unreadChatsExist && (
-            <h1 className="text-xl font-normal ">You're all caught up!</h1>
+            <h1 className="text-xl font-normal ">You are all caught up!</h1>
           )}
           {unreadChatsExist && (
             <div className="flex items-center gap-1">
