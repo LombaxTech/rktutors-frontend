@@ -103,7 +103,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         <div className="flex flex-col items-center gap-6">
           {isTutor &&
             TutorLinks.map((link) => (
-              <Link href={link.href} key={href.link}>
+              <Link href={link.href} key={link.href}>
                 <div className="cursor-pointer uppercase font-semibold">
                   {link.name}
                 </div>

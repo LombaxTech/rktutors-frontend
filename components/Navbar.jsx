@@ -150,7 +150,7 @@ export default function Navbar() {
                   />
                 </MenuButton>
 
-                <MenuList>
+                <MenuList color={"gray.800"}>
                   {user.type === "tutor" && (
                     <Link href={"profile"}>
                       <MenuItem>My Profile</MenuItem>
