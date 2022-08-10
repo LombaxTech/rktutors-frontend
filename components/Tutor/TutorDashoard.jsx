@@ -65,7 +65,7 @@ function SocialProfileWithImage() {
         maxW={"270px"}
         w={"full"}
         bg={useColorModeValue("white", "gray.800")}
-        boxShadow={"xl"}
+        boxShadow={"md"}
         rounded={"md"}
         overflow={"hidden"}
       >
