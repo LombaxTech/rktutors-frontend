@@ -59,7 +59,6 @@ const SetupAccount = () => {
               <img
                 src="img/personal_settings.svg"
                 alt=""
-                srcset=""
                 className="h-[300px] mx-auto"
               />
             </div>
