@@ -25,12 +25,23 @@ import { IconType } from "react-icons";
 import { ReactText } from "react";
 
 import Link from "next/link";
+import useCustomAuth from "../customHooks/useCustomAuth";
 
-const LinkItems = [
+const TutorLinks = [
   { name: "General", icon: FiHome, href: "#general" },
   { name: "Password", icon: FiTrendingUp, href: "#password" },
   { name: "Tutoring Subjects", icon: FiCompass, href: "#tutoring-subjects" },
+  {
+    name: "Profile Information",
+    icon: FiCompass,
+    href: "#profile-information",
+  },
   { name: "Availability", icon: FiCompass, href: "#availablity" },
+];
+
+const StudentLinks = [
+  { name: "General", icon: FiHome, href: "#general" },
+  { name: "Password", icon: FiTrendingUp, href: "#password" },
 ];
 
 export default function SideBar({ children }) {
@@ -64,33 +75,52 @@ export default function SideBar({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  return (
-    <Box
-      bg={useColorModeValue("white", "gray.900")}
-      borderRight="1px"
-      borderRightColor={useColorModeValue("gray.200", "gray.700")}
-      w={{ base: "full", md: 60 }}
-      pos="fixed"
-      h="full"
-      {...rest}
-    >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        {/* <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+  const { user, userLoading } = useCustomAuth();
+
+  if (user) {
+    const isTutor = user.type === "tutor";
+    const isStudent = user.type === "student";
+
+    return (
+      <Box
+        bg={useColorModeValue("white", "gray.900")}
+        borderRight="1px"
+        borderRightColor={useColorModeValue("gray.200", "gray.700")}
+        w={{ base: "full", md: 60 }}
+        pos="fixed"
+        h="full"
+        {...rest}
+      >
+        <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+          {/* <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
         </Text> */}
-        <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
-      </Flex>
-      <div className="flex flex-col items-center gap-6">
-        {LinkItems.map((link) => (
-          <Link href={link.href}>
-            <div className="cursor-pointer uppercase font-semibold">
-              {link.name}
-            </div>
-          </Link>
-        ))}
-      </div>
-    </Box>
-  );
+          <CloseButton
+            display={{ base: "flex", md: "none" }}
+            onClick={onClose}
+          />
+        </Flex>
+        <div className="flex flex-col items-center gap-6">
+          {isTutor &&
+            TutorLinks.map((link) => (
+              <Link href={link.href}>
+                <div className="cursor-pointer uppercase font-semibold">
+                  {link.name}
+                </div>
+              </Link>
+            ))}
+          {isStudent &&
+            StudentLinks.map((link) => (
+              <Link href={link.href}>
+                <div className="cursor-pointer uppercase font-semibold">
+                  {link.name}
+                </div>
+              </Link>
+            ))}
+        </div>
+      </Box>
+    );
+  }
 };
 
 // const NavItem = ({ icon, children, ...rest }) => {
