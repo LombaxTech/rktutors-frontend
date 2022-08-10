@@ -7,7 +7,7 @@ import axios from "axios";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebaseClient";
 
-export default function gauthStatusCheck() {
+export default function GauthStatusCheck() {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
