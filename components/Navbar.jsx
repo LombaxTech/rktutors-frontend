@@ -70,6 +70,9 @@ export default function Navbar() {
       });
     }
 
+    const isTutor = user.type === "tutor";
+    const isActive = user.active;
+
     return (
       <Box
         bg={"gray.900"}
@@ -123,7 +126,8 @@ export default function Navbar() {
                   </Link>
                 ))}
 
-              {user.type === "tutor" &&
+              {isTutor &&
+                isActive &&
                 TutorLinks.map((link) => (
                   <Link key={link} href={link.href}>
                     <a className="uppercase font-medium tracking-wide flex items-center gap-1">
@@ -151,14 +155,16 @@ export default function Navbar() {
                 </MenuButton>
 
                 <MenuList color={"gray.800"}>
-                  {user.type === "tutor" && (
-                    <Link href={"profile"}>
-                      <MenuItem>My Profile</MenuItem>
+                  {isTutor && isActive && (
+                    <Link href={"/profile-settings"}>
+                      <MenuItem>Settings</MenuItem>
                     </Link>
                   )}
-                  <Link href={"/profile-settings"}>
-                    <MenuItem>Settings</MenuItem>
-                  </Link>
+                  {user.type === "student" && (
+                    <Link href={"/profile-settings"}>
+                      <MenuItem>Settings</MenuItem>
+                    </Link>
+                  )}
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
