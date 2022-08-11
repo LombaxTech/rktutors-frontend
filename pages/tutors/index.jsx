@@ -10,6 +10,9 @@ import {
   Button,
   Badge,
   useColorModeValue,
+  Tag,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { getDocs, collection, query, where } from "firebase/firestore";
@@ -19,14 +22,21 @@ import Link from "next/link";
 import useCustomAuth from "../../customHooks/useCustomAuth";
 import { smallBigString } from "../../helperFunctions";
 
-const ImageAndFilter = () => {
+const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
   const [subject, setSubject] = useState("");
   const [academicLevel, setAcademicLevel] = useState("");
+  const [error, setError] = useState(false);
 
   const search = () => {
     console.log(subject, academicLevel);
+    setError(false);
     if (!subject || !academicLevel) {
       console.log("you are missing something..");
+      setError(true);
+      setTimeout(() => setError(false), 8000);
+    } else {
+      setSearchedSubject(subject);
+      setSearchedAcademicLevel(academicLevel);
     }
   };
 
@@ -69,13 +79,19 @@ const ImageAndFilter = () => {
                 Academic Level
               </option>
               <option>GCSE</option>
-              <option>A Level</option>
+              <option>A-Level</option>
             </select>
           </div>
           <button className="btn btn-primary" onClick={search}>
             Search
           </button>
         </div>
+        {error && (
+          <Alert status="warning" className="mt-4 w-3/4 mx-auto text-center">
+            <AlertIcon />
+            You must select a subject and an academic level
+          </Alert>
+        )}
       </div>
     </div>
   );
@@ -83,12 +99,20 @@ const ImageAndFilter = () => {
 
 export default function Tutors() {
   const [tutors, setTutors] = useState([]);
+  const [filteredTutors, setFilteredTutors] = useState([]);
+
+  const [searchedSubject, setSearchedSubject] = useState("");
+  const [searchedAcademicLevel, setSearchedAcademicLevel] = useState("");
 
   useEffect(() => {
     async function init() {
       try {
         const usersRef = collection(db, "users");
-        const tutorsRef = query(usersRef, where("type", "==", "tutor"));
+        const tutorsRef = query(
+          usersRef,
+          where("type", "==", "tutor"),
+          where("active", "==", true)
+        );
 
         let tutorsSnapshot = await getDocs(tutorsRef);
 
@@ -99,6 +123,7 @@ export default function Tutors() {
         );
 
         setTutors(tutors);
+        setFilteredTutors(tutors);
       } catch (error) {
         console.log(error);
       }
@@ -107,19 +132,59 @@ export default function Tutors() {
     init();
   }, []);
 
+  useEffect(() => {
+    console.log(searchedAcademicLevel, searchedSubject);
+
+    if (searchedSubject && searchedAcademicLevel && tutors) {
+      let filteredTutors = tutors.filter((tutor) => {
+        let exists = false;
+
+        if (!tutor.profile.teachingSubjects) return false;
+
+        const teachingSubjects = tutor.profile.teachingSubjects;
+        teachingSubjects.forEach((subject) => {
+          if (
+            subject.level === searchedAcademicLevel &&
+            subject.subject === searchedSubject
+          ) {
+            exists = true;
+          }
+        });
+
+        if (exists) return true;
+      });
+
+      setFilteredTutors(filteredTutors);
+      console.log(filteredTutors);
+    }
+  }, [searchedSubject, searchedAcademicLevel]);
+
   return (
     <div className="flex-1 p-8 bg-gray-200">
       <div className="bg-white rounded-md shadow-md p-8">
-        <ImageAndFilter />
+        <ImageAndFilter
+          setSearchedSubject={setSearchedSubject}
+          setSearchedAcademicLevel={setSearchedAcademicLevel}
+        />
+
         <hr className="my-12" />
         <h1 className="text-4xl font-bold underline my-8 text-center">
           {" "}
-          A Level <span className="text-blue-700">Physics</span> Tutors
+          {(!searchedSubject || !searchedAcademicLevel) && "Our Tutors"}
+          {setSearchedAcademicLevel && searchedSubject && (
+            <div>
+              {searchedAcademicLevel}{" "}
+              <span className="text-blue-700">{searchedSubject}</span> Tutors
+            </div>
+          )}
+          {/* <span className="text-blue-700">Physics</span> Tutors */}
         </h1>
         {/* tutor profiles */}
         <div className="flex gap-8 flex-wrap justify-center">
-          {tutors &&
-            tutors.map((tutor, i) => <TutorProfile tutor={tutor} key={i} />)}
+          {filteredTutors &&
+            filteredTutors.map((tutor, i) => (
+              <TutorProfile tutor={tutor} key={i} />
+            ))}
         </div>
       </div>
     </div>
@@ -153,19 +218,21 @@ function TutorProfile({ tutor }) {
         </Heading>
 
         <Stack align={"center"} justify={"center"} direction={"row"} my={4}>
-          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
-            Math A Level
-          </Badge>
-          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
-            Math GCSE
-          </Badge>
-          <Badge px={2} py={1} bg="gray.50" fontWeight={"400"}>
-            Physics GCSE
-          </Badge>
+          {tutor.profile.teachingSubjects &&
+            tutor.profile.teachingSubjects.map((subject, i) => (
+              <Tag
+                size={"md"}
+                variant="solid"
+                colorScheme="blue"
+                key={i}
+                className="p-2"
+              >
+                {`${subject.subject} ${subject.level}`}
+              </Tag>
+            ))}
         </Stack>
-        <Text textAlign={"center"} bg="gray.700" px={3}>
-          Actress, musician, songwriter and artist. PM for work inquires or me
-          in your posts
+        <Text textAlign={"center"} bg={"white"} px={3}>
+          {tutor.profile.aboutMe}
         </Text>
       </div>
 
@@ -196,9 +263,9 @@ function TutorProfile({ tutor }) {
             rounded={"md"}
             bg={"blue.400"}
             color={"white"}
-            boxShadow={
-              "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-            }
+            // boxShadow={
+            //   "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+            // }
             _hover={{
               bg: "blue.500",
             }}
