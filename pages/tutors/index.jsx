@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
   Heading,
@@ -104,6 +104,8 @@ export default function Tutors() {
   const [searchedSubject, setSearchedSubject] = useState("");
   const [searchedAcademicLevel, setSearchedAcademicLevel] = useState("");
 
+  const tutorsRef = useRef(null);
+
   useEffect(() => {
     async function init() {
       try {
@@ -156,6 +158,7 @@ export default function Tutors() {
 
       setFilteredTutors(filteredTutors);
       console.log(filteredTutors);
+      tutorsRef.current?.scrollIntoView();
     }
   }, [searchedSubject, searchedAcademicLevel]);
 
@@ -168,7 +171,10 @@ export default function Tutors() {
         />
 
         <hr className="my-12" />
-        <h1 className="text-4xl font-bold underline my-8 text-center">
+        <h1
+          className="text-4xl font-bold underline my-8 text-center"
+          ref={tutorsRef}
+        >
           {" "}
           {(!searchedSubject || !searchedAcademicLevel) && "Our Tutors"}
           {setSearchedAcademicLevel && searchedSubject && (
