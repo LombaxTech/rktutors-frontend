@@ -113,7 +113,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
           {isStudent &&
             StudentLinks.map((link) => (
               <Link href={link.href} key={link.href}>
-                <div className="cursor-pointer uppercase font-semibold hover:unde rline">
+                <div className="cursor-pointer uppercase font-semibold hover:underline">
                   {link.name}
                 </div>
               </Link>
