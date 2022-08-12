@@ -37,6 +37,7 @@ const TutorLinks = [
     href: "#profile-information",
   },
   { name: "Availability", icon: FiCompass, href: "#availablity" },
+  { name: "Payment Settings", icon: FiCompass, href: "#payment-settings" },
 ];
 
 const StudentLinks = [
@@ -112,7 +113,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
           {isStudent &&
             StudentLinks.map((link) => (
               <Link href={link.href} key={link.href}>
-                <div className="cursor-pointer uppercase font-semibold hover:underline">
+                <div className="cursor-pointer uppercase font-semibold hover:unde rline">
                   {link.name}
                 </div>
               </Link>
