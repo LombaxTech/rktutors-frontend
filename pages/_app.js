@@ -12,6 +12,11 @@ import Navbar from "../components/Navbar";
 
 import Head from "next/head";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = loadStripe(publishableKey);
+
 const theme = extendTheme({
   components: {
     Steps,
@@ -37,33 +42,35 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ChatsProvider>
-      <ChakraProvider theme={theme}>
-        <Head>
-          <title>RKTutors</title>
-          <meta
-            name="viewport"
-            content="initial-scale=1.0, width=device-width"
-          />
-        </Head>
+    <Elements stripe={stripePromise}>
+      <ChatsProvider>
+        <ChakraProvider theme={theme}>
+          <Head>
+            <title>RKTutors</title>
+            <meta
+              name="viewport"
+              content="initial-scale=1.0, width=device-width"
+            />
+          </Head>
 
-        {/* Loading */}
-        {userLoading && <LoadingPage />}
+          {/* Loading */}
+          {userLoading && <LoadingPage />}
 
-        {/* No user */}
-        {!userLoading && !user && <Component {...pageProps} />}
+          {/* No user */}
+          {!userLoading && !user && <Component {...pageProps} />}
 
-        {/* User */}
-        {!userLoading && user && (
-          <div className="max-h-screen min-h-screen flex flex-col">
-            <Navbar />
-            <div className="flex-1 overflow-y-auto flex flex-col">
-              <Component {...pageProps} />
+          {/* User */}
+          {!userLoading && user && (
+            <div className="max-h-screen min-h-screen flex flex-col">
+              <Navbar />
+              <div className="flex-1 overflow-y-auto flex flex-col">
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
-        )}
-      </ChakraProvider>
-    </ChatsProvider>
+          )}
+        </ChakraProvider>
+      </ChatsProvider>
+    </Elements>
   );
 }
 
