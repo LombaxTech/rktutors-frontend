@@ -28,21 +28,24 @@ export default function Saved() {
   if (user && !userLoading) {
     const savedTutors = user.savedTutors || [];
 
-    return (
-      <div className="bg-gray-200 flex-1 p-4 flex flex-col ">
-        <div className="bg-white rounded-md shadow-md flex-1 p-4">
-          <h1 className="text-5xl font-bold text-center">Saved Tutors</h1>
-          <hr className="my-12" />
+    if (savedTutors.length === 0) return <NoSavedTutors />;
 
-          <div className="flex gap-8 flex-wrap justify-center">
-            {savedTutors &&
-              savedTutors.map((tutor, i) => (
-                <TutorProfile tutor={tutor} user={user} key={i} />
-              ))}
+    if (savedTutors.length > 0)
+      return (
+        <div className="bg-gray-200 flex-1 p-4 flex flex-col ">
+          <div className="bg-white rounded-md shadow-md flex-1 p-4">
+            <h1 className="text-5xl font-bold text-center">Saved Tutors</h1>
+            <hr className="my-12" />
+
+            <div className="flex gap-8 flex-wrap justify-center">
+              {savedTutors &&
+                savedTutors.map((tutor, i) => (
+                  <TutorProfile tutor={tutor} user={user} key={i} />
+                ))}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 
@@ -187,3 +190,13 @@ function TutorProfile({ tutor, user }) {
     </Box>
   );
 }
+
+const NoSavedTutors = () => (
+  <div className="flex flex-col items-center gap-6 flex-1 bg-gray-200 pt-10">
+    <h1 className="text-4xl font-bold">You have no saved Tutors</h1>
+    <img src="/img/void.svg" className="h-72" />
+    <Link href="/tutors">
+      <button className="btn btn-primary text-2xl">Browse Tutors</button>
+    </Link>
+  </div>
+);
