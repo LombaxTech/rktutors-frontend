@@ -45,16 +45,7 @@ export default function TutorPage() {
   const saveTutor = async () => {
     try {
       const currentSavedTutors = user.savedTutors || [];
-      const newSavedTutors = [
-        ...currentSavedTutors,
-        {
-          id: tutor.id,
-          fullName: tutor.fullName,
-          ...(tutor.profilePictureUrl && {
-            profilePictureUrl: tutor.profilePictureUrl,
-          }),
-        },
-      ];
+      const newSavedTutors = [...currentSavedTutors, tutor];
 
       await updateDoc(doc(db, "users", user.uid), {
         savedTutors: newSavedTutors,
