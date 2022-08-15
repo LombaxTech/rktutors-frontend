@@ -38,8 +38,13 @@ export default function GauthStatusCheck() {
 
             console.log(googleEmailAddress);
 
+            const stripeAndProfileSetup =
+              user.profile.setup && user.stripeConnectedAccount.setup;
+
             const userDocRef = doc(db, "users", user.uid);
             const updateDetails = {
+              ...(stripeAndProfileSetup && { active: true }),
+
               googleAccount: {
                 refresh_token,
                 googleEmailAddress,
@@ -49,11 +54,6 @@ export default function GauthStatusCheck() {
 
             await updateDoc(userDocRef, updateDetails);
             console.log("account updated");
-
-            // user google n stripe need to be setup for account to be active
-            if (user.stripeConnectedAccount.setup) {
-              await updateDoc(userDocRef, { active: true });
-            }
 
             setLoading(false);
           }
