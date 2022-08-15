@@ -161,9 +161,14 @@ export default function Navbar() {
                     </Link>
                   )}
                   {user.type === "student" && (
-                    <Link href={"/profile-settings"}>
-                      <MenuItem>Settings</MenuItem>
-                    </Link>
+                    <>
+                      <Link href={"/profile-settings"}>
+                        <MenuItem>Settings</MenuItem>
+                      </Link>
+                      <Link href={"/tutors/saved"}>
+                        <MenuItem>Saved Tutors</MenuItem>
+                      </Link>
+                    </>
                   )}
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </MenuList>

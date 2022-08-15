@@ -6,6 +6,8 @@ import Link from "next/link";
 
 import useCustomAuth from "../../customHooks/useCustomAuth";
 
+const quickLinks = [{ title: "Bookings", href: "/bookings" }];
+
 export default function StudentHome() {
   return (
     <div className="bg-gray-200 flex-1 p-8">
@@ -33,6 +35,9 @@ export default function StudentHome() {
             Quick Links
           </h1>
           <hr></hr>
+          <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-4">
+            <Link href="/tutors/saved">Saved Tutors</Link>
+          </div>
         </div>
         <MessagesSection />
       </div>
