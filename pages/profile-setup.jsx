@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
   Textarea,
@@ -8,13 +8,32 @@ import {
   Select,
   Alert,
   AlertIcon,
+  Input,
+  Avatar,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
 } from "@chakra-ui/react";
 import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import useCustomAuth from "../customHooks/useCustomAuth";
 import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../firebase/firebaseClient";
+import { db, storage } from "../firebase/firebaseClient";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from "next/router";
+
+import { FaFileImage } from "react-icons/fa";
+import Dropzone from "react-dropzone";
+import AvatarEditor from "react-avatar-editor";
 
 export default function ProfileSetup() {
   const router = useRouter();
@@ -29,6 +48,10 @@ export default function ProfileSetup() {
 
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [croppedBlob, setCroppedBlob] = useState(null);
 
   const addSubjectAndLevel = async () => {
     const subjectExist = subjects.some(
@@ -68,6 +91,23 @@ export default function ProfileSetup() {
       const stripeAndGoogleActive =
         user.googleAccount.setup && user.stripeConnectedAccount.setup;
 
+      // todo: upload profile pic
+      const imageRef = ref(
+        storage,
+        `profilePicture/${user.uid}/${selectedFile.name}`
+      );
+      if (croppedBlob) {
+        await uploadBytes(imageRef, croppedBlob);
+        console.log("Uploaded a blob or file!");
+      } else {
+        await uploadBytes(imageRef, selectedFile);
+        console.log("Uploaded a blob or file!");
+      }
+
+      const profilePictureUrl = await getDownloadURL(
+        ref(storage, `profilePicture/${user.uid}/${selectedFile.name}`)
+      );
+
       const updateDetails = {
         ...(stripeAndGoogleActive && { active: true }),
         profile: {
@@ -76,6 +116,7 @@ export default function ProfileSetup() {
           aboutMe,
           aboutMyLessons,
         },
+        ...(profilePictureUrl && { profilePictureUrl }),
         // [`profile.setup`]: false,
         // [`profile.secret.age`]: 19,
       };
@@ -172,6 +213,20 @@ export default function ProfileSetup() {
                   size="sm"
                 />
               </div>
+              <div className="flex flex-col gap-2">
+                <h1 className="text-xl font-semibold ml-4">
+                  Upload Profile Picture
+                </h1>
+                <ImageUpload
+                  onOpen={onOpen}
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  selectedFile={selectedFile}
+                  setSelectedFile={setSelectedFile}
+                  croppedBlob={croppedBlob}
+                  setCroppedBlob={setCroppedBlob}
+                />
+              </div>
               <div className="">
                 <button className="btn btn-primary" onClick={finish}>
                   Save and Finish
@@ -200,3 +255,152 @@ export default function ProfileSetup() {
       </div>
     );
 }
+
+const ImageUpload = ({
+  onOpen,
+  isOpen,
+  onClose,
+  croppedBlob,
+  setCroppedBlob,
+  selectedFile,
+  setSelectedFile,
+}) => {
+  const [croppedPreview, setCroppedPreview] = useState(null);
+  const EditorRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  const onDrop = (acceptedFiles) => {
+    console.log(acceptedFiles[0]);
+    setSelectedFile(acceptedFiles[0]);
+    onOpen();
+  };
+
+  const finishCropping = () => {
+    if (EditorRef.current) {
+      EditorRef.current.getImage().toBlob((blob) => {
+        setCroppedBlob(blob);
+
+        const url = URL.createObjectURL(blob);
+        setCroppedPreview(url);
+      });
+    }
+    onClose();
+  };
+
+  // const updateProfilePicture = async () => {
+  //   try {
+  //     const imageRef = ref(
+  //       storage,
+  //       `profilePicture/${user.uid}/${selectedFile.name}`
+  //     );
+  //     if (croppedBlob) {
+  //       await uploadBytes(imageRef, croppedBlob);
+  //       console.log("Uploaded a blob or file!");
+  //     } else {
+  //       await uploadBytes(imageRef, selectedFile);
+  //       console.log("Uploaded a blob or file!");
+  //     }
+
+  //     const profilePictureUrl = await getDownloadURL(
+  //       ref(storage, `profilePicture/${user.uid}/${selectedFile.name}`)
+  //     );
+  //     await updateDoc(doc(db, "users", user.uid), { profilePictureUrl });
+  //     console.log("updated profile pic!");
+  //     console.log("here is the image url!");
+  //     console.log(profilePictureUrl);
+
+  //     setSelectedFile(null);
+  //     setCroppedBlob(null);
+  //     setCroppedPreview(null);
+  //     setScale(1);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <Dropzone onDrop={onDrop}>
+        {({ getRootProps, getInputProps }) => (
+          <section>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+
+              <header className="border-dashed border-2 border-gray-400 p-4 flex flex-col justify-center items-center cursor-pointer my-4">
+                <FaFileImage className="text-4xl" />
+                <p className="font-semibold text-gray-900 text-center">
+                  Drop an image or click to upload a new image
+                </p>
+              </header>
+            </div>
+          </section>
+        )}
+      </Dropzone>
+      {selectedFile && (
+        <div className="flex flex-col gap-3 ml-4">
+          <h1 className="text-2xl font-semibold">Preview: </h1>
+          <Avatar
+            src={
+              croppedPreview
+                ? croppedPreview
+                : URL.createObjectURL(selectedFile)
+            }
+            size="xl"
+          />
+          <div className="flex gap-3">
+            <button
+              className="btn btn-outline w-6/12"
+              onClick={() => {
+                onOpen();
+              }}
+            >
+              Crop Image
+            </button>
+          </div>
+        </div>
+      )}
+      <>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Crop Image</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody className="flex flex-col">
+              <div className="flex-1 flex flex-col gap-4">
+                <AvatarEditor
+                  ref={EditorRef}
+                  className="mx-auto"
+                  image={selectedFile}
+                  width={180}
+                  height={180}
+                  border={50}
+                  borderRadius={999}
+                  color={[0, 0, 0, 0.3]} // RGBA
+                  scale={scale}
+                  rotate={0}
+                />
+                <p className="font-semibold">Drag to reposition</p>
+                <Slider
+                  aria-label="slider-ex-1"
+                  onChange={(v) => console.log(setScale(v))}
+                  value={scale}
+                  min={0.5}
+                  max={2}
+                  step={0.1}
+                >
+                  <SliderTrack>
+                    <SliderFilledTrack />
+                  </SliderTrack>
+                  <SliderThumb />
+                </Slider>
+                <button className="btn btn-primary" onClick={finishCropping}>
+                  Finish
+                </button>
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </>
+    </div>
+  );
+};
