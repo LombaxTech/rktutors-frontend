@@ -4,16 +4,12 @@ import { Avatar, MenuDivider, Tooltip, Tag, HStack } from "@chakra-ui/react";
 
 import {
   addDoc,
-  collection,
   serverTimestamp,
-  onSnapshot,
-  query,
-  where,
   orderBy,
   getDoc,
   doc,
-  setDoc,
   updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseClient";
 
@@ -21,6 +17,8 @@ import Link from "next/link";
 import useCustomAuth from "../../customHooks/useCustomAuth";
 import { smallBigString } from "../../helperFunctions";
 import { useRouter } from "next/router";
+
+import BookingModal from "../../components/BookingModal";
 
 export default function TutorPage() {
   const router = useRouter();
@@ -44,7 +42,53 @@ export default function TutorPage() {
     if (router.isReady) init();
   }, [router.isReady]);
 
-  if (tutor && user)
+  const saveTutor = async () => {
+    try {
+      const currentSavedTutors = user.savedTutors || [];
+      const newSavedTutors = [
+        ...currentSavedTutors,
+        {
+          id: tutor.id,
+          fullName: tutor.fullName,
+          ...(tutor.profilePictureUrl && {
+            profilePictureUrl: tutor.profilePictureUrl,
+          }),
+        },
+      ];
+
+      await updateDoc(doc(db, "users", user.uid), {
+        savedTutors: newSavedTutors,
+      });
+
+      console.log("added tutors to saved");
+      // todo: create success alert
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeTutor = async () => {
+    try {
+      const currentSavedTutors = user.savedTutors || [];
+      const newSavedTutors = currentSavedTutors.filter(
+        (t) => t.id !== tutor.id
+      );
+      console.log(newSavedTutors);
+
+      await updateDoc(doc(db, "users", user.uid), {
+        savedTutors: newSavedTutors,
+      });
+
+      console.log("removed tutors from saved list");
+      // todo: create success alert
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (tutor && user) {
+    const tutorSaved = user.savedTutors?.some((t) => t.id === tutor.id);
+
     return (
       <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex">
         <div className="flex-1 flex bg-white rounded-md shadow-md">
@@ -55,6 +99,22 @@ export default function TutorPage() {
               size={"2xl"}
             />
             <h1 className="text-2xl font-semibold">{tutor.fullName}</h1>
+            {!tutorSaved && (
+              <div
+                className="text-blue-500 underline cursor-pointer"
+                onClick={saveTutor}
+              >
+                Add to saved tutors
+              </div>
+            )}
+            {tutorSaved && (
+              <div
+                className="text-blue-500 underline cursor-pointer"
+                onClick={removeTutor}
+              >
+                Remove from saved tutors
+              </div>
+            )}
             <div className="rating w-8/12 mx-auto">
               <input
                 type="radio"
@@ -85,7 +145,7 @@ export default function TutorPage() {
               <div className="font-semibold ml-2">(46)</div>
             </div>
             <div className="flex flex-col gap-4">
-              <button className="btn btn-secondary">Book Lesson</button>
+              <BookingModal tutor={tutor} />
               <Link
                 href={`/chats/${smallBigString(user.uid, tutor.id)}?partnerId=${
                   tutor.id
@@ -122,4 +182,5 @@ export default function TutorPage() {
         </div>
       </div>
     );
+  }
 }
