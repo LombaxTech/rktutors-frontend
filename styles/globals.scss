@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./LandingPage/contact-us.scss";
+@import "./LandingPage/footer.scss";
+@import "./LandingPage/faq.scss";
 html,
 body {
   padding: 0;
@@ -19,10 +22,10 @@ a {
   box-sizing: border-box;
 }
 
-.test {
-  background: yellow;
+.test-work {
+  // z-index: 2 !important;
+}
 
-  .test-header {
-    color: red;
-  }
+#navbar {
+  z-index: 90 !important;
 }

@@ -1,38 +1,26 @@
 import useCustomAuth from "../customHooks/useCustomAuth";
 import { useRouter } from "next/router";
 
+import LandingPage from "../LandingPage";
+
+import TutorHome from "../components/Tutor/TutorHome";
+import StudentHome from "../components/Student/StudentHome";
+
 export default function Home() {
   const router = useRouter();
-  const { user, loading } = useCustomAuth();
+  const { user, userLoading } = useCustomAuth();
 
   // Landing page
-  if (!user)
-    return (
-      <div>
-        <div>should be a landing page here</div>
-        <button
-          className="btn btn-primary"
-          onClick={() => router.push("/login")}
-        >
-          Go to login
-        </button>
-        <div className="h-screen bg-red-400">hello</div>
-        <div className="h-screen bg-purple-400">hello</div>
-      </div>
-    );
+  if (!userLoading && !user) return <LandingPage />;
 
   // default app
-  if (user)
-    return (
-      <div className="flex-1 bg-orange-300">
-        <div className="h-screen bg-blue-200">hello</div>
-        <div className="h-screen bg-green-200">hello</div>
-        <button
-          className="btn btn-primary"
-          onClick={() => router.push("/login")}
-        >
-          Go to login
-        </button>
-      </div>
-    );
+  if (!userLoading && user) {
+    if (user.type === "student") {
+      return <StudentHome />;
+    }
+
+    if (user.type === "tutor") {
+      return <TutorHome />;
+    }
+  }
 }
