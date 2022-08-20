@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Alert, AlertIcon, Spinner } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -7,12 +7,12 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const SetupAccount = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { user } = useCustomAuth();
+  const { user } = useContext(AuthContext);
 
   const setupGooglePermssions = async () => {
     setLoading(true);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Sidebar from "../components/Sidebar";
 
 import {
@@ -23,8 +23,7 @@ import {
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
 import General from "../components/ProfileSettingComponents/General";
@@ -34,7 +33,7 @@ import ProfileInformation from "../components/ProfileSettingComponents/ProfileIn
 import Availablity from "../components/ProfileSettingComponents/Availability";
 
 export default function ProfileSettings() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user) {
     const isTutor = user.type === "tutor";

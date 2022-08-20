@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 import axios from "axios";
 
 import { doc, setDoc, updateDoc } from "firebase/firestore";
@@ -8,7 +9,7 @@ import { db } from "../firebase/firebaseClient";
 import Link from "next/link";
 
 export default function StripeConnectStatusCheck() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [setupSuccess, setSetupSuccess] = useState(false);
   const [setupError, setSetupError] = useState(false);

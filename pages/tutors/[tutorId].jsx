@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import { Avatar, MenuDivider, Tooltip, Tag, HStack } from "@chakra-ui/react";
 
@@ -14,7 +14,8 @@ import {
 import { db } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
+
 import { smallBigString } from "../../helperFunctions";
 import { useRouter } from "next/router";
 
@@ -23,7 +24,7 @@ import BookingModal from "../../components/BookingModal";
 export default function TutorPage() {
   const router = useRouter();
 
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const [tutor, setTutor] = useState(null);
 
   useEffect(() => {

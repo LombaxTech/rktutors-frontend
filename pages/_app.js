@@ -2,13 +2,12 @@ import "../styles/globals.scss";
 
 import { useEffect } from "react";
 import { ChatsProvider } from "../context/ChatsContext";
+import { AuthProvider } from "../context/AuthContext";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
 
-import useCustomAuth from "../customHooks/useCustomAuth";
-import LoadingPage from "../components/LoadingPage";
-import Navbar from "../components/Navbar";
+import Layout from "../components/Layout";
 
 import Head from "next/head";
 
@@ -24,8 +23,6 @@ const theme = extendTheme({
 });
 
 function MyApp({ Component, pageProps }) {
-  const { user, userLoading } = useCustomAuth();
-
   useEffect(() => {
     const threeScript = document.createElement("script");
     threeScript.setAttribute("id", "threeScript");
@@ -43,33 +40,22 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Elements stripe={stripePromise}>
-      <ChatsProvider>
-        <ChakraProvider theme={theme}>
-          <Head>
-            <title>RKTutors</title>
-            <meta
-              name="viewport"
-              content="initial-scale=1.0, width=device-width"
-            />
-          </Head>
-
-          {/* Loading */}
-          {userLoading && <LoadingPage />}
-
-          {/* No user */}
-          {!userLoading && !user && <Component {...pageProps} />}
-
-          {/* User */}
-          {!userLoading && user && (
-            <div className="max-h-screen min-h-screen flex flex-col">
-              <Navbar />
-              <div className="flex-1 overflow-y-auto flex flex-col">
-                <Component {...pageProps} />
-              </div>
-            </div>
-          )}
-        </ChakraProvider>
-      </ChatsProvider>
+      <AuthProvider>
+        <ChatsProvider>
+          <ChakraProvider theme={theme}>
+            <Head>
+              <title>RKTutors</title>
+              <meta
+                name="viewport"
+                content="initial-scale=1.0, width=device-width"
+              />
+            </Head>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ChakraProvider>
+        </ChatsProvider>
+      </AuthProvider>
     </Elements>
   );
 }

@@ -4,7 +4,7 @@ import { Box, Avatar, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Link from "next/link";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const quickLinks = [{ title: "Bookings", href: "/bookings" }];
 
@@ -47,7 +47,7 @@ export default function StudentHome() {
 
 const MessagesSection = () => {
   const { chats } = useContext(ChatsContext);
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user && chats) {
     const unreadChats = chats.filter((chat) => !chat.read[user.uid]);
@@ -93,7 +93,7 @@ const MessagesSection = () => {
 };
 
 function SocialProfileWithImage() {
-  const { user } = useCustomAuth();
+  const { user } = useContext(AuthContext);
 
   if (user)
     return (

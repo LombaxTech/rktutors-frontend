@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import { Avatar, MenuDivider, Tooltip } from "@chakra-ui/react";
 
@@ -19,13 +19,14 @@ import {
 import { db } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
+
 import { useRouter } from "next/router";
 
 export default function Chat() {
   const router = useRouter();
 
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const [chatId, setChatId] = useState("");
   const [partner, setPartner] = useState(null);
   const [chattedBefore, setChattedBefore] = useState(false);

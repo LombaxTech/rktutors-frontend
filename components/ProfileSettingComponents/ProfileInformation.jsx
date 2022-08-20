@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import {
   Input,
@@ -17,7 +17,7 @@ import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { db } from "../../firebase/firebaseClient";
 import { updateDoc, doc } from "firebase/firestore";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const ProfileInformation = ({ user }) => {
   const [aboutMe, setAboutMe] = useState(user.profile.aboutMe);

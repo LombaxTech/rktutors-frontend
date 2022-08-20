@@ -3,7 +3,7 @@ import { ChatsContext } from "../../context/ChatsContext";
 import { Avatar, Box, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Link from "next/link";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function TutorDashoard() {
   return (
@@ -41,7 +41,7 @@ export default function TutorDashoard() {
 
 const MessagesSection = () => {
   const { chats } = useContext(ChatsContext);
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user && chats) {
     const unreadChats = chats.filter((chat) => !chat.read[user.uid]);
@@ -87,7 +87,7 @@ const MessagesSection = () => {
 };
 
 function SocialProfileWithImage() {
-  const { user } = useCustomAuth();
+  const { user } = useContext(AuthContext);
 
   if (user)
     return (

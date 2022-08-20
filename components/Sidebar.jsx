@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useContext } from "react";
 import {
   IconButton,
   Box,
@@ -25,7 +25,7 @@ import { IconType } from "react-icons";
 import { ReactText } from "react";
 
 import Link from "next/link";
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
 
 const TutorLinks = [
   { name: "General", icon: FiHome, href: "#general" },
@@ -76,7 +76,7 @@ export default function SideBar({ children }) {
 }
 
 const SidebarContent = ({ onClose, ...rest }) => {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user) {
     const isTutor = user.type === "tutor";

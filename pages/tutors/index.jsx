@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import {
   Heading,
@@ -19,7 +19,8 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
+
 import { smallBigString } from "../../helperFunctions";
 
 const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
@@ -198,7 +199,7 @@ export default function Tutors() {
 }
 
 function TutorProfile({ tutor }) {
-  const { user } = useCustomAuth();
+  const { user } = useContext(AuthContext);
 
   return (
     <Box

@@ -6,14 +6,15 @@ import { Avatar } from "@chakra-ui/react";
 import { db } from "../../firebase/firebaseClient";
 import { onSnapshot, query, where, collection } from "firebase/firestore";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
+
 import { smallBigString, isToday } from "../../helperFunctions";
 
 import Link from "next/link";
 import { DateTime } from "luxon";
 
 export default function Chats() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   const { chats } = useContext(ChatsContext);
 
