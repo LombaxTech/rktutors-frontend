@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 
 import {
   Heading,
@@ -20,10 +20,10 @@ import { smallBigString } from "../../helperFunctions";
 
 import { db } from "../../firebase/firebaseClient";
 import { doc, updateDoc } from "firebase/firestore";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Saved() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user && !userLoading) {
     const savedTutors = user.savedTutors || [];

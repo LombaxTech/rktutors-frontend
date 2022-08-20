@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import {
   Alert,
@@ -20,13 +20,13 @@ import { FaCheckCircle } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 import SetupAccount from "./SetupAccount";
 import TutorDashboard from "./TutorDashoard";
 
 export default function TutorHome() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   if (user && !user.active) {
     return <SetupAccount />;

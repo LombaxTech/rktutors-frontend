@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import { useRouter } from "next/router";
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
+
 import axios from "axios";
 
 import { doc, updateDoc } from "firebase/firestore";
@@ -11,7 +12,7 @@ export default function GauthStatusCheck() {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   useEffect(() => {
     async function init() {

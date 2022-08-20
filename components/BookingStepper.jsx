@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
+
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const SelectPaymentMethod = () => {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   const [cards, setCards] = useState([]);
 

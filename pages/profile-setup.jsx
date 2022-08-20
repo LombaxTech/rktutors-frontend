@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import {
   Textarea,
@@ -25,7 +25,8 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
+
 import { updateDoc, doc } from "firebase/firestore";
 import { db, storage } from "../firebase/firebaseClient";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -37,7 +38,7 @@ import AvatarEditor from "react-avatar-editor";
 
 export default function ProfileSetup() {
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   const [aboutMe, setAboutMe] = useState("");
   const [aboutMyLessons, setAboutMyLessons] = useState("");

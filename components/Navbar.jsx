@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -49,7 +49,7 @@ const Links = ["Dashboard", "Projects", "Team"];
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const { chats } = useContext(ChatsContext);
   const signout = async () => {
     try {
