@@ -1,0 +1,81 @@
+* {
+  font-family: Google Sans, Roboto, Arial, sans-serif
+}
+
+.eachDay {
+  width: 1.7rem;
+  height: 1.65rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.eachDay:hover {
+  background-color: #E1E0E0;
+  border-radius: 50%;
+}
+
+.calendarDays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.calendarHeading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.calenderView {
+  width: 19.2rem;
+}
+
+.headingMonthYear {
+  font-weight: bold;
+  color: #3c4043;
+}
+
+.headingItems {
+  width: 1.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calenderWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.timeView {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: -2rem;
+}
+
+.calendarMain {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.disabledDays {
+  pointer-events: none;
+  width: 1.7rem;
+  height: 1.65rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  cursor: not-allowed;
+  color: rgba(0, 0, 0, 0.4) !important;
+}
