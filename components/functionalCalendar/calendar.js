@@ -189,7 +189,7 @@ export default function FunctionalCalendar({
   if (!loading)
     return (
       <div className={`mainContainer`}>
-        <div className={`header text-white`}>
+        <div className={`header text-white flex items-center`}>
           <div
             style={{
               display: "flex",
@@ -201,27 +201,27 @@ export default function FunctionalCalendar({
           </div>
 
           <div className={`buttonsContainer`}>
-            <div
-              className={`buttons`}
+            <button
+              className={`buttons btn`}
               onClick={() => {
                 const newDays = daysToShow(disableDays, true);
                 setCurrentDay(new Date(newDays[0].date));
                 setDays(newDays);
               }}
             >
-              Back
-            </div>
+              Previous Week
+            </button>
 
-            <div
-              className={`buttons`}
+            <button
+              className={`buttons btn`}
               onClick={() => {
                 setCurrentDay(new Date(days[7].date));
                 const newDays = daysToShow();
                 setDays(newDays);
               }}
             >
-              Next
-            </div>
+              Next Week
+            </button>
           </div>
         </div>
 
@@ -241,7 +241,9 @@ export default function FunctionalCalendar({
                 >
                   <div className={`headings`}>{day.readableDate}</div>
 
-                  <div className={`timeSlotsContainer overscroll-y-auto`}>
+                  <div
+                    className={`timeSlotsContainer overscroll-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100`}
+                  >
                     {timeOptions &&
                       timeOptions.map((time, i) => {
                         let hour = Number(time.value.substring(0, 2));
