@@ -43,6 +43,7 @@ const TutorLinks = [
 const StudentLinks = [
   { name: "General", icon: FiHome, href: "#general" },
   { name: "Password", icon: FiTrendingUp, href: "#password" },
+  { name: "Payment Methods", icon: FiCompass, href: "#payment-methods" },
 ];
 
 export default function SideBar({ children }) {
