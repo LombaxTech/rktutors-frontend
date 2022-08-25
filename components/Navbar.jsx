@@ -41,7 +41,7 @@ const StudentLinks = [
 const TutorLinks = [
   { title: "Home", href: "/" },
   { title: "Bookings", href: "/bookings" },
-  { title: "Requests", href: "/booking-requests" },
+  { title: "Requests", href: "/bookings/requests" },
   { title: "Messages", href: "/chats" },
 ];
 
