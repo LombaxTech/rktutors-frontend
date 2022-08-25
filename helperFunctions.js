@@ -16,4 +16,4 @@ export const isToday = (someDate) => {
   );
 };
 
-export const formatDate = (date) => moment(date).format("DD/MM/YYYY ha");
+export const formatDate = (date) => moment(date).format("ha DD/MM/YYYY");
