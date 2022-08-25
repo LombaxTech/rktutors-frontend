@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function smallBigString(str1, str2) {
   if (str1 < str2) {
     return str1 + str2;
@@ -13,3 +15,5 @@ export const isToday = (someDate) => {
     someDate.getFullYear() == today.getFullYear()
   );
 };
+
+export const formatDate = (date) => moment(date).format("DD/MM/YYYY ha");
