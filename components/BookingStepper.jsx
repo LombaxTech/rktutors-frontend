@@ -16,12 +16,22 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import FunctionalCalendar from "../components/functionalCalendar/calendar";
 
 import axios from "axios";
-import { updateDoc, doc, addDoc, collection } from "firebase/firestore";
+import {
+  updateDoc,
+  doc,
+  addDoc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseClient";
 import { FaPlusCircle } from "react-icons/fa";
 
 import { formatDate } from "../helperFunctions";
 import Link from "next/link";
+import moment from "moment";
 
 const Card = ({ card, user }) => {
   const { name } = card.billing_details;
@@ -273,6 +283,53 @@ export default function BookingStepper({ tutor }) {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState(false);
 
+  const [bookedTimes, setBookedTimes] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [boookingRequests, setBookingRequests] = useState([]);
+  const [bookedTimesLoading, setBookedTimesLoading] = useState(true);
+
+  useEffect(() => {
+    async function init() {
+      setBookedTimesLoading(true);
+      try {
+        // todo: get bookings and set booked times
+        let bookingsRef = collection(db, "bookings");
+        let bookingsQuery = query(
+          bookingsRef,
+          where("tutor.id", "==", tutor.id)
+        );
+
+        let reqsRef = collection(db, "bookingRequests");
+        let reqsQuery = query(reqsRef, where("tutor.id", "==", tutor.id));
+
+        let bookingsSnapshot = await getDocs(bookingsQuery);
+        let reqsSnapshot = await getDocs(reqsQuery);
+
+        let bookings = [];
+        let reqs = [];
+
+        bookingsSnapshot.forEach((b) => bookings.push(b.data()));
+        reqsSnapshot.forEach((r) => reqs.push(r.data()));
+
+        let newBookedTimes = bookings.map((booking) =>
+          moment(booking.selectedTime.toDate()).format("YYYY-MM-DD hh:mm")
+        );
+        let newReqsTime = reqs.map((r) =>
+          moment(r.selectedTime.toDate()).format("YYYY-MM-DD hh:mm")
+        );
+
+        let bookedTimes = [...newBookedTimes, ...newReqsTime];
+        // console.log(bookedTimes);
+        setBookedTimes(bookedTimes);
+        setBookedTimesLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    init();
+  }, []);
+
   useEffect(() => {
     if (paymentMethodId) {
       let pm = user.paymentMethods.filter((p) => p.id === paymentMethodId)[0];
@@ -339,15 +396,17 @@ export default function BookingStepper({ tutor }) {
             {/* Time Picking */}
             <Step label="Choose A Time">
               <div className="mt-6">
-                <FunctionalCalendar
-                  disableDays={[new Date(2022, 7, 21)]}
-                  interval={60}
-                  disabledTimes={[]}
-                  minDate={new Date()}
-                  onChange={(value) => setSelectedTime(value)}
-                  minHour={7}
-                  maxHour={23}
-                />
+                {!bookedTimesLoading && (
+                  <FunctionalCalendar
+                    disableDays={[new Date(2022, 7, 21)]}
+                    interval={60}
+                    disabledTimes={bookedTimes}
+                    minDate={new Date()}
+                    onChange={(value) => setSelectedTime(value)}
+                    minHour={7}
+                    maxHour={23}
+                  />
+                )}
               </div>
             </Step>
 
