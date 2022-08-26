@@ -416,7 +416,7 @@ export default function BookingStepper({ tutor }) {
                   </div>
                   <div className="">
                     <span className="">Paying with: </span>
-                    Card ending in <span>**** {paymentMethod.card.last4}</span>
+                    Card ending in <span>**** {paymentMethod?.card.last4}</span>
                     <span
                       className="ml-2 underline text-blue-500 cursor-pointer"
                       onClick={() => setStep(2)}
