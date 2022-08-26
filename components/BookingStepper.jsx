@@ -8,7 +8,8 @@ import {
   Spinner,
   Select,
   Textarea,
-  cookieStorageManager,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -20,6 +21,7 @@ import { db } from "../firebase/firebaseClient";
 import { FaPlusCircle } from "react-icons/fa";
 
 import { formatDate } from "../helperFunctions";
+import Link from "next/link";
 
 const Card = ({ card, user }) => {
   const { name } = card.billing_details;
@@ -268,6 +270,9 @@ export default function BookingStepper({ tutor }) {
   const [paymentMethodId, setPaymentMethodId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState(null);
 
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingError, setBookingError] = useState(false);
+
   useEffect(() => {
     if (paymentMethodId) {
       let pm = user.paymentMethods.filter((p) => p.id === paymentMethodId)[0];
@@ -282,6 +287,8 @@ export default function BookingStepper({ tutor }) {
     // todo: make sure payment method is selected
     if (activeStep == 2 && !paymentMethod) return true;
     if (activeStep == 3) return true;
+
+    if (bookingSuccess) return true;
   };
 
   const confirmBooking = async () => {
@@ -317,8 +324,10 @@ export default function BookingStepper({ tutor }) {
       await addDoc(collection(db, "bookingRequests"), bookingRequest);
 
       console.log("created req...");
+      setBookingSuccess(true);
     } catch (error) {
       console.log(error);
+      setBookingError(true);
     }
   };
 
@@ -387,48 +396,88 @@ export default function BookingStepper({ tutor }) {
                   <div className="">
                     <span>Lesson: </span>
                     {subject} with {tutor.fullName}
-                    <span
-                      className="ml-2 underline text-blue-500 cursor-pointer"
-                      onClick={() => setStep(1)}
-                    >
-                      Edit
-                    </span>
+                    {!bookingSuccess && (
+                      <span
+                        className="ml-2 underline text-blue-500 cursor-pointer"
+                        onClick={() => setStep(1)}
+                      >
+                        Edit
+                      </span>
+                    )}
                   </div>
                   <div className="">
                     <span className="">At: </span>
                     {formatDate(selectedTime)}
-                    <span
-                      className="ml-2 underline text-blue-500 cursor-pointer"
-                      onClick={() => setStep(0)}
-                    >
-                      Edit
-                    </span>
+                    {!bookingSuccess && (
+                      <span
+                        className="ml-2 underline text-blue-500 cursor-pointer"
+                        onClick={() => setStep(0)}
+                      >
+                        Edit
+                      </span>
+                    )}
                   </div>
                   <div className="">
                     <span className="">Additional Notes: </span>
                     {note}
-                    <span
-                      className="ml-2 underline text-blue-500 cursor-pointer"
-                      onClick={() => setStep(1)}
-                    >
-                      Edit
-                    </span>
+                    {!bookingSuccess && (
+                      <span
+                        className="ml-2 underline text-blue-500 cursor-pointer"
+                        onClick={() => setStep(1)}
+                      >
+                        Edit
+                      </span>
+                    )}
                   </div>
                   <div className="">
                     <span className="">Paying with: </span>
                     Card ending in <span>**** {paymentMethod?.card.last4}</span>
-                    <span
-                      className="ml-2 underline text-blue-500 cursor-pointer"
-                      onClick={() => setStep(2)}
-                    >
-                      Edit
-                    </span>
+                    {!bookingSuccess && (
+                      <span
+                        className="ml-2 underline text-blue-500 cursor-pointer"
+                        onClick={() => setStep(2)}
+                      >
+                        Edit
+                      </span>
+                    )}
                   </div>
                 </div>
 
-                <button className="btn btn-primary" onClick={confirmBooking}>
+                <button
+                  className="btn btn-primary"
+                  onClick={confirmBooking}
+                  disabled={bookingSuccess}
+                >
                   Confirm Booking
                 </button>
+                <div className="w-1/3">
+                  {bookingError && (
+                    <Alert status="error">
+                      <AlertIcon />
+                      An error has occurred. Please try again or contact
+                      support.
+                    </Alert>
+                  )}
+                  {bookingSuccess && (
+                    <div className="flex flex-col gap-4">
+                      <Alert status="success">
+                        <AlertIcon />
+                        Booking request completed successfully. You will receive
+                        an email shortly with confirmation details.
+                      </Alert>
+                      <div className="flex gap-4 mx-auto">
+                        <Link href={`/bookings/requests`}>
+                          <button className="btn btn-primary">
+                            View Booking Requests
+                          </button>
+                        </Link>
+                        <Link href={`/`}>
+                          <button className="btn btn-secondary">Go Home</button>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </Step>
           </Steps>
@@ -437,7 +486,7 @@ export default function BookingStepper({ tutor }) {
         <div className="flex gap-4 p-2">
           <button
             onClick={prevStep}
-            disabled={activeStep === 0}
+            disabled={activeStep === 0 || bookingSuccess}
             className="btn btn-primary"
           >
             {/* <ArrowBackIcon />  */}
