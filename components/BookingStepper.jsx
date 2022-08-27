@@ -250,7 +250,7 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
                 <Stack direction="column" gap={2}>
                   {/* <div className="flex justify-center flex-wrap gap-2"> */}
                   {paymentMethods.map((card, i) => (
-                    <Radio value={card.id}>
+                    <Radio value={card.id} key={i}>
                       <Card user={user} card={card} key={i} />
                     </Radio>
                   ))}
@@ -420,8 +420,11 @@ export default function BookingStepper({ tutor }) {
                     placeholder="Select Subject"
                     onChange={(e) => setSubject(e.target.value)}
                   >
-                    {tutor.profile.teachingSubjects?.map((subject) => (
-                      <option value={`${subject.subject} ${subject.level}`}>
+                    {tutor.profile.teachingSubjects?.map((subject, i) => (
+                      <option
+                        value={`${subject.subject} ${subject.level}`}
+                        key={i}
+                      >
                         {`${subject.subject} ${subject.level}`}
                       </option>
                     ))}
