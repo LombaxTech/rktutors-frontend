@@ -149,13 +149,13 @@ const AddCard = ({ user }) => {
   };
 
   return (
-    <div class="collapse">
+    <div className="collapse">
       <input type="checkbox" />
       <button className="collapse-title btn btn-accent font-bold flex items-center gap-4">
         <span>Add New Payment Method</span>
         <FaPlusCircle className="text-xl" />
       </button>
-      <div class="collapse-content">
+      <div className="collapse-content">
         <div className="flex flex-col gap-8 mt-4">
           <CardElement
             options={{
@@ -173,7 +173,7 @@ const AddCard = ({ user }) => {
             <input
               type="text"
               placeholder="Type here"
-              class="input input-bordered input-ghost"
+              className="input input-bordered input-ghost"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />

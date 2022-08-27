@@ -222,7 +222,7 @@ const PaymentMethods = ({ user }) => {
             <input
               type="text"
               placeholder="Type here"
-              class="input input-bordered input-ghost"
+              className="input input-bordered input-ghost"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
