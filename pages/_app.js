@@ -3,6 +3,7 @@ import "../styles/globals.scss";
 import { useEffect } from "react";
 import { ChatsProvider } from "../context/ChatsContext";
 import { AuthProvider } from "../context/AuthContext";
+import { BookingsProvider } from "../context/BookingsContext";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
@@ -42,18 +43,20 @@ function MyApp({ Component, pageProps }) {
     <Elements stripe={stripePromise}>
       <AuthProvider>
         <ChatsProvider>
-          <ChakraProvider theme={theme}>
-            <Head>
-              <title>RKTutors</title>
-              <meta
-                name="viewport"
-                content="initial-scale=1.0, width=device-width"
-              />
-            </Head>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ChakraProvider>
+          <BookingsProvider>
+            <ChakraProvider theme={theme}>
+              <Head>
+                <title>RKTutors</title>
+                <meta
+                  name="viewport"
+                  content="initial-scale=1.0, width=device-width"
+                />
+              </Head>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ChakraProvider>
+          </BookingsProvider>
         </ChatsProvider>
       </AuthProvider>
     </Elements>
