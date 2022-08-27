@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import {
@@ -372,6 +372,7 @@ export default function BookingStepper({ tutor }) {
         selectedTime,
         note,
         paymentMethodId,
+        status: "pending",
       };
 
       console.log(bookingRequest);
@@ -382,11 +383,14 @@ export default function BookingStepper({ tutor }) {
 
       console.log("created req...");
       setBookingSuccess(true);
+      successMessageRef.current?.scrollIntoView();
     } catch (error) {
       console.log(error);
       setBookingError(true);
     }
   };
+
+  const successMessageRef = useRef(null);
 
   if (user)
     return (
@@ -521,7 +525,10 @@ export default function BookingStepper({ tutor }) {
                     </Alert>
                   )}
                   {bookingSuccess && (
-                    <div className="flex flex-col gap-4">
+                    <div
+                      className="flex flex-col gap-4"
+                      ref={successMessageRef}
+                    >
                       <Alert status="success">
                         <AlertIcon />
                         Booking request completed successfully. You will receive
