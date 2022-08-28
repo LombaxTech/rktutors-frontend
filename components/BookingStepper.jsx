@@ -312,10 +312,10 @@ export default function BookingStepper({ tutor }) {
         reqsSnapshot.forEach((r) => reqs.push(r.data()));
 
         let newBookedTimes = bookings.map((booking) =>
-          moment(booking.selectedTime.toDate()).format("YYYY-MM-DD hh:mm")
+          moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
         );
         let newReqsTime = reqs.map((r) =>
-          moment(r.selectedTime.toDate()).format("YYYY-MM-DD hh:mm")
+          moment(r.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
         );
 
         let bookedTimes = [...newBookedTimes, ...newReqsTime];
