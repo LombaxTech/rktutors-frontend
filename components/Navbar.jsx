@@ -2,6 +2,7 @@ import TypeAnimation from "react-type-animation";
 
 import { useContext } from "react";
 import { ChatsContext } from "../context/ChatsContext";
+import { BookingRequestsContext } from "../context/BookingRequestsContext";
 
 import {
   Box,
@@ -51,6 +52,8 @@ export default function Navbar() {
   const router = useRouter();
   const { user, userLoading } = useContext(AuthContext);
   const { chats } = useContext(ChatsContext);
+  const { pendingRequests } = useContext(BookingRequestsContext);
+
   const signout = async () => {
     try {
       await signOut(auth);
@@ -135,6 +138,10 @@ export default function Navbar() {
                       {link.title === "Messages" && chatsUnread && (
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       )}
+                      {link.title === "Requests" &&
+                        pendingRequests.length > 0 && (
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        )}
                     </a>
                   </Link>
                 ))}
