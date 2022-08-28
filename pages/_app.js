@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ChatsProvider } from "../context/ChatsContext";
 import { AuthProvider } from "../context/AuthContext";
 import { BookingsProvider } from "../context/BookingsContext";
+import { BookingRequestsProvider } from "../context/BookingRequestsContext";
 
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { StepsStyleConfig as Steps } from "chakra-ui-steps";
@@ -44,18 +45,20 @@ function MyApp({ Component, pageProps }) {
       <AuthProvider>
         <ChatsProvider>
           <BookingsProvider>
-            <ChakraProvider theme={theme}>
-              <Head>
-                <title>RKTutors</title>
-                <meta
-                  name="viewport"
-                  content="initial-scale=1.0, width=device-width"
-                />
-              </Head>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </ChakraProvider>
+            <BookingRequestsProvider>
+              <ChakraProvider theme={theme}>
+                <Head>
+                  <title>RKTutors</title>
+                  <meta
+                    name="viewport"
+                    content="initial-scale=1.0, width=device-width"
+                  />
+                </Head>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </ChakraProvider>
+            </BookingRequestsProvider>
           </BookingsProvider>
         </ChatsProvider>
       </AuthProvider>
