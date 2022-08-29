@@ -18,22 +18,29 @@ export default function Chats() {
 
   const { chats } = useContext(ChatsContext);
 
-  return (
-    <div className="p-8">
-      <h1 className="text-5xl font-bold text-center">Messages</h1>
-      <hr className="mt-8" />
-      {/* Chats */}
-      <div className="flex flex-col items-center mt-4 w-7/12 shadow-md mx-auto">
-        {chats.length === 0 && <NoChats />}
-        {chats &&
-          user &&
-          chats.map((chat, i) => <Chat chat={chat} user={user} key={i} />)}
+  if (chats.length === 0) return <NoChats />;
+
+  if (user && chats.length > 0)
+    return (
+      <div className="p-8">
+        <h1 className="text-5xl font-bold text-center">Messages</h1>
+        <hr className="mt-8" />
+        {/* Chats */}
+        <div className="flex flex-col items-center mt-4 w-7/12 shadow-md mx-auto">
+          {chats.map((chat, i) => (
+            <Chat chat={chat} user={user} key={i} />
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
-const NoChats = () => <div>No chats available</div>;
+const NoChats = () => (
+  <div className="flex-1 bg-gray-200 flex flex-col items-center gap-6 pt-16">
+    <img src="/img/mailbox.svg" className="h-72" />
+    <h1 className="text-4xl font-bold">No Messages</h1>
+  </div>
+);
 
 const Chat = ({ chat, user }) => {
   const lastMessage = chat.lastMessage.text;
