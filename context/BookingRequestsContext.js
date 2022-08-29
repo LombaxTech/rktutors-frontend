@@ -21,6 +21,7 @@ export const BookingRequestsProvider = ({ children }) => {
   const [pendingRequests, setPendingRequests] = useState([]);
   const [acceptedRequests, setAcceptedRequests] = useState([]);
   const [declinedRequests, setDeclinedRequests] = useState([]);
+  const [cancelledRequests, setCancelledRequests] = useState([]);
 
   useEffect(() => {
     async function init() {
@@ -44,10 +45,12 @@ export const BookingRequestsProvider = ({ children }) => {
           let pendingReqs = reqs.filter((r) => r.status === "pending");
           let acceptedReqs = reqs.filter((r) => r.status === "accepted");
           let declinedReqs = reqs.filter((r) => r.status === "declined");
+          let cancelledReqs = reqs.filter((r) => r.status === "cancelled");
 
           setPendingRequests(pendingReqs);
           setAcceptedRequests(acceptedReqs);
           setDeclinedRequests(declinedReqs);
+          setCancelledRequests(cancelledReqs);
         });
       } catch (error) {
         console.log(error);
@@ -59,7 +62,13 @@ export const BookingRequestsProvider = ({ children }) => {
 
   return (
     <BookingRequestsContext.Provider
-      value={{ requests, pendingRequests, acceptedRequests, declinedRequests }}
+      value={{
+        requests,
+        pendingRequests,
+        acceptedRequests,
+        declinedRequests,
+        cancelledRequests,
+      }}
     >
       {children}
     </BookingRequestsContext.Provider>
