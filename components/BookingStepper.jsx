@@ -367,11 +367,14 @@ export default function BookingStepper({ tutor }) {
           ...(tutor.profilePictureUrl && {
             profilePictureUrl: tutor.profilePictureUrl,
           }),
+          connectedAccountId: tutor.stripeConnectedAccount.id,
         },
         subject,
         selectedTime,
         note,
         paymentMethodId,
+        // todo: fix up price stuff
+        price: 20,
         status: "pending",
       };
 
