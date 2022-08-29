@@ -56,9 +56,11 @@ export default function Bookings() {
           <div className="flex flex-col gap-4 flex-1 rounded-md shadow-md bg-white p-4">
             <h1 className="text-4xl font-bold text-center">Bookings</h1>
             <hr className="my-2" />
-            {bookings.map((booking) => (
-              <Booking key={booking.id} booking={booking} user={user} />
-            ))}
+            <div className="flex flex-col gap-6 items-center">
+              {bookings.map((booking) => (
+                <Booking key={booking.id} booking={booking} user={user} />
+              ))}
+            </div>
           </div>
         )}
       </div>
