@@ -16,6 +16,8 @@ import { formatDate, smallBigString } from "../../helperFunctions";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import axios from "axios";
+
 export default function Bookings() {
   const { user, userLoading } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
@@ -69,10 +71,40 @@ export default function Bookings() {
 
 const Booking = ({ booking, user }) => {
   const router = useRouter();
-  const { student, tutor, subject, note, meetingLink, selectedTime } = booking;
+  const {
+    student,
+    tutor,
+    subject,
+    note,
+    meetingLink,
+    selectedTime,
+    paymentIntentId,
+  } = booking;
 
   const isStudent = user.type == "student";
   const isTutor = user.type == "tutor";
+
+  const cancelLesson = async () => {
+    try {
+      console.log("pi id");
+      console.log(paymentIntentId);
+
+      let res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/stripe/refund`,
+        {
+          payment_intent: paymentIntentId,
+        }
+      );
+
+      res = res.data;
+      console.log(res);
+
+      await updateDoc(doc(db, "bookings", booking.id), { status: "cancelled" });
+      console.log("updated booking status to cancelled");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="shadow-md bg-white w-fit p-4 rounded-md">
@@ -95,6 +127,9 @@ const Booking = ({ booking, user }) => {
               onClick={() => router.push(meetingLink)}
             >
               Join Lesson
+            </button>
+            <button className="btn btn-ghost" onClick={cancelLesson}>
+              Cancel
             </button>
           </div>
           <Link
