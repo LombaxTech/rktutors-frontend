@@ -74,7 +74,7 @@ export default function ProfileSetup() {
     setSuccess(false);
     try {
       //   todo: get unique subjects (since this should be first time tutor is doing this, shouldnt actually need to make unique)
-      const currentlyTeachingSubjects = user.profile.teachingSubjects || [];
+      const currentlyTeachingSubjects = user.profile?.teachingSubjects || [];
       let allSubjects = [...currentlyTeachingSubjects, ...subjects];
       const uniqueSubjects = [];
       allSubjects.map((x) =>
@@ -89,8 +89,7 @@ export default function ProfileSetup() {
         return setError(true);
 
       // note: uniqueSubjects now contains unique subjects new and those already saved in the users account
-      const stripeAndGoogleActive =
-        user.googleAccount.setup && user.stripeConnectedAccount.setup;
+      const stripeActive = user.stripeConnectedAccount.setup;
 
       // todo: upload profile pic
       const imageRef = ref(
@@ -110,7 +109,7 @@ export default function ProfileSetup() {
       );
 
       const updateDetails = {
-        ...(stripeAndGoogleActive && { active: true }),
+        ...(stripeActive && { active: true }),
         profile: {
           setup: true,
           teachingSubjects: uniqueSubjects,

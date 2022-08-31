@@ -39,12 +39,11 @@ export default function StripeConnectStatusCheck() {
       if (details_submitted && payouts_enabled && charges_enabled) {
         const userDocRef = doc(db, "users", user.uid);
 
-        const googleAndProfileSetup =
-          user.profile.setup && user.googleAccount.setup;
+        const profileSetup = user.profile.setup;
 
         await updateDoc(userDocRef, {
           "stripeConnectedAccount.setup": true,
-          ...(googleAndProfileSetup && { active: true }),
+          ...(profileSetup && { active: true }),
         });
 
         setSetupSuccess(true);
