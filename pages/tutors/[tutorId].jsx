@@ -153,7 +153,12 @@ export default function TutorPage() {
               <div className="flex gap-4 flex-wrap">
                 {tutor.profile.teachingSubjects &&
                   tutor.profile.teachingSubjects.map((subject, i) => (
-                    <Tag size={"lg"} variant="solid" colorScheme="blue" key={i}>
+                    <Tag
+                      size={"lg"}
+                      variant="solid"
+                      colorScheme={subject.level === "GCSE" ? "green" : "blue"}
+                      key={i}
+                    >
                       {`${subject.subject} ${subject.level}`}
                     </Tag>
                   ))}

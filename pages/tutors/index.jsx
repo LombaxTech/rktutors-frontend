@@ -170,22 +170,34 @@ export default function Tutors() {
           setSearchedSubject={setSearchedSubject}
           setSearchedAcademicLevel={setSearchedAcademicLevel}
         />
-
         <hr className="my-12" />
-        <h1
-          className="text-4xl font-bold underline my-8 text-center"
-          ref={tutorsRef}
-        >
-          {" "}
-          {(!searchedSubject || !searchedAcademicLevel) && "Our Tutors"}
-          {setSearchedAcademicLevel && searchedSubject && (
-            <div>
-              {searchedAcademicLevel}{" "}
-              <span className="text-blue-700">{searchedSubject}</span> Tutors
+        <div className="flex items-center gap-6 justify-center my-8">
+          <h1
+            className="text-4xl font-bold underline text-center"
+            ref={tutorsRef}
+          >
+            {" "}
+            {(!searchedSubject || !searchedAcademicLevel) && "Our Tutors"}
+            {setSearchedAcademicLevel && searchedSubject && (
+              <div>
+                {searchedAcademicLevel}{" "}
+                <span className="text-teal-500">{searchedSubject}</span> Tutors
+              </div>
+            )}
+            {/* <span className="text-blue-700">Physics</span> Tutors */}
+          </h1>
+          <div className="flex flex-col ml-10 p-8 border-2 rounded-md shadow-md w-fit">
+            <div className="flex gap-4 items-center">
+              <div className="w-3 h-3 rounded-full bg-green-600"></div>
+              <div className="">GCSE</div>
             </div>
-          )}
-          {/* <span className="text-blue-700">Physics</span> Tutors */}
-        </h1>
+            <div className="flex gap-4 items-center">
+              <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+              <div className="">A-Level</div>
+            </div>
+          </div>
+        </div>
+        {/* color key */}
         {/* tutor profiles */}
         <div className="flex gap-8 flex-wrap justify-center">
           {filteredTutors &&
@@ -224,20 +236,23 @@ function TutorProfile({ tutor }) {
           {tutor.fullName}
         </Heading>
 
-        <Stack align={"center"} justify={"center"} direction={"row"} my={4}>
+        {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
+
+        <div className="flex gap-1 flex-wrap my-4">
           {tutor.profile.teachingSubjects &&
             tutor.profile.teachingSubjects.map((subject, i) => (
               <Tag
-                size={"md"}
+                size={"sm"}
                 variant="solid"
-                colorScheme="blue"
+                colorScheme={subject.level === "GCSE" ? "green" : "blue"}
                 key={i}
                 className="p-2"
               >
-                {`${subject.subject} ${subject.level}`}
+                {`${subject.subject}`}
               </Tag>
             ))}
-        </Stack>
+        </div>
+        {/* </Stack> */}
         <Text textAlign={"center"} bg={"white"} px={3}>
           {tutor.profile.aboutMe}
         </Text>
