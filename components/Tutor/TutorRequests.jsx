@@ -36,6 +36,7 @@ import {
 } from "firebase/firestore";
 
 import Link from "next/link";
+import axios from "axios";
 
 const NoBookingRequests = () => (
   <div className="flex-1 flex flex-col items-center gap-6 mt-16">
@@ -171,21 +172,41 @@ const BookingRequest = ({ request, user }) => {
 
 function AcceptModal({ request, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { subject, note, selectedTime, student, paymentMethodId, status } =
-    request;
+  const {
+    subject,
+    note,
+    selectedTime,
+    student,
+    paymentMethodId,
+    status,
+    tutor,
+  } = request;
 
   const [success, setSuccess] = useState(false);
 
   const acceptBooking = async () => {
     try {
+      // if payment succeed, then create booking
+
+      let res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/stripe/accept-payment`,
+        {
+          paymentMethodId,
+          stripeCustomerId: student.stripeCustomerId,
+          connectedAccountId: tutor.connectedAccountId,
+        }
+      );
+      res = res.data;
+      console.log(res);
+
       const newBooking = {
         tutor: request.tutor,
         student,
         selectedTime,
         subject,
         note,
-        paymentMethodId,
         meetingLink: `https://meet.jit.si/${makeId(7)}`,
+        paymentIntentId: res.paymentIntent.id,
       };
 
       await addDoc(collection(db, "bookings"), newBooking);
