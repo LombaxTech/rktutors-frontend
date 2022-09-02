@@ -181,26 +181,13 @@ function CancelModal({ request, user }) {
 
   const cancelBooking = async () => {
     try {
-      const newBooking = {
-        tutor: request.tutor,
-        student,
-        selectedTime,
-        subject,
-        note,
-        paymentMethodId,
-        meetingLink: `https://meet.jit.si/${makeId(7)}`,
-      };
-
-      await addDoc(collection(db, "bookings"), newBooking);
-
-      console.log("created booking");
-
       // update booking status
       await updateDoc(doc(db, "bookingRequests", request.id), {
         status: "cancelled",
       });
 
-      console.log("accepted booking...");
+      console.log("cancelled booking...");
+      // todo: send email
       onClose();
     } catch (error) {
       console.log(error);
