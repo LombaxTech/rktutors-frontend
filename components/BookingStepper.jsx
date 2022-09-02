@@ -202,27 +202,16 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
 
   return (
     <div className="">
-      {paymentMethods?.length === 0 && (
+      {(!paymentMethods || paymentMethods?.length === 0) && (
         <div className="">
           <h1 className="text-3xl font-bold">
             You have no saved payment methods
           </h1>
 
           <div className="flex flex-col items-center">
-            <div className="w-full p-8 ">
-              <CardElement
-                options={{
-                  hidePostalCode: true,
-                  style: {
-                    base: {
-                      fontSize: "18px",
-                    },
-                  },
-                }}
-                className="shadow-md p-4 rounded-lg text-3xl"
-              />
+            <div className="mt-12">
+              <AddCard user={user} />
             </div>
-            <button className="btn btn-secondary">Add Card</button>
             <div className="font-light my-4">
               This card will be used for booking your lesson
             </div>
