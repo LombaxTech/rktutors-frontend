@@ -207,6 +207,7 @@ function AcceptModal({ request, user }) {
         note,
         meetingLink: `https://meet.jit.si/${makeId(7)}`,
         paymentIntentId: res.paymentIntent.id,
+        status: "active",
       };
 
       await addDoc(collection(db, "bookings"), newBooking);
