@@ -95,6 +95,7 @@ const Booking = ({ booking, user }) => {
     meetingLink,
     selectedTime,
     paymentIntentId,
+    status,
   } = booking;
 
   const isStudent = user.type == "student";
@@ -137,17 +138,19 @@ const Booking = ({ booking, user }) => {
           {isStudent && <div className="">Tutor: {tutor.fullName}</div>}
         </div>
         <div className="flex flex-col justify-center items-center">
-          <div className="flex flex-col gap-2">
-            <button
-              className="btn btn-primary"
-              onClick={() => router.push(meetingLink)}
-            >
-              Join Lesson
-            </button>
-            <button className="btn btn-ghost" onClick={cancelLesson}>
-              Cancel
-            </button>
-          </div>
+          {status === "active" && (
+            <div className="flex flex-col gap-2">
+              <button
+                className="btn btn-primary"
+                onClick={() => router.push(meetingLink)}
+              >
+                Join Lesson
+              </button>
+              <button className="btn btn-ghost" onClick={cancelLesson}>
+                Cancel
+              </button>
+            </div>
+          )}
           <Link
             href={`/chats/${smallBigString(tutor.id, student.id)}/?partnerId=${
               isStudent ? tutor.id : student.id
