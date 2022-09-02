@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { BookingsContext } from "../../context/BookingsContext";
 
 import { db } from "../../firebase/firebaseClient";
 import {
@@ -12,6 +13,8 @@ import {
   where,
 } from "firebase/firestore";
 
+import { Select } from "@chakra-ui/react";
+
 import { formatDate, smallBigString } from "../../helperFunctions";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -20,48 +23,61 @@ import axios from "axios";
 
 export default function Bookings() {
   const { user, userLoading } = useContext(AuthContext);
-  const [bookings, setBookings] = useState([]);
+  const {
+    allBookings,
+    activeBookings,
+    futureBookings,
+    pastBookings,
+    cancelledBookings,
+  } = useContext(BookingsContext);
 
-  useEffect(() => {
-    async function init() {
-      try {
-        let q = query(
-          collection(db, "bookings"),
-          where(
-            `${user.type === "tutor" ? "tutor.id" : "student.id"}`,
-            "==",
-            user.uid
-          )
-        );
-
-        onSnapshot(q, (bookingsSnapshot) => {
-          let bookings = [];
-          bookingsSnapshot.forEach((booking) =>
-            bookings.push({ id: booking.id, ...booking.data() })
-          );
-          console.log(bookings);
-          setBookings(bookings);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (user && !userLoading) init();
-  }, [user, userLoading]);
+  const [bookingType, setBookingType] = useState("Active Bookings");
 
   if (user)
     return (
       <div className="bg-gray-200 flex-1 flex p-4">
-        {bookings.length === 0 && <NoBookings />}
-        {bookings.length > 0 && (
+        {allBookings.length === 0 && <NoBookings />}
+        {allBookings.length > 0 && (
           <div className="flex flex-col gap-4 flex-1 rounded-md shadow-md bg-white p-4">
             <h1 className="text-4xl font-bold text-center">Bookings</h1>
+            {/* Filter  */}
+            <div className="w-1/3 mx-auto">
+              <Select
+                value={bookingType}
+                onChange={(e) => setBookingType(e.target.value)}
+              >
+                <option value="Active Bookings">
+                  Active Bookings ({activeBookings.length})
+                </option>
+                <option value="Cancelled Bookings">
+                  Cancelled Bookings ({cancelledBookings.length})
+                </option>
+                <option value="Future Bookings">
+                  Future Bookings ({futureBookings.length})
+                </option>
+                <option value="All Bookings">
+                  All Bookings ({allBookings.length})
+                </option>
+              </Select>
+            </div>
             <hr className="my-2" />
             <div className="flex flex-col gap-6 items-center">
-              {bookings.map((booking) => (
-                <Booking key={booking.id} booking={booking} user={user} />
-              ))}
+              {bookingType === "Active Bookings" &&
+                activeBookings.map((booking) => (
+                  <Booking key={booking.id} booking={booking} user={user} />
+                ))}
+              {bookingType === "Cancelled Bookings" &&
+                cancelledBookings.map((booking) => (
+                  <Booking key={booking.id} booking={booking} user={user} />
+                ))}
+              {bookingType === "Future Bookings" &&
+                futureBookings.map((booking) => (
+                  <Booking key={booking.id} booking={booking} user={user} />
+                ))}
+              {bookingType === "All Bookings" &&
+                allBookings.map((booking) => (
+                  <Booking key={booking.id} booking={booking} user={user} />
+                ))}
             </div>
           </div>
         )}
