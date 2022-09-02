@@ -46,7 +46,7 @@ const StudentLinks = [
   { name: "Payment Methods", icon: FiCompass, href: "#payment-methods" },
 ];
 
-export default function SideBar({ children }) {
+export default function HowToSideBar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={"gray.100"}>
@@ -124,42 +124,6 @@ const SidebarContent = ({ onClose, ...rest }) => {
     );
   }
 };
-
-// const NavItem = ({ icon, children, ...rest }) => {
-//   return (
-//     <Link
-//       href="#"
-//       style={{ textDecoration: "none" }}
-//       _focus={{ boxShadow: "none" }}
-//     >
-//       <Flex
-//         align="center"
-//         p="4"
-//         mx="4"
-//         borderRadius="lg"
-//         role="group"
-//         cursor="pointer"
-//         _hover={{
-//           bg: "cyan.400",
-//           color: "white",
-//         }}
-//         {...rest}
-//       >
-//         {icon && (
-//           <Icon
-//             mr="4"
-//             fontSize="16"
-//             _groupHover={{
-//               color: "white",
-//             }}
-//             as={icon}
-//           />
-//         )}
-//         {children}
-//       </Flex>
-//     </Link>
-//   );
-// };
 
 const MobileNav = ({ onOpen, ...rest }) => {
   return (

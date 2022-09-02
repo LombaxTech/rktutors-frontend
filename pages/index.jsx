@@ -1,14 +1,18 @@
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { useRouter } from "next/router";
 
 import LandingPage from "../LandingPage";
+import LoadingPage from "../components/LoadingPage";
 
 import TutorHome from "../components/Tutor/TutorHome";
 import StudentHome from "../components/Student/StudentHome";
 
 export default function Home() {
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
+
+  if (userLoading) return <LoadingPage />;
 
   // Landing page
   if (!userLoading && !user) return <LandingPage />;

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
 import axios from "axios";
 
 import { doc, setDoc, updateDoc } from "firebase/firestore";
@@ -8,7 +9,7 @@ import { db } from "../firebase/firebaseClient";
 import Link from "next/link";
 
 export default function StripeConnectStatusCheck() {
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [setupSuccess, setSetupSuccess] = useState(false);
   const [setupError, setSetupError] = useState(false);
@@ -38,12 +39,11 @@ export default function StripeConnectStatusCheck() {
       if (details_submitted && payouts_enabled && charges_enabled) {
         const userDocRef = doc(db, "users", user.uid);
 
-        const googleAndProfileSetup =
-          user.profile.setup && user.googleAccount.setup;
+        const profileSetup = user.profile.setup;
 
         await updateDoc(userDocRef, {
           "stripeConnectedAccount.setup": true,
-          ...(googleAndProfileSetup && { active: true }),
+          ...(profileSetup && { active: true }),
         });
 
         setSetupSuccess(true);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 
 import {
   Textarea,
@@ -25,7 +25,8 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
+
 import { updateDoc, doc } from "firebase/firestore";
 import { db, storage } from "../firebase/firebaseClient";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -37,7 +38,7 @@ import AvatarEditor from "react-avatar-editor";
 
 export default function ProfileSetup() {
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
 
   const [aboutMe, setAboutMe] = useState("");
   const [aboutMyLessons, setAboutMyLessons] = useState("");
@@ -73,7 +74,7 @@ export default function ProfileSetup() {
     setSuccess(false);
     try {
       //   todo: get unique subjects (since this should be first time tutor is doing this, shouldnt actually need to make unique)
-      const currentlyTeachingSubjects = user.profile.teachingSubjects || [];
+      const currentlyTeachingSubjects = user.profile?.teachingSubjects || [];
       let allSubjects = [...currentlyTeachingSubjects, ...subjects];
       const uniqueSubjects = [];
       allSubjects.map((x) =>
@@ -88,8 +89,7 @@ export default function ProfileSetup() {
         return setError(true);
 
       // note: uniqueSubjects now contains unique subjects new and those already saved in the users account
-      const stripeAndGoogleActive =
-        user.googleAccount.setup && user.stripeConnectedAccount.setup;
+      const stripeActive = user.stripeConnectedAccount.setup;
 
       // todo: upload profile pic
       const imageRef = ref(
@@ -109,7 +109,7 @@ export default function ProfileSetup() {
       );
 
       const updateDetails = {
-        ...(stripeAndGoogleActive && { active: true }),
+        ...(stripeActive && { active: true }),
         profile: {
           setup: true,
           teachingSubjects: uniqueSubjects,

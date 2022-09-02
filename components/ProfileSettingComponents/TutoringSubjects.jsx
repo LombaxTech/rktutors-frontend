@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import {
   Input,
@@ -16,7 +16,7 @@ import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import { db } from "../../firebase/firebaseClient";
 import { updateDoc, doc } from "firebase/firestore";
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const TutoringSubjects = ({ user }) => {
   const [subject, setSubject] = useState("");

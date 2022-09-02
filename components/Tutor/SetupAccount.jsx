@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import { Alert, AlertIcon, Spinner } from "@chakra-ui/react";
 import { FaCheckCircle } from "react-icons/fa";
@@ -7,28 +7,12 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import useCustomAuth from "../../customHooks/useCustomAuth";
+import { AuthContext } from "../../context/AuthContext";
 
 const SetupAccount = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { user } = useCustomAuth();
-
-  const setupGooglePermssions = async () => {
-    setLoading(true);
-    try {
-      let res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER}/gen-auth-link`
-      );
-      const url = res.data;
-      console.log({ url });
-      router.push(url);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
+  const { user } = useContext(AuthContext);
 
   const setupStripePermissions = async () => {
     try {
@@ -44,11 +28,10 @@ const SetupAccount = () => {
   };
 
   if (user) {
-    let googleSetUp = user.googleAccount?.setup;
     let stripeSetUp = user.stripeConnectedAccount.setup;
     let profileSetUp = user.profile?.setup;
 
-    console.log({ googleSetUp, stripeSetUp });
+    console.log({ stripeSetUp });
     console.log(profileSetUp);
 
     return (
@@ -64,13 +47,13 @@ const SetupAccount = () => {
             </div>
             <div className="w-6/12">
               <div className=" mx-auto">
-                {(!googleSetUp || !stripeSetUp || !profileSetUp) && (
+                {(!stripeSetUp || !profileSetUp) && (
                   <Alert status="warning" className="flex justify-center">
                     <AlertIcon />
                     Your account is not active yet
                   </Alert>
                 )}
-                {googleSetUp && stripeSetUp && profileSetUp && (
+                {stripeSetUp && profileSetUp && (
                   <Alert status="success" className="flex justify-center">
                     <AlertIcon />
                     Account is active
@@ -83,19 +66,15 @@ const SetupAccount = () => {
               <div className="flex justify-center">
                 <ul className="steps">
                   <li className={`step ${profileSetUp ? "step-primary" : ""}`}>
-                    Set up your Profile
+                    Profile set up
                   </li>
-                  <li className={`step ${googleSetUp ? "step-primary" : ""}`}>
-                    Set up Google Permissions
-                  </li>
+
                   <li className={`step ${stripeSetUp ? "step-primary" : ""}`}>
-                    Set up payments
+                    Payments set up
                   </li>
                   <li
                     className={`step ${
-                      stripeSetUp && googleSetUp && profileSetUp
-                        ? "step-primary"
-                        : ""
+                      stripeSetUp && profileSetUp ? "step-primary" : ""
                     }`}
                   >
                     Complete
@@ -122,21 +101,6 @@ const SetupAccount = () => {
                     {profileSetUp ? "Completed" : "Start Now"}
                   </button>
                 </Link>
-              </div>
-              <div className="flex justify-between gap-8 items-center text-xl font-semibold uppercase">
-                <div className="flex gap-6 items-center">
-                  <FaCheckCircle
-                    style={{ color: googleSetUp ? "#570DF8" : "#E5E6E6" }}
-                  />{" "}
-                  Set up google Permissions
-                </div>
-                <button
-                  className="btn btn-primary flex gap-4"
-                  onClick={setupGooglePermssions}
-                  disabled={loading || googleSetUp}
-                >
-                  {googleSetUp ? "Completed" : "Start Now"}
-                </button>
               </div>
               <div className="flex justify-between items-center text-xl font-semibold uppercase">
                 <div className="flex gap-6 items-center">

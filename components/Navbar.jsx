@@ -2,6 +2,7 @@ import TypeAnimation from "react-type-animation";
 
 import { useContext } from "react";
 import { ChatsContext } from "../context/ChatsContext";
+import { BookingRequestsContext } from "../context/BookingRequestsContext";
 
 import {
   Box,
@@ -21,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-import useCustomAuth from "../customHooks/useCustomAuth";
+import { AuthContext } from "../context/AuthContext";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,7 +42,7 @@ const StudentLinks = [
 const TutorLinks = [
   { title: "Home", href: "/" },
   { title: "Bookings", href: "/bookings" },
-  { title: "Requests", href: "/booking-requests" },
+  { title: "Requests", href: "/bookings/requests" },
   { title: "Messages", href: "/chats" },
 ];
 
@@ -49,8 +50,10 @@ const Links = ["Dashboard", "Projects", "Team"];
 
 export default function Navbar() {
   const router = useRouter();
-  const { user, userLoading } = useCustomAuth();
+  const { user, userLoading } = useContext(AuthContext);
   const { chats } = useContext(ChatsContext);
+  const { pendingRequests } = useContext(BookingRequestsContext);
+
   const signout = async () => {
     try {
       await signOut(auth);
@@ -135,6 +138,10 @@ export default function Navbar() {
                       {link.title === "Messages" && chatsUnread && (
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                       )}
+                      {link.title === "Requests" &&
+                        pendingRequests.length > 0 && (
+                          <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        )}
                     </a>
                   </Link>
                 ))}

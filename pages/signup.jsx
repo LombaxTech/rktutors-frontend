@@ -60,7 +60,7 @@ export default function Signup() {
 
       // Create Stripe User
       let stripeCustomer = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER}/stripe-customer`,
+        `${process.env.NEXT_PUBLIC_SERVER}/stripe/stripe-customer`,
         {
           name: fullName,
           email,

@@ -24,11 +24,11 @@ export default function BookingModal({ tutor }) {
 
       <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="overflow-hidden max-h-screen">
           <ModalHeader>Book a Lesson with {tutor.fullName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody className="flex flex-col">
-            <BookingStepper />
+          <ModalBody className="flex flex-col overflow-hidden">
+            <BookingStepper tutor={tutor} />
           </ModalBody>
 
           {/* <ModalFooter>
