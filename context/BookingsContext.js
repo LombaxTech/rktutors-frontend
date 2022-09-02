@@ -16,10 +16,12 @@ export const BookingsContext = createContext();
 export const BookingsProvider = ({ children }) => {
   const { user, userLoading } = useCustomAuth();
 
-  const [bookings, setBookings] = useState([]);
+  const [allBookings, setAllBookings] = useState([]);
+  const [activeBookings, setActiveBookings] = useState([]);
   const [todaysBookings, setTodaysBookings] = useState([]);
   const [futureBookings, setFutureBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
+  const [cancelledBookings, setCancelledBookings] = useState([]);
 
   useEffect(() => {
     async function init() {
@@ -34,29 +36,41 @@ export const BookingsProvider = ({ children }) => {
         );
 
         onSnapshot(bookingsQuery, (bookingsSnapshot) => {
-          let bookings = [];
+          let allBookings = [];
 
           bookingsSnapshot.forEach((b) =>
-            bookings.push({ id: b.id, ...b.data() })
+            allBookings.push({ id: b.id, ...b.data() })
           );
 
-          setBookings(bookings);
+          setAllBookings(allBookings);
+
+          // get active bookings
+          let activeBookings = allBookings.filter((b) => b.status === "active");
+          setActiveBookings(activeBookings);
 
           // get todays bookings
-          let todaysBookings = bookings.filter((b) =>
-            isToday(b.selectedTime.toDate())
+          let todaysBookings = allBookings.filter(
+            (b) => isToday(b.selectedTime.toDate()) && b.status === "active"
           );
-          console.log("todays bookings...");
-          console.log(todaysBookings);
           setTodaysBookings(todaysBookings);
 
           // get future bookings
-          let futureBookings = bookings.filter(
-            (b) => b.selectedTime.toDate() > new Date()
+          let futureBookings = allBookings.filter(
+            (b) => b.selectedTime.toDate() > new Date() && b.status === "active"
           );
-          console.log("future bookings...");
-          console.log(futureBookings);
           setFutureBookings(futureBookings);
+
+          // get past bookings
+          let pastBookings = allBookings.filter(
+            (b) => b.selectedTime.toDate() < new Date() && b.status === "active"
+          );
+          setPastBookings(pastBookings);
+
+          // get cancelled bookings
+          let cancelledBookings = allBookings.filter(
+            (b) => b.status === "cancelled"
+          );
+          setCancelledBookings(cancelledBookings);
         });
       } catch (error) {
         console.log(error);
@@ -68,7 +82,14 @@ export const BookingsProvider = ({ children }) => {
 
   return (
     <BookingsContext.Provider
-      value={{ bookings, todaysBookings, futureBookings }}
+      value={{
+        allBookings,
+        activeBookings,
+        todaysBookings,
+        futureBookings,
+        pastBookings,
+        cancelledBookings,
+      }}
     >
       {children}
     </BookingsContext.Provider>
