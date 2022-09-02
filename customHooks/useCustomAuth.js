@@ -38,7 +38,7 @@ export default function useCustomAuth() {
         }
       }
 
-      if (!authUserLoading && !authUserError) {
+      if (!authUserLoading && authUserError) {
         setUser(null);
         setUserLoading(false);
       }
