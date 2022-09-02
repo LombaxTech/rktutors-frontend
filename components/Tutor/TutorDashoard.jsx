@@ -36,15 +36,15 @@ export default function TutorDashoard() {
 }
 
 const BookingsSection = ({}) => {
-  const { bookings, todaysBookings, futureBookings } =
+  const { allBookings, todaysBookings, futureBookings } =
     useContext(BookingsContext);
 
   const { pendingRequests } = useContext(BookingRequestsContext);
 
   console.log("bookings...");
-  console.log(bookings);
+  console.log(allBookings);
 
-  if (bookings && todaysBookings && futureBookings && pendingRequests)
+  if (allBookings && todaysBookings && futureBookings && pendingRequests)
     return (
       <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md">
         <div className="img w-6/12 flex justify-center items-center">
