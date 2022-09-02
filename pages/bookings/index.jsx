@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { BookingsContext } from "../../context/BookingsContext";
 
+import useRedirectAuth from "../../customHooks/useRedirectAuth";
+
 import { db } from "../../firebase/firebaseClient";
 import {
   onSnapshot,
@@ -22,6 +24,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 export default function Bookings() {
+  useRedirectAuth();
+
   const { user, userLoading } = useContext(AuthContext);
   const {
     allBookings,

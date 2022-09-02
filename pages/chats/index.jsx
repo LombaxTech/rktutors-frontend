@@ -9,16 +9,19 @@ import { onSnapshot, query, where, collection } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
 
 import { smallBigString, isToday } from "../../helperFunctions";
+import useRedirectAuth from "../../customHooks/useRedirectAuth";
 
 import Link from "next/link";
 import { DateTime } from "luxon";
 
 export default function Chats() {
+  useRedirectAuth();
+
   const { user, userLoading } = useContext(AuthContext);
 
   const { chats } = useContext(ChatsContext);
 
-  if (chats.length === 0) return <NoChats />;
+  if (user && chats.length === 0) return <NoChats />;
 
   if (user && chats.length > 0)
     return (
