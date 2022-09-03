@@ -13,6 +13,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Textarea,
+  Spinner,
 } from "@chakra-ui/react";
 
 import {
@@ -183,8 +184,10 @@ function AcceptModal({ request, user }) {
   } = request;
 
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const acceptBooking = async () => {
+    setLoading(true);
     try {
       // if payment succeed, then create booking
 
@@ -220,9 +223,11 @@ function AcceptModal({ request, user }) {
       });
 
       console.log("accepted booking...");
+      setLoading(false);
       onClose();
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -232,15 +237,26 @@ function AcceptModal({ request, user }) {
         Accept Lesson
       </button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={"lg"}
+        isCentered
+        closeOnOverlayClick={loading ? false : true}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
+          {!loading && <ModalCloseButton />}
           <ModalBody>
             <div className="p-8 flex flex-col gap-8">
               Make sure you are able to attend the lesson on time
-              <button className="btn btn-primary" onClick={acceptBooking}>
+              <button
+                className="btn btn-primary"
+                onClick={acceptBooking}
+                disabled={loading}
+              >
                 Confirm Booking
+                {loading && <Spinner className="ml-4" />}
               </button>
             </div>
           </ModalBody>
