@@ -32,7 +32,7 @@ export const BookingsProvider = ({ children }) => {
         let bookingsQuery = query(
           bookingsRef,
           where(isTutor ? "tutor.id" : "student.id", "==", user.uid),
-          orderBy("selectedTime", "desc")
+          orderBy("selectedTime", "asc")
         );
 
         onSnapshot(bookingsQuery, (bookingsSnapshot) => {
