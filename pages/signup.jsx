@@ -77,6 +77,7 @@ export default function Signup() {
         fullName,
         stripeCustomerId: stripeCustomer.id,
         createdAt: serverTimestamp(),
+        prevBookedTutors: [],
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);

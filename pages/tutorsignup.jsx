@@ -77,6 +77,7 @@ export default function TutorSignup() {
           remaining_requirements: [],
         },
         // TODO: Fill in more details
+        prevBookedStudents: [],
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);
