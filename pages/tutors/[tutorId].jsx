@@ -1,25 +1,49 @@
 import { useState, useEffect, useRef, useContext } from "react";
 
-import { Avatar, MenuDivider, Tooltip, Tag, HStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  MenuDivider,
+  Tooltip,
+  Tag,
+  HStack,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Textarea,
+  Spinner,
+} from "@chakra-ui/react";
+
+import { FaStar } from "react-icons/fa";
 
 import {
   addDoc,
   serverTimestamp,
   orderBy,
   getDoc,
+  getDocs,
   doc,
   updateDoc,
   arrayUnion,
+  query,
+  where,
+  collection,
+  onSnapshot,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
-import { smallBigString } from "../../helperFunctions";
+import { smallBigString, getMean } from "../../helperFunctions";
 import { useRouter } from "next/router";
 
 import BookingModal from "../../components/BookingModal";
+import StarRatings from "react-star-ratings";
 
 export default function TutorPage() {
   const router = useRouter();
@@ -80,6 +104,8 @@ export default function TutorPage() {
 
   if (tutor && user) {
     const tutorSaved = user.savedTutors?.some((t) => t.id === tutor.id);
+    let ratingNumbers = tutor.ratings.map((r) => r.rating);
+    const tutorRating = getMean(ratingNumbers);
 
     return (
       <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex">
@@ -107,35 +133,13 @@ export default function TutorPage() {
                 Remove from saved tutors
               </div>
             )}
-            <div className="rating w-8/12 mx-auto">
-              <input
-                type="radio"
-                name="rating-1"
-                className="mask mask-star bg-yellow-500"
-              />
-              <input
-                type="radio"
-                name="rating-1"
-                className="mask mask-star bg-yellow-500"
-              />
-              <input
-                type="radio"
-                name="rating-1"
-                className="mask mask-star bg-yellow-500"
-              />
-              <input
-                type="radio"
-                name="rating-1"
-                className="mask mask-star bg-yellow-500"
-              />
-              <input
-                type="radio"
-                name="rating-1"
-                className="mask mask-star bg-yellow-500"
-                checked
-              />
-              <div className="font-semibold ml-2">(46)</div>
-            </div>
+            <StarRatings
+              rating={tutorRating}
+              starRatedColor="gold"
+              starDimension={"20px"}
+              starSpacing={"2px"}
+            />
+
             <div className="flex flex-col gap-4">
               <BookingModal tutor={tutor} />
               <Link
@@ -170,10 +174,7 @@ export default function TutorPage() {
               <div className="text-4xl font-bold">About My Lessons</div>
               <div className="">{tutor.profile.aboutMyLessons}</div>
               <hr className="my-6" />
-              <div className="text-4xl font-bold">Reviews</div>
-              <div className="">
-                {tutor.reviews ? "Reviews..." : "No Reviews Found"}
-              </div>
+              <Reviews tutor={tutor} user={user} />
             </div>
           </div>
         </div>
@@ -181,3 +182,147 @@ export default function TutorPage() {
     );
   }
 }
+
+const Reviews = ({ tutor, user }) => {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        let q = query(
+          collection(db, "reviews"),
+          where("tutor.id", "==", tutor.id),
+          orderBy("createdAt", "desc")
+        );
+
+        onSnapshot(q, (reviewsSnapshot) => {
+          let reviews = [];
+          reviewsSnapshot.forEach((r) =>
+            reviews.push({ id: r.id, ...r.data() })
+          );
+          setReviews(reviews);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    init();
+  }, []);
+
+  return (
+    <>
+      <div className="text-4xl font-bold">Reviews</div>
+      <AddReviewModal tutor={tutor} user={user} />
+      {reviews.length === 0 && <div>No Reviews Found</div>}
+      {reviews.length > 0 && (
+        <div className="flex flex-col gap-4">
+          {reviews.map((r) => (
+            <Review key={r.id} review={r} />
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
+
+const Review = ({ review }) => {
+  return (
+    <div className="p-4 flex flex-col gap-2 rounded-md border shadow-sm">
+      <div className="flex justify-between">
+        <div className="">{review.student.fullName}</div>
+        <div className="flex gap-1 items-center p-2 ">
+          <FaStar className="text-yellow-500" />
+          <div className="">{review.rating}</div>
+        </div>
+      </div>
+      <div className="">{review.review}</div>
+    </div>
+  );
+};
+
+const AddReviewModal = ({ tutor, user }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const addReview = async () => {
+    setLoading(true);
+    // todo: check rating exists
+    // todo: do some checks on review text
+
+    try {
+      await addDoc(collection(db, "reviews"), {
+        tutor: {
+          id: tutor.id,
+          fullName: tutor.fullName,
+        },
+        student: {
+          id: user.uid,
+          fullName: user.fullName,
+        },
+        review: reviewText,
+        rating,
+        createdAt: serverTimestamp(),
+      });
+
+      let ratings = tutor.ratings || [];
+      let newRatings = [...ratings, { studentId: user.uid, rating }];
+
+      await updateDoc(doc(db, "users", tutor.id), {
+        ratings: newRatings,
+      });
+      setLoading(false);
+      onClose();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button className="btn btn-primary" onClick={onOpen}>
+        Add Review
+      </button>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col gap-8">
+              <Textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Write your review here"
+                size="md"
+                rows={5}
+              />
+              <div className="flex items-center gap-4">
+                <div className="">Give a rating</div>
+                <StarRatings
+                  rating={rating}
+                  starRatedColor="gold"
+                  changeRating={(r) => setRating(r)}
+                  starDimension={"20px"}
+                  starSpacing={"2px"}
+                />
+              </div>
+
+              <button
+                className="btn btn-primary"
+                onClick={addReview}
+                disabled={loading}
+              >
+                Add Review
+                {loading && <Spinner className="ml-4" />}
+              </button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </div>
+  );
+};
