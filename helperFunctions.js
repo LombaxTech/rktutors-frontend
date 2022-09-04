@@ -28,3 +28,5 @@ export function makeId(length) {
   }
   return result;
 }
+
+export const getMean = (array) => array.reduce((a, b) => a + b) / array.length;
