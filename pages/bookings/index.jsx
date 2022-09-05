@@ -113,15 +113,17 @@ const Booking = ({ booking, user }) => {
       console.log("pi id");
       console.log(paymentIntentId);
 
-      let res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER}/stripe/refund`,
-        {
-          payment_intent: paymentIntentId,
-        }
-      );
+      if (!isFreeTrial) {
+        let res = await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER}/stripe/refund`,
+          {
+            payment_intent: paymentIntentId,
+          }
+        );
 
-      res = res.data;
-      console.log(res);
+        res = res.data;
+        console.log(res);
+      }
 
       await updateDoc(doc(db, "bookings", booking.id), { status: "cancelled" });
       console.log("updated booking status to cancelled");
