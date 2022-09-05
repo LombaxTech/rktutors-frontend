@@ -137,16 +137,32 @@ export default function TutorRequests() {
 }
 
 const BookingRequest = ({ request, user }) => {
-  const { subject, note, selectedTime, student, paymentMethodId, status } =
-    request;
+  const {
+    subject,
+    note,
+    selectedTime,
+    student,
+    paymentMethodId,
+    status,
+    isFreeTrial,
+  } = request;
 
   return (
-    <div className="shadow-md bg-white w-fit p-4 rounded-md border-2">
+    <div
+      className={`shadow-md bg-white w-fit p-4 rounded-md border-2 ${
+        isFreeTrial && "border-pink-500"
+      }`}
+    >
       <div className="flex gap-8">
         <div className="flex flex-col justify-around">
           <div className="">Subject: {subject}</div>
           <div className="">Date: {formatDate(selectedTime.toDate())}</div>
           <div className="">Student: {student.fullName}</div>
+          {isFreeTrial && (
+            <span className="font-bold text-lg text-pink-500">
+              TRIAL LESSON REQUEST
+            </span>
+          )}
         </div>
         <div className="flex flex-col justify-center items-center">
           {status === "pending" && (
@@ -181,6 +197,7 @@ function AcceptModal({ request, user }) {
     paymentMethodId,
     status,
     tutor,
+    isFreeTrial,
   } = request;
 
   const [success, setSuccess] = useState(false);
@@ -191,17 +208,20 @@ function AcceptModal({ request, user }) {
 
     try {
       // if payment succeed, then create booking
-
-      let res = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER}/stripe/accept-payment`,
-        {
-          paymentMethodId,
-          stripeCustomerId: student.stripeCustomerId,
-          connectedAccountId: tutor.connectedAccountId,
-        }
-      );
-      res = res.data;
-      console.log(res);
+      let paymentIntentId;
+      if (!isFreeTrial) {
+        let res = await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER}/stripe/accept-payment`,
+          {
+            paymentMethodId,
+            stripeCustomerId: student.stripeCustomerId,
+            connectedAccountId: tutor.connectedAccountId,
+          }
+        );
+        res = res.data;
+        paymentIntentId = res.paymentIntent.id;
+        console.log(res);
+      }
 
       const newBooking = {
         tutor: request.tutor,
@@ -210,8 +230,9 @@ function AcceptModal({ request, user }) {
         subject,
         note,
         meetingLink: `https://meet.jit.si/${makeId(7)}`,
-        paymentIntentId: res.paymentIntent.id,
+        ...(!isFreeTrial && { paymentIntentId }),
         status: "active",
+        isFreeTrial: isFreeTrial ? true : false,
       };
 
       await addDoc(collection(db, "bookings"), newBooking);
@@ -260,7 +281,10 @@ function AcceptModal({ request, user }) {
 
   return (
     <div>
-      <button className="btn btn-primary" onClick={onOpen}>
+      <button
+        className={`btn ${isFreeTrial ? "btn-secondary" : "btn-primary"} `}
+        onClick={onOpen}
+      >
         Accept Lesson
       </button>
 
