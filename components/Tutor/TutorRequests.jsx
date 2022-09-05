@@ -188,6 +188,7 @@ function AcceptModal({ request, user }) {
 
   const acceptBooking = async () => {
     setLoading(true);
+
     try {
       // if payment succeed, then create booking
 
@@ -223,6 +224,32 @@ function AcceptModal({ request, user }) {
       });
 
       console.log("accepted booking...");
+
+      // add tutor to student prevbooked tutors
+      const hasPrevBooked = tutor.prevBookedStudents.some(
+        (student) => student.id === user.uid
+      );
+
+      if (!hasPrevBooked) {
+        const newPrevBookedStudents = [
+          ...tutor.prevBookedStudents,
+          { id: student.id, fullName: student.fullName },
+        ];
+
+        await updateDoc(doc(db, "users", tutor.id), {
+          prevBookedStudents: newPrevBookedStudents,
+        });
+
+        const newPrevBookedTutors = [
+          ...student.prevBookedTutors,
+          { id: tutor.id, fullName: tutor.fullName },
+        ];
+
+        await updateDoc(doc(db, "users", student.id), {
+          prevBookedTutors: newPrevBookedTutors,
+        });
+      }
+
       setLoading(false);
       onClose();
     } catch (error) {
