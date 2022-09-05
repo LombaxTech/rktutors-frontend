@@ -30,3 +30,6 @@ export function makeId(length) {
 }
 
 export const getMean = (array) => array.reduce((a, b) => a + b) / array.length;
+
+export const hasStudentBookedTutor = (studentId, tutor) =>
+  tutor.prevBookedStudents.some((student) => student.id === studentId);
