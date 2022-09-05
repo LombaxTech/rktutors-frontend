@@ -307,7 +307,39 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
           moment(r.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
         );
 
-        let bookedTimes = [...newBookedTimes, ...newReqsTime];
+        // todo: do same for student bookings and reqs
+        let studentBookingsQuery = query(
+          bookingsRef,
+          where("student.id", "==", user.uid)
+        );
+
+        let studentReqsQuery = query(
+          reqsRef,
+          where("student.id", "==", user.uid)
+        );
+
+        let studentBookingsSnapshot = await getDocs(studentBookingsQuery);
+        let studentReqsSnapshot = await getDocs(studentReqsQuery);
+
+        let studentBookings = [];
+        let studentReqs = [];
+
+        studentBookingsSnapshot.forEach((b) => studentBookings.push(b.data()));
+        studentReqsSnapshot.forEach((r) => studentReqs.push(r.data()));
+
+        let newStudentBookedTimes = studentBookings.map((booking) =>
+          moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
+        );
+        let newStudentReqsTimes = studentReqs.map((r) =>
+          moment(r.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
+        );
+
+        let bookedTimes = [
+          ...newBookedTimes,
+          ...newReqsTime,
+          ...newStudentBookedTimes,
+          ...newStudentReqsTimes,
+        ];
         // console.log(bookedTimes);
         setBookedTimes(bookedTimes);
         setBookedTimesLoading(false);
