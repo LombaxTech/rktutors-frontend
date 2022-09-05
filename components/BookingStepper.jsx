@@ -256,7 +256,7 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
   );
 };
 
-export default function BookingStepper({ tutor }) {
+export default function BookingStepper({ tutor, hasPrevBooked }) {
   const { user, userLoading } = useContext(AuthContext);
 
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
@@ -327,12 +327,18 @@ export default function BookingStepper({ tutor }) {
   }, [paymentMethodId]);
 
   const isNextDisabled = () => {
-    if (activeStep == 0 && !selectedTime) return true;
-    if (activeStep == 1 && !subject) return true;
+    if (hasPrevBooked) {
+      if (activeStep == 0 && !selectedTime) return true;
+      if (activeStep == 1 && !subject) return true;
 
-    // todo: make sure payment method is selected
-    if (activeStep == 2 && !paymentMethod) return true;
-    if (activeStep == 3) return true;
+      // todo: make sure payment method is selected
+      if (activeStep == 2 && !paymentMethod) return true;
+      if (activeStep == 3) return true;
+    } else if (!hasPrevBooked) {
+      if (activeStep == 0 && !selectedTime) return true;
+      if (activeStep == 1 && !subject) return true;
+      if (activeStep == 3) return true;
+    }
 
     if (bookingSuccess) return true;
   };
@@ -348,6 +354,7 @@ export default function BookingStepper({ tutor }) {
           ...(user.profilePictureUrl && {
             profilePictureUrl: user.profilePictureUrl,
           }),
+          prevBookedTutors: user.prevBookedTutors || [],
         },
         tutor: {
           id: tutor.id,
@@ -357,14 +364,16 @@ export default function BookingStepper({ tutor }) {
             profilePictureUrl: tutor.profilePictureUrl,
           }),
           connectedAccountId: tutor.stripeConnectedAccount.id,
+          prevBookedStudents: tutor.prevBookedStudents || [],
         },
         subject,
         selectedTime,
         note,
-        paymentMethodId,
+        ...(hasPrevBooked && { paymentMethodId }),
         // todo: fix up price stuff
-        price: 20,
+        price: hasPrevBooked ? 20 : 0,
         status: "pending",
+        isFreeTrial: hasPrevBooked ? false : true,
       };
 
       console.log(bookingRequest);
@@ -439,11 +448,17 @@ export default function BookingStepper({ tutor }) {
             {/* Payment */}
             <Step label="Payment Details">
               <div className="flex flex-col justify-center items-center mt-4">
-                <SelectPaymentMethod
-                  user={user}
-                  paymentMethodId={paymentMethodId}
-                  setPaymentMethodId={setPaymentMethodId}
-                />
+                {hasPrevBooked ? (
+                  <SelectPaymentMethod
+                    user={user}
+                    paymentMethodId={paymentMethodId}
+                    setPaymentMethodId={setPaymentMethodId}
+                  />
+                ) : (
+                  <h1 className="text-3xl font-bold mt-6">
+                    You May Skip This Step (Free Trial)
+                  </h1>
+                )}
               </div>
             </Step>
 
@@ -487,18 +502,26 @@ export default function BookingStepper({ tutor }) {
                       </span>
                     )}
                   </div>
-                  <div className="">
-                    <span className="">Paying with: </span>
-                    Card ending in <span>**** {paymentMethod?.card.last4}</span>
-                    {!bookingSuccess && (
-                      <span
-                        className="ml-2 underline text-blue-500 cursor-pointer"
-                        onClick={() => setStep(2)}
-                      >
-                        Edit
-                      </span>
-                    )}
-                  </div>
+                  {hasPrevBooked ? (
+                    <div className="">
+                      <span className="">Paying with: </span>
+                      Card ending in{" "}
+                      <span>**** {paymentMethod?.card.last4}</span>
+                      {!bookingSuccess && (
+                        <span
+                          className="ml-2 underline text-blue-500 cursor-pointer"
+                          onClick={() => setStep(2)}
+                        >
+                          Edit
+                        </span>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="">
+                      <span className="">Price: </span>
+                      <span className="font-bold">FREE Trial</span>
+                    </div>
+                  )}
                 </div>
 
                 <button

@@ -13,13 +13,13 @@ import {
 
 import BookingStepper from "./BookingStepper";
 
-export default function BookingModal({ tutor }) {
+export default function BookingModal({ tutor, hasPrevBooked }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <div>
       <button className="btn btn-secondary w-full" onClick={onOpen}>
-        Book Lesson
+        {hasPrevBooked ? "Book Lesson" : "Book Free trial lesson"}
       </button>
 
       <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
@@ -28,7 +28,7 @@ export default function BookingModal({ tutor }) {
           <ModalHeader>Book a Lesson with {tutor.fullName}</ModalHeader>
           <ModalCloseButton />
           <ModalBody className="flex flex-col overflow-hidden">
-            <BookingStepper tutor={tutor} />
+            <BookingStepper tutor={tutor} hasPrevBooked={hasPrevBooked} />
           </ModalBody>
 
           {/* <ModalFooter>

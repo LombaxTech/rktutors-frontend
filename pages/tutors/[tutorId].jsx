@@ -107,6 +107,10 @@ export default function TutorPage() {
     let ratingNumbers = tutor.ratings.map((r) => r.rating);
     const tutorRating = getMean(ratingNumbers);
 
+    const hasPrevBooked = tutor.prevBookedStudents?.some(
+      (student) => student.id === user.uid
+    );
+
     return (
       <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex">
         <div className="flex-1 flex bg-white rounded-md shadow-md">
@@ -141,7 +145,7 @@ export default function TutorPage() {
             />
 
             <div className="flex flex-col gap-4">
-              <BookingModal tutor={tutor} />
+              <BookingModal tutor={tutor} hasPrevBooked={hasPrevBooked} />
               <Link
                 href={`/chats/${smallBigString(user.uid, tutor.id)}?partnerId=${
                   tutor.id
