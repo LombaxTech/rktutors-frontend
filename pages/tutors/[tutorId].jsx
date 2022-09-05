@@ -39,7 +39,11 @@ import { db } from "../../firebase/firebaseClient";
 import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
-import { smallBigString, getMean } from "../../helperFunctions";
+import {
+  smallBigString,
+  getMean,
+  hasStudentBookedTutor,
+} from "../../helperFunctions";
 import { useRouter } from "next/router";
 
 import BookingModal from "../../components/BookingModal";
@@ -297,9 +301,13 @@ const AddReviewModal = ({ tutor, user }) => {
 
   return (
     <div>
-      <button className="btn btn-primary" onClick={onOpen}>
-        Add Review
-      </button>
+      {hasStudentBookedTutor(user.uid, tutor) ? (
+        <button className="btn btn-primary" onClick={onOpen}>
+          Add Review
+        </button>
+      ) : (
+        <div className=""></div>
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
         <ModalOverlay />
