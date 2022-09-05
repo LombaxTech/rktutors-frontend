@@ -104,8 +104,8 @@ export default function TutorPage() {
 
   if (tutor && user) {
     const tutorSaved = user.savedTutors?.some((t) => t.id === tutor.id);
-    let ratingNumbers = tutor.ratings.map((r) => r.rating);
-    const tutorRating = getMean(ratingNumbers);
+    let ratingNumbers = tutor.ratings?.map((r) => r.rating);
+    const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
 
     const hasPrevBooked = tutor.prevBookedStudents?.some(
       (student) => student.id === user.uid
@@ -137,12 +137,22 @@ export default function TutorPage() {
                 Remove from saved tutors
               </div>
             )}
-            <StarRatings
-              rating={tutorRating}
-              starRatedColor="gold"
-              starDimension={"20px"}
-              starSpacing={"2px"}
-            />
+            {ratingNumbers.length === 0 ? (
+              <div className="flex items-center gap-2 font-bold text-lg text-teal-500"></div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <StarRatings
+                  rating={tutorRating}
+                  starRatedColor="gold"
+                  starDimension={"20px"}
+                  starSpacing={"2px"}
+                />
+                <span className="">
+                  ({ratingNumbers.length} Review
+                  {ratingNumbers.length === 1 ? "" : "s"})
+                </span>
+              </div>
+            )}
 
             <div className="flex flex-col gap-4">
               <BookingModal tutor={tutor} hasPrevBooked={hasPrevBooked} />

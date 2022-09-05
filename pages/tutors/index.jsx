@@ -21,7 +21,8 @@ import { db } from "../../firebase/firebaseClient";
 import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
-import { smallBigString } from "../../helperFunctions";
+import { smallBigString, getMean } from "../../helperFunctions";
+import StarRatings from "react-star-ratings";
 
 const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
   const [subject, setSubject] = useState("");
@@ -213,6 +214,9 @@ export default function Tutors() {
 function TutorProfile({ tutor }) {
   const { user } = useContext(AuthContext);
 
+  let ratingNumbers = tutor.ratings?.map((r) => r.rating);
+  const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
+
   return (
     <Box
       maxW={"320px"}
@@ -237,7 +241,26 @@ function TutorProfile({ tutor }) {
         <Heading fontSize={"2xl"} fontFamily={"body"}>
           {tutor.fullName}
         </Heading>
-
+        <div className="flex justify-center">
+          {ratingNumbers.length === 0 ? (
+            <div className="flex items-center gap-2 font-bold text-lg text-teal-500">
+              NEW Tutor
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <StarRatings
+                rating={tutorRating}
+                starRatedColor="gold"
+                starDimension={"20px"}
+                starSpacing={"2px"}
+              />
+              <span className="">
+                ({ratingNumbers.length} Review
+                {ratingNumbers.length === 1 ? "" : "s"})
+              </span>
+            </div>
+          )}
+        </div>
         {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
 
         <div className="flex gap-1 flex-wrap my-4">
