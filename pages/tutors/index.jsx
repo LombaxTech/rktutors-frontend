@@ -186,7 +186,7 @@ export default function Tutors() {
             )}
             {/* <span className="text-blue-700">Physics</span> Tutors */}
           </h1>
-          <div className="flex flex-col ml-10 p-8 border-2 rounded-md shadow-md w-fit">
+          <div className="flex flex-col ml-10 p-8 border-2 rounded-md  w-fit">
             <div className="flex gap-4 items-center">
               <div className="w-3 h-3 rounded-full bg-green-600"></div>
               <div className="">GCSE</div>
@@ -224,6 +224,8 @@ function TutorProfile({ tutor }) {
       textAlign={"center"}
       display={"flex"}
       flexDirection="column"
+      border={"1px"}
+      borderColor={"gray.200"}
     >
       <div className="flex-1">
         <Avatar
