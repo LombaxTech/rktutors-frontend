@@ -100,7 +100,10 @@ const Booking = ({ booking, user }) => {
     selectedTime,
     paymentIntentId,
     status,
+    isFreeTrial,
   } = booking;
+
+  console.log(booking);
 
   const isStudent = user.type == "student";
   const isTutor = user.type == "tutor";
@@ -128,44 +131,52 @@ const Booking = ({ booking, user }) => {
   };
 
   return (
-    <div className="shadow-md bg-white w-fit p-4 rounded-md">
-      <div className="flex gap-8">
-        <div className="flex flex-col justify-around">
-          <div className="">Subject: {subject}</div>
-          <div className="">Date: {formatDate(selectedTime.toDate())}</div>
-          {
-            isTutor && <div className="">Student: {student.fullName}</div>
+    <div
+      className={`shadow-md bg-white w-fit p-4 rounded-md flex gap-8 border-2
+    ${isFreeTrial && " border-pink-500"}`}
+    >
+      <div className="flex flex-col justify-around">
+        <div className="">Subject: {subject}</div>
+        <div className="">Date: {formatDate(selectedTime.toDate())}</div>
+        {
+          isTutor && <div className="">Student: {student.fullName}</div>
 
-            // todo: add proofile pics
-          }
+          // todo: add proofile pics
+        }
 
-          {isStudent && <div className="">Tutor: {tutor.fullName}</div>}
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          {status === "active" && (
-            <div className="flex flex-col gap-2">
-              <button
-                className="btn btn-primary"
-                onClick={() => router.push(meetingLink)}
-              >
-                Join Lesson
-              </button>
-              <button className="btn btn-ghost" onClick={cancelLesson}>
-                Cancel
-              </button>
-            </div>
-          )}
-          <Link
-            href={`/chats/${smallBigString(tutor.id, student.id)}/?partnerId=${
-              isStudent ? tutor.id : student.id
-            }`}
-          >
-            <div className="text-center text-blue-500 underline cursor-pointer">
-              Message
-              {isStudent ? " tutor" : " student"}
-            </div>
-          </Link>
-        </div>
+        {isStudent && <div className="">Tutor: {tutor.fullName}</div>}
+        {isFreeTrial && (
+          <span className="font-bold text-lg text-pink-500">
+            TRIAL LESSON REQUEST
+          </span>
+        )}
+      </div>
+      <div className="flex flex-col justify-center items-center">
+        {status === "active" && (
+          <div className="flex flex-col gap-2">
+            <button
+              className={`btn ${
+                isFreeTrial ? "btn-secondary" : "btn-primary"
+              } `}
+              onClick={() => router.push(meetingLink)}
+            >
+              Join Lesson
+            </button>
+            <button className="btn btn-ghost" onClick={cancelLesson}>
+              Cancel
+            </button>
+          </div>
+        )}
+        <Link
+          href={`/chats/${smallBigString(tutor.id, student.id)}/?partnerId=${
+            isStudent ? tutor.id : student.id
+          }`}
+        >
+          <div className="text-center text-blue-500 underline cursor-pointer">
+            Message
+            {isStudent ? " tutor" : " student"}
+          </div>
+        </Link>
       </div>
     </div>
   );

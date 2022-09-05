@@ -143,15 +143,25 @@ const BookingRequest = ({ request, user }) => {
     paymentMethodId,
     status,
     tutor,
+    isFreeTrial,
   } = request;
 
   return (
-    <div className="shadow-md bg-white w-fit p-4 rounded-md border-2">
+    <div
+      className={`shadow-md bg-white w-fit p-4 rounded-md border-2  
+    ${isFreeTrial && "border-pink-500"}
+    `}
+    >
       <div className="flex gap-8">
         <div className="flex flex-col justify-around">
           <div className="">Subject: {subject}</div>
           <div className="">Date: {formatDate(selectedTime.toDate())}</div>
           <div className="">Tutor: {tutor.fullName}</div>
+          {isFreeTrial && (
+            <span className="font-bold text-lg text-pink-500">
+              TRIAL LESSON
+            </span>
+          )}
         </div>
         <div className="flex flex-col justify-center items-center">
           {request.status === "pending" && (
