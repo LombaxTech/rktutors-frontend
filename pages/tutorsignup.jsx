@@ -78,6 +78,7 @@ export default function TutorSignup() {
         },
         // TODO: Fill in more details
         prevBookedStudents: [],
+        ratings: [],
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);
