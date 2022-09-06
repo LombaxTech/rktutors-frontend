@@ -113,7 +113,7 @@ export default function Navbar() {
           </Link>
           <Link href="/login">
             <button
-              className="btn border-none"
+              className="btn border-none outline-none"
               style={{
                 backgroundColor: "#5ca9fb",
                 backgroundImage:
