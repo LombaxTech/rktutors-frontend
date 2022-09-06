@@ -87,13 +87,6 @@ export default function Navbar() {
         boxShadow="lg"
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <IconButton
-            size={"md"}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={"Open Menu"}
-            display={{ md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
-          />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
               <Link href="/">
@@ -182,6 +175,14 @@ export default function Navbar() {
               </Menu>
             </HStack>
           </Flex>
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+            style={{ backgroundColor: "transparent" }}
+          />
         </Flex>
 
         {isOpen ? (
