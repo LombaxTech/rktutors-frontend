@@ -25,10 +25,6 @@ const Links = [
     href: "#how-it-works",
   },
   {
-    title: "FAQ",
-    href: "#faq",
-  },
-  {
     title: "Contact Us",
     href: "#contact",
   },
@@ -89,14 +85,6 @@ export default function Navbar() {
       boxShadow="lg"
     >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <IconButton
-          size={"lg"}
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          style={{ backgroundColor: "transparent" }}
-          aria-label={"Open Menu"}
-          display={{ md: "none" }}
-          onClick={isOpen ? onClose : onOpen}
-        />
         <Box>
           <div
             className={`text-3xl font-semibold  ${
@@ -112,10 +100,12 @@ export default function Navbar() {
             />
           </div>
         </Box>
-        <HStack as={"nav"} spacing={8} display={{ base: "none", md: "flex" }}>
+        <HStack as={"nav"} spacing={10} display={{ base: "none", md: "flex" }}>
           {Links.map((link) => (
             <Link key={link.title} href={link.href}>
-              {link.title}
+              <div className="font-medium uppercase cursor-pointer">
+                {link.title}
+              </div>
             </Link>
           ))}
           <Link href="/signup">
@@ -123,7 +113,7 @@ export default function Navbar() {
           </Link>
           <Link href="/login">
             <button
-              className="btn bg-teal-400 outline-none border-none"
+              className="btn border-none"
               style={{
                 backgroundColor: "#5ca9fb",
                 backgroundImage:
@@ -134,6 +124,14 @@ export default function Navbar() {
             </button>
           </Link>
         </HStack>
+        <IconButton
+          size={"lg"}
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          style={{ backgroundColor: "transparent" }}
+          aria-label={"Open Menu"}
+          display={{ md: "none" }}
+          onClick={isOpen ? onClose : onOpen}
+        />
       </Flex>
 
       {isOpen ? (

@@ -15,7 +15,8 @@ export default function index() {
       <Header />
       <AboutUs />
       <HowItWorks data={data.HowItWorks} />
-      <FAQ />
+      {/* <FAQ /> */}
+
       <ContactUs />
       <Footer />
     </div>

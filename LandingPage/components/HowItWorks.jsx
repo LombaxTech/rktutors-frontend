@@ -17,14 +17,12 @@ export default function HowItWorks(props) {
         />
       </div>
       <div className="w-1/2 sm:w-full">
-        <div className="about-text ">
-          <h2 className="text-4xl font-bold prose sm:flex sm:justify-center sm:text-2xl">
-            START TODAY
-          </h2>
+        <div className="about-text flex flex-col gap-4">
+          <h2 className="lp-section-header">START TODAY</h2>
 
           {/* <p>{props.data ? props.data.paragraph : "loading..."}</p> */}
-          <h3 className="text-2xl font-medium mb-8 sm:text-xl">
-            As Easy As 1-2-3?
+          <h3 className="text-center text-2xl font-medium mb-8 sm:text-xl">
+            As Easy As 1-2-3
           </h3>
           <div className="list-style">
             {props.data

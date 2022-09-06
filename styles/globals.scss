@@ -31,3 +31,9 @@ a {
 #navbar {
   z-index: 90 !important;
 }
+
+@layer components {
+  .lp-section-header {
+    @apply text-center text-4xl font-bold uppercase sm:text-2xl;
+  }
+}
