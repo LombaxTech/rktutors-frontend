@@ -38,6 +38,7 @@ const TutorLinks = [
   },
   { name: "Availability", icon: FiCompass, href: "#availablity" },
   { name: "Payment Settings", icon: FiCompass, href: "#payment-settings" },
+  { name: "Lesson Prices", icon: FiCompass, href: "#lesson-price-settings" },
 ];
 
 const StudentLinks = [
@@ -91,6 +92,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         w={{ base: "full", md: 60 }}
         pos="fixed"
         h="full"
+        className="overflow-y-auto scrollbar-thin scrollbar-track-black"
         {...rest}
       >
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
