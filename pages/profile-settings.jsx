@@ -150,36 +150,46 @@ const EditPricesModal = ({ user }) => {
           <ModalCloseButton />
           <ModalBody>
             <div className="p-8 flex flex-col items-center gap-8">
-              <div className="flex items-center gap-1">
-                <span className="">GCSE £</span>
-                <NumberInput
-                  value={gcsePrice}
-                  min={10}
-                  max={50}
-                  onChange={(n) => setGcsePrice(Math.floor(n))}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
+              <div className="w-11/12">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="">GCSE </span>
+
+                  <span className="flex items-center gap-1">
+                    £
+                    <NumberInput
+                      value={gcsePrice}
+                      min={10}
+                      max={50}
+                      onChange={(n) => setGcsePrice(Math.floor(n))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-1">
+                  <span className="">A-Level </span>
+                  <span className="flex items-center gap-1">
+                    £
+                    <NumberInput
+                      value={aLevelPrice}
+                      min={10}
+                      max={50}
+                      onChange={(n) => setALevelPrice(Math.floor(n))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="">A-Level £</span>
-                <NumberInput
-                  value={aLevelPrice}
-                  min={10}
-                  max={50}
-                  onChange={(n) => setALevelPrice(Math.floor(n))}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </div>
+
               <button
                 className="btn btn-primary "
                 onClick={updatePrices}
