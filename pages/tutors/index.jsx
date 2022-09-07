@@ -219,7 +219,7 @@ function TutorProfile({ tutor }) {
 
   return (
     <Box
-      maxW={"320px"}
+      maxW={"440px"}
       w={"full"}
       bg="white"
       boxShadow={"xl"}
@@ -243,7 +243,7 @@ function TutorProfile({ tutor }) {
         </Heading>
         <div className="flex justify-center">
           {ratingNumbers.length === 0 ? (
-            <div className="flex items-center gap-2 font-bold text-lg text-teal-500">
+            <div className="flex items-center gap-2 font-bold text-sm text-teal-500">
               NEW Tutor
             </div>
           ) : (
@@ -261,9 +261,11 @@ function TutorProfile({ tutor }) {
             </div>
           )}
         </div>
+        <div className="text-center font-bold text-base">£10/hr</div>
+
         {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
 
-        <div className="flex gap-1 flex-wrap my-4">
+        <div className="flex gap-1 flex-wrap my-4 overflow-x-auto">
           {tutor.profile.teachingSubjects &&
             tutor.profile.teachingSubjects.map((subject, i) => (
               <Tag
