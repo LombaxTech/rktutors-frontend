@@ -183,6 +183,15 @@ function SocialProfileWithImage() {
             <span className="text-lg">Welcome back </span> <br />
             <span className="text-2xl font-medium">{user.fullName}</span>
           </div>
+          {user.active ? (
+            <div className="font-bold text-lg text-teal-500 uppercase text-center">
+              ACTIVE
+            </div>
+          ) : (
+            <div className="font-bold text-lg text-pink-500 uppercase text-center">
+              INACTIVE
+            </div>
+          )}
           <Link href="/profile-settings">
             <button className="btn btn-primary">Account Settings</button>
           </Link>
