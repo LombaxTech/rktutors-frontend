@@ -14,6 +14,8 @@ import {
   useColorModeValue,
   Link,
   IconButton,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -79,6 +81,10 @@ export default function TutorSignup() {
         // TODO: Fill in more details
         prevBookedStudents: [],
         ratings: [],
+        lessonPrices: {
+          GCSE: 10,
+          "A-Level": 15,
+        },
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);
@@ -87,8 +93,16 @@ export default function TutorSignup() {
       console.log("created user");
       router.push("/");
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMessage("Email has already been used");
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage("Please enter a valid email address");
+      } else if (error.code === "auth/internal-error") {
+        setErrorMessage("Something went wrong");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
 
@@ -110,6 +124,18 @@ export default function TutorSignup() {
             </Heading>
           </div>
         </Stack>
+        {errorMessage && (
+          <Alert status="error">
+            <AlertIcon />
+            {errorMessage}
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert status="success">
+            <AlertIcon />
+            {successMessage}
+          </Alert>
+        )}
         <Box rounded={"lg"} bg="white" boxShadow={"lg"} p={8}>
           <Stack spacing={4}>
             <FormControl isRequired>

@@ -86,8 +86,16 @@ export default function Signup() {
       console.log("created user");
       router.push("/");
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMessage("Email has already been used");
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage("Please enter a valid email address");
+      } else if (error.code === "auth/internal-error") {
+        setErrorMessage("Something went wrong");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
 
