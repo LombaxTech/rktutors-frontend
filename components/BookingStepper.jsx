@@ -297,8 +297,18 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         let bookings = [];
         let reqs = [];
 
-        bookingsSnapshot.forEach((b) => bookings.push(b.data()));
-        reqsSnapshot.forEach((r) => reqs.push(r.data()));
+        bookingsSnapshot.forEach((b) => {
+          const { status } = b.data();
+          if (status === "cancelled") return;
+
+          bookings.push(b.data());
+        });
+        reqsSnapshot.forEach((r) => {
+          const { status } = r.data();
+          if (status === "cancelled" || status === "declined") return;
+
+          reqs.push(r.data());
+        });
 
         let newBookedTimes = bookings.map((booking) =>
           moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
@@ -324,8 +334,17 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         let studentBookings = [];
         let studentReqs = [];
 
-        studentBookingsSnapshot.forEach((b) => studentBookings.push(b.data()));
-        studentReqsSnapshot.forEach((r) => studentReqs.push(r.data()));
+        studentBookingsSnapshot.forEach((b) => {
+          const { status } = b.data();
+          if (status === "cancelled") return;
+
+          studentBookings.push(b.data());
+        });
+        studentReqsSnapshot.forEach((r) => {
+          const { status } = r.data();
+          if (status === "cancelled" || status === "declined") return;
+          studentReqs.push(r.data());
+        });
 
         let newStudentBookedTimes = studentBookings.map((booking) =>
           moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")

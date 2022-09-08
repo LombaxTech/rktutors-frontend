@@ -97,6 +97,7 @@ const LessonPriceSettings = ({ user }) => {
         </div>
       </div>
       <EditPricesModal user={user} />
+      <p className="text-sm font-light">£1 platform fee per lesson</p>
     </div>
   );
 };
@@ -189,7 +190,6 @@ const EditPricesModal = ({ user }) => {
                   </span>
                 </div>
               </div>
-
               <button
                 className="btn btn-primary "
                 onClick={updatePrices}
