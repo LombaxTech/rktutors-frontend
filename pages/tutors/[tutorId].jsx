@@ -111,6 +111,8 @@ export default function TutorPage() {
     let ratingNumbers = tutor.ratings?.map((r) => r.rating);
     const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
 
+    const { lessonPrices } = tutor;
+
     const hasPrevBooked = tutor.prevBookedStudents?.some(
       (student) => student.id === user.uid
     );
@@ -171,6 +173,20 @@ export default function TutorPage() {
           </div>
           <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-8 flex flex-col">
             <div className="flex flex-col gap-4 w-3/4 mx-auto">
+              <div className="flex flex-col p-8 border-2 rounded-md w-fit">
+                <div className="flex gap-4 items-center">
+                  <div className="w-3 h-3 rounded-full bg-green-600"></div>
+                  <div className="">
+                    GCSE - £{lessonPrices["GCSE"]} per lesson
+                  </div>
+                </div>
+                <div className="flex gap-4 items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                  <div className="">
+                    A-Level - £{lessonPrices["A-Level"]} per lesson
+                  </div>
+                </div>
+              </div>
               <div className="text-4xl font-bold">Subjects Offered</div>
               <div className="flex gap-4 flex-wrap">
                 {tutor.profile.teachingSubjects &&
@@ -185,6 +201,7 @@ export default function TutorPage() {
                     </Tag>
                   ))}
               </div>
+
               <hr className="my-6" />
               <div className="text-4xl font-bold">About Me</div>
               <div className="">{tutor.profile.aboutMe}</div>

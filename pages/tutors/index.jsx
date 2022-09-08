@@ -261,7 +261,12 @@ function TutorProfile({ tutor }) {
             </div>
           )}
         </div>
-        <div className="text-center font-bold text-base">£10/hr</div>
+        <div className="text-center">
+          <span className="font-bold text-lg mr-1">
+            £{tutor.lessonPrices["GCSE"]}
+          </span>
+          per lesson
+        </div>
 
         {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
 
