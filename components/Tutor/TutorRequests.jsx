@@ -198,6 +198,7 @@ function AcceptModal({ request, user }) {
     status,
     tutor,
     isFreeTrial,
+    price,
   } = request;
 
   const [success, setSuccess] = useState(false);
@@ -216,6 +217,7 @@ function AcceptModal({ request, user }) {
             paymentMethodId,
             stripeCustomerId: student.stripeCustomerId,
             connectedAccountId: tutor.connectedAccountId,
+            price,
           }
         );
         res = res.data;
@@ -233,6 +235,7 @@ function AcceptModal({ request, user }) {
         ...(!isFreeTrial && { paymentIntentId }),
         status: "active",
         isFreeTrial: isFreeTrial ? true : false,
+        ...(!isFreeTrial && { price }),
       };
 
       await addDoc(collection(db, "bookings"), newBooking);
