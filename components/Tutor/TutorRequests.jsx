@@ -15,6 +15,7 @@ import {
   Textarea,
   Spinner,
   Avatar,
+  Tag,
 } from "@chakra-ui/react";
 
 import {
@@ -197,15 +198,19 @@ const BookingRequest = ({ request, user }) => {
           )}
           <div className="flex flex-col items-center">
             {status === "cancelled" && (
-              <div className="font-bold text-lg text-red-500">Cancelled</div>
+              <Tag size="lg" colorScheme="red" borderRadius="full">
+                Cancelled
+              </Tag>
             )}
             {status === "declined" && (
-              <div className="font-bold text-lg text-red-500">
+              <Tag size="lg" colorScheme="red" borderRadius="full">
                 Declined by tutor
-              </div>
+              </Tag>
             )}
             {status === "accepted" && (
-              <div className="font-bold text-lg text-green-500">Confirmed</div>
+              <Tag size="lg" colorScheme="green" borderRadius="full">
+                Confirmed
+              </Tag>
             )}
             <Link
               href={`/chats/${smallBigString(
