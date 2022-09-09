@@ -579,7 +579,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                       )}
                       <div className="mt-2">
                         <span className="">Price: </span>
-                        <span className="font-bold">{lessonPrice}</span>
+                        <span className="font-bold">£{lessonPrice}</span>
                       </div>
                     </div>
                   ) : (
