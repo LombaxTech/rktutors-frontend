@@ -9,7 +9,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-import { isToday } from "../helperFunctions";
+import { isToday, isPast } from "../helperFunctions";
 import { RepeatWrapping } from "three";
 
 export const BookingRequestsContext = createContext();
@@ -32,7 +32,7 @@ export const BookingRequestsProvider = ({ children }) => {
         let reqsQuery = query(
           reqsRef,
           where(isTutor ? "tutor.id" : "student.id", "==", user.uid),
-          orderBy("selectedTime", "desc")
+          orderBy("selectedTime", "asc")
         );
 
         onSnapshot(reqsQuery, (reqsSnapshot) => {
@@ -42,7 +42,9 @@ export const BookingRequestsProvider = ({ children }) => {
 
           setRequests(reqs);
 
-          let pendingReqs = reqs.filter((r) => r.status === "pending");
+          let pendingReqs = reqs.filter(
+            (r) => r.status === "pending" && !isPast(r.selectedTime.toDate())
+          );
           let acceptedReqs = reqs.filter((r) => r.status === "accepted");
           let declinedReqs = reqs.filter((r) => r.status === "declined");
           let cancelledReqs = reqs.filter((r) => r.status === "cancelled");
