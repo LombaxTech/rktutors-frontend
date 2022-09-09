@@ -13,6 +13,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Textarea,
+  Avatar,
 } from "@chakra-ui/react";
 
 import {
@@ -86,7 +87,7 @@ export default function StudentRequests() {
             </Select>
           </div>
           {/* Requests */}
-          <div className="flex justify-center gap-12 flex-wrap">
+          <div className="flex flex-col gap-6 w-full mx-auto">
             {bookingType === "Pending Requests" &&
               pendingRequests.map((bookingRequest) => (
                 <BookingRequest
@@ -144,38 +145,82 @@ const BookingRequest = ({ request, user }) => {
     status,
     tutor,
     isFreeTrial,
+    price,
   } = request;
 
   return (
     <div
-      className={`shadow-md bg-white w-fit p-4 rounded-md border-2  
-    ${isFreeTrial && "border-pink-500"}
-    `}
+      className={`shadow-md bg-white p-4 rounded-md border-2 ${
+        isFreeTrial && "border-pink-500"
+      } flex flex-1`}
     >
-      <div className="flex gap-8">
-        <div className="flex flex-col justify-around">
-          <div className="">Subject: {subject}</div>
-          <div className="">Date: {formatDate(selectedTime.toDate())}</div>
-          <div className="">Tutor: {tutor.fullName}</div>
-          {isFreeTrial && (
-            <span className="font-bold text-lg text-pink-500">
-              TRIAL LESSON
-            </span>
-          )}
+      <div className="flex-1 flex">
+        {/* profile pic n name */}
+        <div className="w-2/12">
+          <div className="flex flex-col gap-2 justify-center items-center w-fit">
+            <Link href={`/tutors/${tutor.id}`}>
+              <Avatar
+                name={tutor.fullName}
+                src={tutor.profilePictureUrl}
+                className="cursor-pointer"
+              />
+            </Link>
+            <h3 className="font-semibold">{tutor.fullName}</h3>
+          </div>
         </div>
-        <div className="flex flex-col justify-center items-center">
+        <div className="w-4/12">
+          <div className="flex justify-center items-center h-full">
+            <h3 className="font-semibold">
+              {formatDate(selectedTime.toDate())}
+            </h3>
+          </div>
+        </div>
+        <div className="w-4/12">
+          <div className="flex items-center h-full">
+            <h3 className="font-semibold">{subject}</h3>
+          </div>
+        </div>
+        <div className="w-2/12">
+          <div className="flex items-center justify-center h-full">
+            {isFreeTrial ? (
+              <h3 className="font-semibold text-pink-500">Free Trial</h3>
+            ) : (
+              <h3 className="font-semibold">Price: £{price}</h3>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className={` ${status == "pending" ? "w-6/12" : "w-3/12"} `}>
+        <div className="flex gap-8 items-center justify-center h-full">
           {request.status === "pending" && (
             <CancelModal request={request} user={user} />
           )}
-          <Link
-            href={`/chats/${smallBigString(user.uid, tutor.id)}/?partnerId=${
-              tutor.id
-            }`}
-          >
-            <div className="text-center text-blue-500 underline cursor-pointer mt-2">
-              Message Tutor
-            </div>
-          </Link>
+          <div className="flex flex-col items-center">
+            {status === "cancelled" && (
+              <div className="font-bold text-lg text-red-500">Cancelled</div>
+            )}
+            {status === "declined" && (
+              <div className="font-bold text-lg text-red-500">
+                Declined by tutor
+              </div>
+            )}
+            {status === "accepted" && (
+              <div className="font-bold text-lg text-green-500">Confirmed</div>
+            )}
+            {status === "pending" && (
+              <div className="font-bold text-lg text-pink-500">Pending</div>
+            )}
+
+            <Link
+              href={`/chats/${smallBigString(user.uid, tutor.id)}/?partnerId=${
+                tutor.id
+              }`}
+            >
+              <div className="text-center text-blue-500 underline cursor-pointer">
+                Message Tutor
+              </div>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
