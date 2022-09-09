@@ -29,7 +29,7 @@ import {
 import { db } from "../firebase/firebaseClient";
 import { FaPlusCircle } from "react-icons/fa";
 
-import { formatDate } from "../helperFunctions";
+import { formatDate, getLastNChars } from "../helperFunctions";
 import Link from "next/link";
 import moment from "moment";
 
@@ -377,6 +377,16 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
     }
   }, [paymentMethodId]);
 
+  const [lessonPrice, setLessonPrice] = useState();
+
+  useEffect(() => {
+    if (getLastNChars(subject, 4) === "GCSE") {
+      setLessonPrice(tutor.lessonPrices["GCSE"]);
+    } else if (getLastNChars(subject, 7) === "A-Level") {
+      setLessonPrice(tutor.lessonPrices["A-Level"]);
+    }
+  }, [subject]);
+
   const isNextDisabled = () => {
     if (hasPrevBooked) {
       if (activeStep == 0 && !selectedTime) return true;
@@ -422,7 +432,8 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         note,
         ...(hasPrevBooked && { paymentMethodId }),
         // todo: fix up price stuff
-        price: hasPrevBooked ? 20 : 0,
+
+        price: hasPrevBooked ? lessonPrice : 0,
         status: "pending",
         isFreeTrial: hasPrevBooked ? false : true,
       };
@@ -566,6 +577,10 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                           Edit
                         </span>
                       )}
+                      <div className="mt-2">
+                        <span className="">Price: </span>
+                        <span className="font-bold">{lessonPrice}</span>
+                      </div>
                     </div>
                   ) : (
                     <div className="">
