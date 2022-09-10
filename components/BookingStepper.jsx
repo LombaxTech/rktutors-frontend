@@ -305,9 +305,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         });
         reqsSnapshot.forEach((r) => {
           const { status } = r.data();
-          if (status === "cancelled" || status === "declined") return;
-
-          reqs.push(r.data());
+          if (status === "pending") reqs.push(r.data());
         });
 
         let newBookedTimes = bookings.map((booking) =>
@@ -342,8 +340,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         });
         studentReqsSnapshot.forEach((r) => {
           const { status } = r.data();
-          if (status === "cancelled" || status === "declined") return;
-          studentReqs.push(r.data());
+          if (status === "pending") studentReqs.push(r.data());
         });
 
         let newStudentBookedTimes = studentBookings.map((booking) =>
