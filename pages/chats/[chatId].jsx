@@ -22,6 +22,7 @@ import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useRouter } from "next/router";
+import { formatMsgDate } from "../../helperFunctions";
 
 export default function Chat() {
   const router = useRouter();
@@ -144,7 +145,7 @@ export default function Chat() {
   const MyMessage = ({ msg }) => (
     <li className="flex justify-start">
       {/* <Tooltip label={msg.sentAt.toString()}> */}
-      <Tooltip label={"aa"}>
+      <Tooltip label={formatMsgDate(msg.sentAt.toDate())}>
         <div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
           <span className="block">{msg.text}</span>
         </div>
@@ -153,9 +154,11 @@ export default function Chat() {
   );
   const YourMessage = ({ msg }) => (
     <li className="flex justify-end">
-      <div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-        <span className="block">{msg.text}</span>
-      </div>
+      <Tooltip label={formatMsgDate(msg.sentAt.toDate())}>
+        <div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
+          <span className="block">{msg.text}</span>
+        </div>
+      </Tooltip>
     </li>
   );
 

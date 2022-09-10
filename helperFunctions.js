@@ -18,7 +18,10 @@ export const isToday = (someDate) => {
 
 export const isPast = (date) => date < new Date();
 
-export const formatDate = (date) => moment(date).format("ha DD/MM/YYYY");
+export const formatDate = (date) => moment(date).format("ha DD/MM/YY");
+
+export const formatMsgDate = (date) =>
+  moment(date).format("hh:mma  DD/MM/YYYY");
 
 export function makeId(length) {
   var result = "";
