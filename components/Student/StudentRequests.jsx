@@ -209,7 +209,7 @@ const BookingRequest = ({ request, user }) => {
             )}
             {status === "accepted" && (
               <Tag size="lg" colorScheme="green" borderRadius="full">
-                Confirmed
+                Accepted
               </Tag>
             )}
             {status === "pending" && (
