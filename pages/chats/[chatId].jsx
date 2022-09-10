@@ -176,7 +176,9 @@ export default function Chat() {
               />
             </Link>
             <div className="text-xl font-semibold">{partner.fullName}</div>
-            <button className="btn btn-secondary">Book Lesson</button>
+            <Link href={`/tutors/${partner.id}`}>
+              <button className="btn btn-secondary"> Visit tutor page</button>
+            </Link>
           </>
         )}
         {partner && partner.type === "student" && (
