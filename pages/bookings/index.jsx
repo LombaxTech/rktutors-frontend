@@ -15,7 +15,21 @@ import {
   where,
 } from "firebase/firestore";
 
-import { Select } from "@chakra-ui/react";
+import {
+  Select,
+  Avatar,
+  Tag,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Textarea,
+  Spinner,
+} from "@chakra-ui/react";
 
 import { formatDate, smallBigString } from "../../helperFunctions";
 import Link from "next/link";
@@ -65,7 +79,8 @@ export default function Bookings() {
               </Select>
             </div>
             <hr className="my-2" />
-            <div className="flex flex-col gap-6 items-center">
+            {/* <div className="flex flex-col gap-6 items-center"> */}
+            <div className="flex flex-col gap-6 w-full mx-auto">
               {bookingType === "Active Bookings" &&
                 activeBookings.map((booking) => (
                   <Booking key={booking.id} booking={booking} user={user} />
@@ -101,6 +116,8 @@ const Booking = ({ booking, user }) => {
     paymentIntentId,
     status,
     isFreeTrial,
+    price,
+    refunded,
   } = booking;
 
   console.log(booking);
@@ -108,7 +125,124 @@ const Booking = ({ booking, user }) => {
   const isStudent = user.type == "student";
   const isTutor = user.type == "tutor";
 
+  return (
+    <div
+      className={`shadow-md bg-white p-4 rounded-md border-2 ${
+        isFreeTrial && "border-pink-500"
+      } flex flex-1`}
+    >
+      <div className="flex-1 flex">
+        {/* profile pic n name */}
+        <div className="w-2/12">
+          <div className="flex flex-col gap-2 justify-center items-center w-fit">
+            {isStudent && (
+              <Link href={`/tutors/${tutor.id}`}>
+                <Avatar
+                  name={tutor.fullName}
+                  src={tutor.profilePictureUrl}
+                  className="cursor-pointer"
+                />
+              </Link>
+            )}
+
+            {isTutor && (
+              <Avatar name={student.fullName} className="cursor-pointer" />
+            )}
+
+            {isStudent && <h3 className="font-semibold">{tutor.fullName}</h3>}
+
+            {isTutor && <h3 className="font-semibold">{student.fullName}</h3>}
+          </div>
+        </div>
+        <div className="w-4/12">
+          <div className="flex justify-center items-center h-full">
+            <h3 className="font-semibold">
+              {formatDate(selectedTime.toDate())}
+            </h3>
+          </div>
+        </div>
+        <div className="w-4/12">
+          <div className="flex items-center h-full">
+            <h3 className="font-semibold">{subject}</h3>
+          </div>
+        </div>
+        <div className="w-2/12">
+          <div className="flex items-center justify-center h-full">
+            {isFreeTrial && (
+              <h3 className="font-semibold text-pink-500">Free Trial</h3>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className={`w-5/12 `}>
+        <div className="flex gap-8 items-center justify-center h-full">
+          <div className="flex items-center gap-4">
+            {status === "cancelled" && (
+              <div className="flex gap-2">
+                <Tag size="lg" colorScheme="red" borderRadius="full">
+                  Cancelled
+                </Tag>
+                {refunded && (
+                  <Tag size="lg" colorScheme="green" borderRadius="full">
+                    Refunded
+                  </Tag>
+                )}
+              </div>
+            )}
+
+            {status === "active" && (
+              <div className="flex gap-2">
+                <button
+                  className={`btn ${
+                    isFreeTrial ? "btn-secondary" : "btn-primary"
+                  } `}
+                  onClick={() => router.push(meetingLink)}
+                >
+                  Join Lesson
+                </button>
+                <CancelModal user={user} booking={booking} />
+              </div>
+            )}
+            <Link
+              href={`/chats/${smallBigString(user.uid, tutor.id)}/?partnerId=${
+                isStudent ? tutor.id : student.id
+              }`}
+            >
+              <div className="text-center text-blue-500 underline cursor-pointer">
+                Message
+                {isStudent ? " tutor" : " student"}
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function CancelModal({ booking, user }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    student,
+    tutor,
+    subject,
+    note,
+    meetingLink,
+    selectedTime,
+    paymentIntentId,
+    status,
+    isFreeTrial,
+    price,
+    refunded,
+  } = booking;
+
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const cancelLesson = async () => {
+    setError(false);
+    setLoading(true);
     try {
       console.log("pi id");
       console.log(paymentIntentId);
@@ -125,64 +259,56 @@ const Booking = ({ booking, user }) => {
         console.log(res);
       }
 
-      await updateDoc(doc(db, "bookings", booking.id), { status: "cancelled" });
+      await updateDoc(doc(db, "bookings", booking.id), {
+        status: "cancelled",
+        ...(!isFreeTrial && {
+          refunded: true,
+        }),
+      });
       console.log("updated booking status to cancelled");
+      setLoading(false);
+      onClose();
     } catch (error) {
       console.log(error);
+      setError(error);
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      className={`shadow-md bg-white w-fit p-4 rounded-md flex gap-8 border-2
-    ${isFreeTrial && " border-pink-500"}`}
-    >
-      <div className="flex flex-col justify-around">
-        <div className="">Subject: {subject}</div>
-        <div className="">Date: {formatDate(selectedTime.toDate())}</div>
-        {
-          isTutor && <div className="">Student: {student.fullName}</div>
+    <div>
+      <button className="btn btn-ghost" onClick={onOpen}>
+        Cancel
+      </button>
 
-          // todo: add proofile pics
-        }
-
-        {isStudent && <div className="">Tutor: {tutor.fullName}</div>}
-        {isFreeTrial && (
-          <span className="font-bold text-lg text-pink-500">
-            TRIAL LESSON REQUEST
-          </span>
-        )}
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        {status === "active" && (
-          <div className="flex flex-col gap-2">
-            <button
-              className={`btn ${
-                isFreeTrial ? "btn-secondary" : "btn-primary"
-              } `}
-              onClick={() => router.push(meetingLink)}
-            >
-              Join Lesson
-            </button>
-            <button className="btn btn-ghost" onClick={cancelLesson}>
-              Cancel
-            </button>
-          </div>
-        )}
-        <Link
-          href={`/chats/${smallBigString(tutor.id, student.id)}/?partnerId=${
-            isStudent ? tutor.id : student.id
-          }`}
-        >
-          <div className="text-center text-blue-500 underline cursor-pointer">
-            Message
-            {isStudent ? " tutor" : " student"}
-          </div>
-        </Link>
-      </div>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={"lg"}
+        isCentered
+        closeOnOverlayClick={loading ? false : true}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col gap-8">
+              Are you sure you want to cancel the lesson?
+              <button
+                className="btn btn-ghost"
+                onClick={cancelLesson}
+                disabled={loading}
+              >
+                Cancel Lesson
+                {loading && <Spinner className="ml-2" />}
+              </button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
-};
+}
 
 const NoBookings = () => (
   <div className="flex-1 flex flex-col items-center gap-6 mt-16">
