@@ -75,6 +75,7 @@ export default function Signup() {
       let firestoreUserDetails = {
         type: "student",
         fullName,
+        email,
         stripeCustomerId: stripeCustomer.id,
         createdAt: serverTimestamp(),
         prevBookedTutors: [],
