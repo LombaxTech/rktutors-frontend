@@ -204,9 +204,10 @@ const Booking = ({ booking, user }) => {
               </div>
             )}
             <Link
-              href={`/chats/${smallBigString(user.uid, tutor.id)}/?partnerId=${
-                isStudent ? tutor.id : student.id
-              }`}
+              href={`/chats/${smallBigString(
+                student.id,
+                tutor.id
+              )}/?partnerId=${isStudent ? tutor.id : student.id}`}
             >
               <div className="text-center text-blue-500 underline cursor-pointer">
                 Message
