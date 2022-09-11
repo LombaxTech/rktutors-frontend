@@ -46,6 +46,12 @@ const TutorLinks = [
   { title: "Messages", href: "/chats" },
 ];
 
+const AdminLinks = [
+  { title: "Users", href: "/admin/users" },
+  { title: "Messages", href: "/chats" },
+  { title: "Bookings", href: "/admin/bookings" },
+];
+
 const Links = ["Dashboard", "Projects", "Team"];
 
 export default function Navbar() {
@@ -139,6 +145,18 @@ export default function Navbar() {
                   </Link>
                 ))}
 
+              {user.type === "admin" &&
+                AdminLinks.map((link) => (
+                  <Link key={link} href={link.href}>
+                    <a className="uppercase font-medium tracking-wide flex items-center gap-1">
+                      <div className="">{link.title}</div>
+                      {link.title === "Messages" && chatsUnread && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      )}
+                    </a>
+                  </Link>
+                ))}
+
               <Menu>
                 <MenuButton
                   as={Button}
@@ -197,6 +215,13 @@ export default function Navbar() {
 
               {user.type === "tutor" &&
                 TutorLinks.map((link) => (
+                  <Link key={link} href={link.href}>
+                    {link.title}
+                  </Link>
+                ))}
+
+              {user.type === "admin" &&
+                AdminLinks.map((link) => (
                   <Link key={link} href={link.href}>
                     {link.title}
                   </Link>
