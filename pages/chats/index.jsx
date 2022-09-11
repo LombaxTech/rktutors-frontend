@@ -78,6 +78,11 @@ const Chat = ({ chat, user }) => {
             }}
           />
           <div className="font-bold text-lg">{partner.fullName}</div>
+          {partner.id === "m4PhQsgOqYb5eWwNBXr5xxMnjGz1" && (
+            <div className="font-bold text-teal-500 text-sm">
+              RKTutors Support Account
+            </div>
+          )}
         </div>
         <div className="flex-1 h-full flex justify-between">
           {/* Last Message */}

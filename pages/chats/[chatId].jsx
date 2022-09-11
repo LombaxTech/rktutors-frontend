@@ -194,6 +194,21 @@ export default function Chat() {
             <div className="text-xl font-semibold">{partner.fullName}</div>
           </>
         )}
+        {partner && partner.type === "admin" && (
+          <>
+            <Avatar src={"/img/logos/biggerIcon.png"} size={"xl"} />
+            <div className="text-xl font-semibold">{partner.fullName}</div>
+            <div className="text-base text-teal-500 font-semibold">
+              RKTutors Support Account
+            </div>
+            <div className="text-base text-teal-500 font-semibold">
+              +44 (0) 7419 206020
+            </div>
+            <div className="text-base text-teal-500 font-semibold">
+              tutors@rktutors.co.uk
+            </div>
+          </>
+        )}
       </div>
     );
   };
