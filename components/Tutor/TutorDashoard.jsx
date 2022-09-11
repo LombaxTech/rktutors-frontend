@@ -6,11 +6,17 @@ import { Avatar, Box, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
+import { smallBigString } from "../../helperFunctions";
 
 // todo: finish
-const quickLinks = [{ title: "Bookings", href: "/bookings" }];
+const quickLinks = [
+  { title: "Profile Settings ", href: "/profile-settings" },
+  { title: "Payment Settings", href: "/profile-settings/#payment-settings" },
+];
 
 export default function TutorDashoard() {
+  const { user, userLoading } = useContext(AuthContext);
+
   return (
     <div className="flex-1 p-8 bg-gray-200">
       <div className="flex gap-8">
@@ -23,10 +29,24 @@ export default function TutorDashoard() {
             Quick Links
           </h1>
           <hr></hr>
-          <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-4">
-            <Link href="/">Home</Link>
-            <Link href="/">Home</Link>
-            <Link href="/">Home</Link>
+          <div className="mt-4">
+            {quickLinks.map((link, i) => (
+              <Link href={link.href} key={i}>
+                <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-1 cursor-pointer">
+                  {link.title}
+                </div>
+              </Link>
+            ))}
+            <Link
+              href={`/chats/${smallBigString(
+                user.uid,
+                "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
+              )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+            >
+              <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-1 cursor-pointer">
+                Contact Us
+              </div>
+            </Link>
           </div>
         </div>
         <MessagesSection />

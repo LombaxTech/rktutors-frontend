@@ -5,12 +5,17 @@ import { BookingRequestsContext } from "../../context/BookingRequestsContext";
 import { Box, Avatar, Image, Flex, useColorModeValue } from "@chakra-ui/react";
 
 import Link from "next/link";
-
 import { AuthContext } from "../../context/AuthContext";
+import { smallBigString } from "../../helperFunctions";
 
-const quickLinks = [{ title: "Bookings", href: "/bookings" }];
+const quickLinks = [
+  { title: "Saved Tutors", href: "/tutors/saved" },
+  { title: "Profile Settings ", href: "/profile-settings" },
+];
 
 export default function StudentHome() {
+  const { user, userLoading } = useContext(AuthContext);
+
   return (
     <div className="bg-gray-200 flex-1 p-8">
       <div className="flex gap-8">
@@ -23,8 +28,24 @@ export default function StudentHome() {
             Quick Links
           </h1>
           <hr></hr>
-          <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-4">
-            <Link href="/tutors/saved">Saved Tutors</Link>
+          <div className="mt-4">
+            {quickLinks.map((link, i) => (
+              <Link href={link.href} key={i}>
+                <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-1 cursor-pointer">
+                  {link.title}
+                </div>
+              </Link>
+            ))}
+            <Link
+              href={`/chats/${smallBigString(
+                user.uid,
+                "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
+              )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+            >
+              <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-1 cursor-pointer">
+                Contact Us
+              </div>
+            </Link>
           </div>
         </div>
         <MessagesSection />
