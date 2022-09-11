@@ -7,6 +7,7 @@ import LoadingPage from "../components/LoadingPage";
 
 import TutorHome from "../components/Tutor/TutorHome";
 import StudentHome from "../components/Student/StudentHome";
+import AdminDashboard from "../components/Admin/AdminDashboard";
 
 export default function Home() {
   const router = useRouter();
@@ -25,6 +26,10 @@ export default function Home() {
 
     if (user.type === "tutor") {
       return <TutorHome />;
+    }
+
+    if (user.type === "admin") {
+      return <AdminDashboard />;
     }
   }
 }
