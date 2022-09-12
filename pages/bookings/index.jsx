@@ -268,6 +268,7 @@ function CancelModal({ booking, user }) {
         ...(!isFreeTrial && {
           refunded: true,
         }),
+        cancelledBy: user.uid,
       });
       console.log("updated booking status to cancelled");
       setLoading(false);
