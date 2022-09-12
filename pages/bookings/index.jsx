@@ -129,12 +129,12 @@ const Booking = ({ booking, user }) => {
     <div
       className={`shadow-md bg-white p-4 rounded-md border-2 ${
         isFreeTrial && "border-pink-500"
-      } flex flex-1`}
+      } flex flex-1 sm:flex-col`}
     >
-      <div className="flex-1 flex">
+      <div className="flex-1 flex sm:flex-col sm:justify-center sm:items-center">
         {/* profile pic n name */}
-        <div className="w-2/12">
-          <div className="flex flex-col gap-2 justify-center items-center w-fit">
+        <div className="w-2/12 sm:w-full">
+          <div className="flex flex-col gap-2 justify-center items-center w-fit sm:w-full">
             {isStudent && (
               <Link href={`/tutors/${tutor.id}`}>
                 <Avatar
@@ -154,19 +154,19 @@ const Booking = ({ booking, user }) => {
             {isTutor && <h3 className="font-semibold">{student.fullName}</h3>}
           </div>
         </div>
-        <div className="w-4/12">
+        <div className="w-4/12 sm:w-full">
           <div className="flex justify-center items-center h-full">
             <h3 className="font-semibold">
               {formatDate(selectedTime.toDate())}
             </h3>
           </div>
         </div>
-        <div className="w-4/12">
-          <div className="flex items-center h-full">
+        <div className="w-4/12 sm:w-full">
+          <div className="flex items-center h-full sm:justify-center">
             <h3 className="font-semibold">{subject}</h3>
           </div>
         </div>
-        <div className="w-2/12">
+        <div className="w-2/12 sm:w-full">
           <div className="flex items-center justify-center h-full">
             {isFreeTrial && (
               <h3 className="font-semibold text-pink-500">Free Trial</h3>
@@ -174,35 +174,38 @@ const Booking = ({ booking, user }) => {
           </div>
         </div>
       </div>
-      <div className={`w-5/12 `}>
-        <div className="flex gap-8 items-center justify-center h-full">
-          <div className="flex items-center gap-4">
-            {status === "cancelled" && (
-              <div className="flex gap-2">
-                <Tag size="lg" colorScheme="red" borderRadius="full">
-                  Cancelled
-                </Tag>
-                {refunded && (
-                  <Tag size="lg" colorScheme="green" borderRadius="full">
-                    Refunded
+      <div className={`w-5/12 sm:w-full`}>
+        <div className="flex gap-8 items-center justify-center h-full sm:flex-col">
+          <div className="flex items-center gap-4 sm:flex-col">
+            <div className="flex items-center gap-4">
+              {status === "cancelled" && (
+                <div className="flex gap-2">
+                  <Tag size="lg" colorScheme="red" borderRadius="full">
+                    Cancelled
                   </Tag>
-                )}
-              </div>
-            )}
+                  {refunded && (
+                    <Tag size="lg" colorScheme="green" borderRadius="full">
+                      Refunded
+                    </Tag>
+                  )}
+                </div>
+              )}
 
-            {status === "active" && (
-              <div className="flex gap-2">
-                <button
-                  className={`btn ${
-                    isFreeTrial ? "btn-secondary" : "btn-primary"
-                  } `}
-                  onClick={() => router.push(meetingLink)}
-                >
-                  Join Lesson
-                </button>
-                <CancelModal user={user} booking={booking} />
-              </div>
-            )}
+              {status === "active" && (
+                <div className="flex gap-2">
+                  <button
+                    className={`btn ${
+                      isFreeTrial ? "btn-secondary" : "btn-primary"
+                    } `}
+                    onClick={() => router.push(meetingLink)}
+                  >
+                    Join Lesson
+                  </button>
+                  <CancelModal user={user} booking={booking} />
+                </div>
+              )}
+            </div>
+
             <Link
               href={`/chats/${smallBigString(
                 student.id,

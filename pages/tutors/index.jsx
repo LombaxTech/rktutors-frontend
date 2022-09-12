@@ -45,17 +45,17 @@ const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
   return (
     <div className="flex gap-6 justify-around">
       {/* Image */}
-      <div className="w-4/12">
+      <div className="w-4/12 sm:hidden">
         <img src="img/user-profiles.svg" alt="" className="h-56" />
       </div>
       {/* Title and Filter */}
-      <div className="w-6/12 flex flex-col">
+      <div className="w-6/12 flex flex-col sm:w-full">
         <h1 className="text-5xl font-bold text-center">Find a Tutor </h1>
-        <hr className="my-6" />
+        <hr className="my-6 sm:my-1" />
 
         {/* Filter */}
-        <div className="flex gap-4 mt-8 w-full">
-          <div className="flex gap-4 flex-1">
+        <div className="flex gap-4 mt-8 w-full sm:flex-col">
+          <div className="flex gap-4 flex-1 sm:w-10/12 sm:flex-col sm:mx-auto">
             <select
               className="flex-1 select max-w-xs outline text-center"
               // value={subject}
@@ -165,7 +165,7 @@ export default function Tutors() {
   }, [searchedSubject, searchedAcademicLevel]);
 
   return (
-    <div className="flex-1 p-8 bg-gray-200">
+    <div className="flex-1 p-8 bg-gray-200 sm:p-0">
       <div className="bg-white rounded-md shadow-md p-8">
         <ImageAndFilter
           setSearchedSubject={setSearchedSubject}

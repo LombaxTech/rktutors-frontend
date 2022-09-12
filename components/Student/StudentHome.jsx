@@ -17,12 +17,12 @@ export default function StudentHome() {
   const { user, userLoading } = useContext(AuthContext);
 
   return (
-    <div className="bg-gray-200 flex-1 p-8">
-      <div className="flex gap-8">
+    <div className="bg-gray-200 flex-1 p-8 flex flex-col">
+      <div className="flex gap-8 sm:flex-col sm:gap-8 sm:justify-center sm:items-center">
         <SocialProfileWithImage />
         <BookingsSection />
       </div>
-      <div className="flex gap-8 mt-8">
+      <div className="flex gap-8 mt-8 sm:flex-col sm:gap-8 sm:justify-center sm:items-center">
         <div className="bg-white shadow-md p-8 min-w-[270px] max-w-[270px] rounded-md">
           <h1 className="text-3xl font-semibold uppercase text-center">
             Quick Links
@@ -65,12 +65,14 @@ const BookingsSection = ({}) => {
 
   if (allBookings && todaysBookings && futureBookings && pendingRequests)
     return (
-      <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md">
-        <div className="img w-6/12 flex justify-center items-center">
+      <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md sm:flex-col sm:gap-2">
+        <div className="img w-6/12 flex justify-center items-center sm:w-full">
           <img src="img/no-data.svg" alt="" className="h-40" />
         </div>
-        <div className="content w-6/12 flex flex-col gap-4">
-          <h1 className="text-3xl font-semibold uppercase">Bookings</h1>
+        <div className="content w-6/12 flex flex-col gap-4 sm:w-full sm:justify-center sm:items-center">
+          <h1 className="text-3xl font-semibold uppercase sm:text-2xl">
+            Bookings
+          </h1>
           <hr></hr>
           <h1 className="text-xl font-normal ">
             You have{" "}
@@ -94,7 +96,7 @@ const BookingsSection = ({}) => {
               {pendingRequests.length == 1 ? "" : "s"}{" "}
             </span>{" "}
           </h1>
-          <div className="flex gap-4 w-5/12 mt-4">
+          <div className="flex gap-4 w-5/12 mt-4 sm:flex-col sm:w-10/12">
             <Link href={`/bookings`}>
               <button className="btn btn-primary">View All Bookings</button>
             </Link>
@@ -121,8 +123,8 @@ const MessagesSection = () => {
     console.log(unreadChats);
 
     return (
-      <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md h-full">
-        <div className="img w-6/12 flex justify-center items-center">
+      <div className="bg-white shadow-md p-8 flex gap-4 flex-1 rounded-md h-full sm:flex-col ">
+        <div className="img w-6/12 flex justify-center items-center sm:w-full">
           {unreadChatsExist && (
             <img src="img/mail-arrived.svg" alt="" className="h-52" />
           )}
@@ -130,7 +132,7 @@ const MessagesSection = () => {
             <img src="img/messages.svg" alt="" className="h-52" />
           )}
         </div>
-        <div className="content w-6/12 flex flex-col gap-4">
+        <div className="content w-6/12 flex flex-col gap-4 sm:w-full sm:justify-center sm:items-center">
           <h1 className="text-3xl font-semibold uppercase">Messages</h1>
           <hr></hr>
           {!unreadChatsExist && (

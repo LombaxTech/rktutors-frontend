@@ -118,9 +118,9 @@ export default function TutorPage() {
     );
 
     return (
-      <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex">
-        <div className="flex-1 flex bg-white rounded-md shadow-md">
-          <div className="p-8 px-12 min-w-[300px] border-r flex flex-col items-center gap-4">
+      <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex sm:p-0 sm:overflow-auto">
+        <div className="flex-1 flex bg-white rounded-md shadow-md sm:flex-col sm:overflow-y-auto">
+          <div className="p-8 px-12 min-w-[300px] border-r flex flex-col items-center gap-4 sm:p-2 sm:px-2">
             <Avatar
               src={tutor.profilePictureUrl}
               name={tutor.fullName}

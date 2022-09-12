@@ -166,7 +166,7 @@ export default function Chat() {
 
   const UserProfile = () => {
     return (
-      <div className="bg-white p-10 rounded-md shadow-md min-w-[200px] flex flex-col gap-4 items-center ">
+      <div className="bg-white p-10 rounded-md shadow-md min-w-[200px] flex flex-col gap-4 items-center sm:p-4">
         {partner && partner.type === "tutor" && (
           <>
             <Link href={`/tutors/${partner.id}`}>
@@ -214,7 +214,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="flex-1 flex gap-4 max-h-full overflow-hidden p-4 bg-gray-200">
+    <div className="flex-1 flex gap-4 max-h-full overflow-hidden p-4 bg-gray-200 sm:flex-col sm:p-0 sm:gap-1 sm:overflow-y-auto">
       <UserProfile />
       {/* message and input */}
       <div className="flex-1 flex flex-col bg-white rounded-md shadow-md">
@@ -235,7 +235,7 @@ export default function Chat() {
             </ul>
           )}
         </div>
-        <div className="w-full ">
+        <div className="w-full sm:fixed sm:bottom-0 sm:left-0">
           {/* <MessageInput /> */}
           <form
             className="flex items-center justify-between w-full p-3 border-t border-gray-300"

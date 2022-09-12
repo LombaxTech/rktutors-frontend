@@ -220,12 +220,12 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
       )}
 
       {paymentMethods?.length > 0 && (
-        <div className="flex gap-16 justify-between">
+        <div className="flex gap-16 justify-between sm:flex-col sm:p-0 sm:justify-center">
           {/* Cards */}
           <div className="flex flex-col gap-8">
             {/* Title */}
             <div className="flex flex-col gap-4">
-              <h1 className="text-3xl font-bold text-center">
+              <h1 className="text-3xl font-bold text-center sm:text-xl">
                 Choose payment method
               </h1>
               <h1 className="text-sm font-bold text-center">
@@ -478,7 +478,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
             <Step label="Choose Subject">
               <div className="flex flex-col justify-center items-center mt-4 gap-8">
                 <h1 className="text-3xl font-bold">Choose Subject</h1>
-                <div className="w-5/12 flex flex-col gap-4">
+                <div className="w-5/12 flex flex-col gap-4 sm:w-full">
                   <Select
                     value={subject}
                     placeholder="Select Subject"
