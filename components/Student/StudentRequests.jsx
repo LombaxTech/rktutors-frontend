@@ -217,22 +217,75 @@ const BookingRequest = ({ request, user }) => {
                 Pending
               </Tag>
             )}
-
-            <Link
-              href={`/chats/${smallBigString(user.uid, tutor.id)}/?partnerId=${
-                tutor.id
-              }`}
-            >
-              <div className="text-center text-blue-500 underline cursor-pointer">
-                Message Tutor
-              </div>
-            </Link>
+            <div className="flex items-end gap-4">
+              <Link
+                href={`/chats/${smallBigString(
+                  user.uid,
+                  tutor.id
+                )}/?partnerId=${tutor.id}`}
+              >
+                <div className="text-center text-blue-500 underline cursor-pointer">
+                  Message Tutor
+                </div>
+              </Link>
+              <MoreInfoModal request={request} />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+function MoreInfoModal({ request }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { tutor, student, selectedTime, note, price, createdAt, isFreeTrial } =
+    request;
+
+  return (
+    <div>
+      <div
+        onClick={onOpen}
+        className="text-blue-500 mt-2 underline cursor-pointer"
+      >
+        View more info
+      </div>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col gap-2">
+              <h1 className="font-semibold text-lg">Tutor: {tutor.fullName}</h1>
+              <h1 className="font-semibold text-lg">
+                Student: {student.fullName}
+              </h1>
+              {!isFreeTrial && (
+                <h1 className="font-semibold text-lg">Price: £{price}</h1>
+              )}
+              {isFreeTrial && (
+                <h1 className="font-semibold text-lg">Type: Free Trial</h1>
+              )}
+              <h1 className="font-semibold text-lg">
+                Requested Time: {formatDate(selectedTime.toDate())}
+              </h1>
+              <h1 className="font-semibold text-lg">
+                Extra Notes: {note ? note : "(No extra notes provided)"}
+              </h1>
+              {createdAt && (
+                <h1 className="font-semibold text-lg">
+                  Booking created at: {formatDate(createdAt.toDate())}
+                </h1>
+              )}
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </div>
+  );
+}
 
 function CancelModal({ request, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();

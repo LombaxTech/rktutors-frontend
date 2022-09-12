@@ -205,24 +205,76 @@ const Booking = ({ booking, user }) => {
                 </div>
               )}
             </div>
-
-            <Link
-              href={`/chats/${smallBigString(
-                student.id,
-                tutor.id
-              )}/?partnerId=${isStudent ? tutor.id : student.id}`}
-            >
-              <div className="text-center text-blue-500 underline cursor-pointer">
-                Message
-                {isStudent ? " tutor" : " student"}
-              </div>
-            </Link>
+            <div className="flex gap-4 items-end">
+              <Link
+                href={`/chats/${smallBigString(
+                  student.id,
+                  tutor.id
+                )}/?partnerId=${isStudent ? tutor.id : student.id}`}
+              >
+                <div className="text-center text-blue-500 underline cursor-pointer">
+                  Message
+                  {isStudent ? " tutor" : " student"}
+                </div>
+              </Link>
+              <MoreInfoModal booking={booking} />
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+function MoreInfoModal({ booking }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { tutor, student, selectedTime, note, price, createdAt, isFreeTrial } =
+    booking;
+
+  return (
+    <div>
+      <div
+        onClick={onOpen}
+        className="text-blue-500 mt-2 underline cursor-pointer"
+      >
+        View more info
+      </div>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col gap-2">
+              <h1 className="font-semibold text-lg">Tutor: {tutor.fullName}</h1>
+              <h1 className="font-semibold text-lg">
+                Student: {student.fullName}
+              </h1>
+              {!isFreeTrial && (
+                <h1 className="font-semibold text-lg">Price: £{price}</h1>
+              )}
+              {isFreeTrial && (
+                <h1 className="font-semibold text-lg">Type: Free Trial</h1>
+              )}
+              <h1 className="font-semibold text-lg">
+                Requested Time: {formatDate(selectedTime.toDate())}
+              </h1>
+              <h1 className="font-semibold text-lg">
+                Extra Notes: {note ? note : "(No extra notes provided)"}
+              </h1>
+              {createdAt && (
+                <h1 className="font-semibold text-lg">
+                  Booking created at: {formatDate(createdAt.toDate())}
+                </h1>
+              )}
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </div>
+  );
+}
 
 function CancelModal({ booking, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
