@@ -31,6 +31,8 @@ import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
 import axios from "axios";
 
+import { toTitleCase } from "../helperFunctions";
+
 const auth = getAuth(firebaseApp);
 
 export default function TutorSignup() {
@@ -69,7 +71,7 @@ export default function TutorSignup() {
       // create firestore user
       let firestoreUserDetails = {
         type: "tutor",
-        fullName,
+        fullName: toTitleCase(fullName),
         email,
         createdAt: serverTimestamp(),
         active: false,

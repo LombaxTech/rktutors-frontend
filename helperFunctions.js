@@ -40,3 +40,10 @@ export const hasStudentBookedTutor = (studentId, tutor) =>
   tutor.prevBookedStudents.some((student) => student.id === studentId);
 
 export const getLastNChars = (string, n) => string.substr(string.length - n);
+
+export const toTitleCase = (phrase) =>
+  phrase
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");

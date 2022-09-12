@@ -31,6 +31,7 @@ import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import Link from "next/link";
 
 import axios from "axios";
+import { toTitleCase } from "../helperFunctions";
 
 const auth = getAuth(firebaseApp);
 
@@ -49,6 +50,8 @@ export default function Signup() {
     setErrorMessage("");
     setSuccessMessage("");
 
+    // fix up name
+
     try {
       // Create Auth User
       let userCred = await createUserWithEmailAndPassword(
@@ -63,7 +66,7 @@ export default function Signup() {
       let stripeCustomer = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER}/stripe/stripe-customer`,
         {
-          name: fullName,
+          name: toTitleCase(fullName),
           email,
         }
       );
@@ -75,7 +78,7 @@ export default function Signup() {
       // create firestore user
       let firestoreUserDetails = {
         type: "student",
-        fullName,
+        fullName: toTitleCase(fullName),
         email,
         stripeCustomerId: stripeCustomer.id,
         createdAt: serverTimestamp(),
