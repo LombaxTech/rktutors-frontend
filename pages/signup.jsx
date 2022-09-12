@@ -12,7 +12,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Link,
   IconButton,
   Alert,
   AlertIcon,
@@ -28,6 +27,8 @@ import { useRouter } from "next/router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { firebaseApp, db } from "../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+
+import Link from "next/link";
 
 import axios from "axios";
 
@@ -118,8 +119,10 @@ export default function Signup() {
             </div>
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
-            <Link color={"blue.400"} href="/tutorsignup">
-              Tutors sign up here
+            <Link href="/tutorsignup">
+              <div className="text-teal-500 cursor-pointer">
+                Tutors sign up here
+              </div>
             </Link>
           </Text>
         </Stack>
@@ -190,7 +193,10 @@ export default function Signup() {
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already have an account? <Link color={"blue.400"}>Login</Link>
+                Already have an account?{" "}
+                <Link href="/login">
+                  <div className="text-teal-500 cursor-pointer">Login</div>
+                </Link>
               </Text>
             </Stack>
           </Stack>
