@@ -226,6 +226,8 @@ export default function Navbar() {
                     {link.title}
                   </Link>
                 ))}
+
+              <div onClick={signout}>Log out</div>
             </Stack>
           </Box>
         ) : null}

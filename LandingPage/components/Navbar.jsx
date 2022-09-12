@@ -142,6 +142,8 @@ export default function Navbar() {
                 {link.title}
               </Link>
             ))}
+            <Link href={"/login"}>Log In</Link>
+            <Link href={"/signup"}>Sign up</Link>
           </Stack>
         </Box>
       ) : null}
