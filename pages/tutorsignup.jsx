@@ -1,4 +1,5 @@
 import {
+  Spinner,
   Flex,
   Box,
   FormControl,
@@ -45,8 +46,10 @@ export default function TutorSignup() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const signup = async () => {
+    setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
 
@@ -93,8 +96,10 @@ export default function TutorSignup() {
 
       setSuccessMessage("Succesfully created account");
       console.log("created user");
+      setLoading(false);
       router.push("/");
     } catch (error) {
+      setLoading(false);
       console.log(error.code);
       if (error.code === "auth/email-already-in-use") {
         setErrorMessage("Email has already been used");
@@ -187,8 +192,10 @@ export default function TutorSignup() {
                   bg: "blue.500",
                 }}
                 onClick={signup}
+                disabled={loading}
               >
                 Sign up
+                {loading && <Spinner className="ml-2" />}
               </Button>
             </Stack>
             <Stack pt={6}>
