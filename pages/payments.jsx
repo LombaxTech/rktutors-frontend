@@ -32,7 +32,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 
-import { formatDate, smallBigString } from "../helperFunctions";
+import { formatMsgDate, smallBigString } from "../helperFunctions";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -88,19 +88,33 @@ export default function Payments() {
 
 const Payment = ({ payment, user }) => {
   const router = useRouter();
-  const { student, tutor, price, paymentDate, status, lesson, lessonDate } =
-    payment;
+  const {
+    student,
+    tutor,
+    price,
+    paymentDate,
+    status,
+    lesson,
+    lessonDate,
+    paymentMethodId,
+  } = payment;
+
+  let paymentMethod = user.paymentMethods.find(
+    (pm) => pm.id === paymentMethodId
+  );
+  let card = paymentMethod?.card;
+  //   console.log(paymentCard);
 
   return (
     <div className={`shadow-md bg-white p-4 rounded-md border-2  w-full flex`}>
       <div className="w-2/12">
         <Tooltip label={`Payment date`}>
-          {formatDate(paymentDate.toDate())}
+          {formatMsgDate(paymentDate.toDate())}
         </Tooltip>
       </div>
       <div className="w-2/12">£{price}</div>
       <div className="w-2/12">{lesson}</div>
-      <div className="w-3/12">
+      <div className="w-2/12">
         Tutor:
         <Link href={`/tutors/${tutor.id}`}>
           <span className="text-blue-500 cursor-pointer underline ml-2">
@@ -108,9 +122,15 @@ const Payment = ({ payment, user }) => {
           </span>
         </Link>
       </div>
-      <div className="w-3/12">
+      <div className="w-1/12">
         <Tag colorScheme={"green"}>{status}</Tag>
       </div>
+      {card && (
+        <div className="w-3/12">
+          Card ending in
+          <span className="font-medium"> {card.last4}</span>
+        </div>
+      )}
     </div>
   );
 };
