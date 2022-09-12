@@ -385,6 +385,7 @@ function AcceptModal({ request, user }) {
           paymentDate: serverTimestamp(),
           lesson: subject,
           lessonTime: selectedTime,
+          paymentMethodId,
         };
 
         await setDoc(doc(db, "payments", request.id), paymentDetails);
