@@ -11,6 +11,7 @@ import {
   doc,
   updateDoc,
   addDoc,
+  setDoc,
   query,
   where,
 } from "firebase/firestore";
@@ -315,6 +316,7 @@ function CancelModal({ booking, user }) {
         console.log(res);
       }
 
+      // update booking status
       await updateDoc(doc(db, "bookings", booking.id), {
         status: "cancelled",
         ...(!isFreeTrial && {
@@ -323,6 +325,14 @@ function CancelModal({ booking, user }) {
         cancelledBy: user.uid,
       });
       console.log("updated booking status to cancelled");
+
+      if (!isFreeTrial) {
+        // update payment status
+        await updateDoc(doc(db, "payments", booking.id), {
+          status: "refunded",
+        });
+      }
+
       setLoading(false);
       onClose();
     } catch (error) {
@@ -347,7 +357,7 @@ function CancelModal({ booking, user }) {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalCloseButton />
+          {!loading && <ModalCloseButton />}
           <ModalBody>
             <div className="p-8 flex flex-col gap-8">
               Are you sure you want to cancel the lesson?

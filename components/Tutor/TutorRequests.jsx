@@ -34,9 +34,11 @@ import {
   query,
   where,
   addDoc,
+  setDoc,
   deleteDoc,
   updateDoc,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 
 import Link from "next/link";
@@ -331,11 +333,11 @@ function AcceptModal({ request, user }) {
         ...(!isFreeTrial && { price }),
       };
 
-      await addDoc(collection(db, "bookings"), newBooking);
+      await setDoc(doc(db, "bookings", request.id), newBooking);
 
       console.log("created booking");
 
-      // update booking status
+      // update booking request status
       await updateDoc(doc(db, "bookingRequests", request.id), {
         status: "accepted",
       });
@@ -365,6 +367,28 @@ function AcceptModal({ request, user }) {
         await updateDoc(doc(db, "users", student.id), {
           prevBookedTutors: newPrevBookedTutors,
         });
+      }
+
+      // create a payment record if payment
+      if (!isFreeTrial) {
+        const paymentDetails = {
+          student: {
+            id: student.id,
+            fullName: student.fullName,
+          },
+          tutor: {
+            id: tutor.id,
+            fullName: tutor.fullName,
+          },
+          price,
+          status: "success",
+          paymentDate: serverTimestamp(),
+          lesson: subject,
+          lessonTime: selectedTime,
+        };
+
+        await setDoc(doc(db, "payments", request.id), paymentDetails);
+        console.log("payment saved...");
       }
 
       setLoading(false);
