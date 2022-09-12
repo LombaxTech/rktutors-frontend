@@ -25,6 +25,7 @@ import {
   where,
   onSnapshot,
   getDocs,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseClient";
 import { FaPlusCircle } from "react-icons/fa";
@@ -428,11 +429,10 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         selectedTime,
         note,
         ...(hasPrevBooked && { paymentMethodId }),
-        // todo: fix up price stuff
-
         price: hasPrevBooked ? lessonPrice : 0,
         status: "pending",
         isFreeTrial: hasPrevBooked ? false : true,
+        createdAt: serverTimestamp(),
       };
 
       console.log(bookingRequest);
