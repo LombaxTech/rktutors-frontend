@@ -66,7 +66,7 @@ export default function ProfileSettings() {
     return (
       <div>
         <Sidebar>
-          <div className="flex flex-col p-8 bg-white">
+          <div className="flex flex-col p-8 bg-white w-9/12">
             <General user={user} />
             <Password user={user} />
             {isTutor && <TutoringSubjects user={user} />}
