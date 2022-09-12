@@ -186,6 +186,9 @@ export default function Navbar() {
                       <Link href={"/tutors/saved"}>
                         <MenuItem>Saved Tutors</MenuItem>
                       </Link>
+                      <Link href={"/payments"}>
+                        <MenuItem>Payments</MenuItem>
+                      </Link>
                     </>
                   )}
                   <MenuItem onClick={signout}>Logout</MenuItem>
