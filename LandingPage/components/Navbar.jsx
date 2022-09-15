@@ -21,6 +21,10 @@ const Links = [
     href: "#about-us",
   },
   {
+    title: "Tutors",
+    href: "/tutors",
+  },
+  {
     title: "How It Works",
     href: "#how-it-works",
   },
