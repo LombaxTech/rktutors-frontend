@@ -59,10 +59,9 @@ export default function TutorPage() {
     async function init() {
       const { tutorId } = router.query;
       try {
-        let tutorDoc = await getDoc(doc(db, "users", tutorId));
-        console.log(tutorDoc);
-        setTutor({ id: tutorDoc.id, ...tutorDoc.data() });
-        // console.log("...");
+        onSnapshot(doc(db, "users", tutorId), (tutorDoc) =>
+          setTutor({ id: tutorDoc.id, ...tutorDoc.data() })
+        );
       } catch (error) {
         console.log(error);
       }
@@ -318,6 +317,8 @@ export default function TutorPage() {
 
 const Reviews = ({ tutor, user }) => {
   const [reviews, setReviews] = useState([]);
+  const [hasReviewedBefore, setHasReviewedBefore] = useState(false);
+  const [userReview, setUserReview] = useState(null);
 
   useEffect(() => {
     async function init() {
@@ -333,7 +334,19 @@ const Reviews = ({ tutor, user }) => {
           reviewsSnapshot.forEach((r) =>
             reviews.push({ id: r.id, ...r.data() })
           );
+
           setReviews(reviews);
+
+          let hasReviewedBefore = false;
+          reviews.forEach((r) => {
+            if (r.student.id == user.uid) hasReviewedBefore = true;
+          });
+          setHasReviewedBefore(hasReviewedBefore);
+
+          if (hasReviewedBefore) {
+            let userReview = reviews.find((r) => r.student.id === user.uid);
+            setUserReview(userReview);
+          }
         });
       } catch (error) {
         console.log(error);
@@ -346,7 +359,12 @@ const Reviews = ({ tutor, user }) => {
   return (
     <>
       <div className="text-4xl font-bold">Reviews</div>
-      {user && <AddReviewModal tutor={tutor} user={user} />}
+      {user && !hasReviewedBefore && hasStudentBookedTutor(user.uid, tutor) && (
+        <AddReviewModal tutor={tutor} user={user} />
+      )}
+      {user && hasReviewedBefore && (
+        <EditReviewModal userReview={userReview} user={user} tutor={tutor} />
+      )}
       {reviews.length === 0 && <div>No Reviews Found</div>}
       {reviews.length > 0 && (
         <div className="flex flex-col gap-4">
@@ -370,6 +388,85 @@ const Review = ({ review }) => {
         </div>
       </div>
       <div className="">{review.review}</div>
+    </div>
+  );
+};
+
+const EditReviewModal = ({ userReview, tutor, user }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [reviewText, setReviewText] = useState(userReview.review);
+  const [rating, setRating] = useState(userReview.rating);
+  const [loading, setLoading] = useState(false);
+
+  const updateReview = async () => {
+    setLoading(true);
+    // todo: check rating exists
+    // todo: do some checks on review text
+
+    try {
+      await updateDoc(doc(db, "reviews", userReview.id), {
+        review: reviewText,
+        rating,
+        lastUpdated: serverTimestamp(),
+      });
+
+      let ratings = tutor.ratings || [];
+      ratings = ratings.filter((r) => r.studentId !== user.uid);
+      let newRatings = [...ratings, { studentId: user.uid, rating }];
+
+      await updateDoc(doc(db, "users", tutor.id), {
+        ratings: newRatings,
+      });
+      setLoading(false);
+      onClose();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <button className="btn btn-primary" onClick={onOpen}>
+        Edit Your Review
+      </button>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col gap-8">
+              <Textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Write your review here"
+                size="md"
+                rows={5}
+              />
+              <div className="flex items-center gap-4">
+                <div className="">Give a rating</div>
+                <StarRatings
+                  rating={rating}
+                  starRatedColor="gold"
+                  changeRating={(r) => setRating(r)}
+                  starDimension={"20px"}
+                  starSpacing={"2px"}
+                />
+              </div>
+
+              <button
+                className="btn btn-primary"
+                onClick={updateReview}
+                disabled={loading}
+              >
+                Update Review
+                {loading && <Spinner className="ml-4" />}
+              </button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
@@ -416,13 +513,9 @@ const AddReviewModal = ({ tutor, user }) => {
 
   return (
     <div>
-      {hasStudentBookedTutor(user.uid, tutor) ? (
-        <button className="btn btn-primary" onClick={onOpen}>
-          Add Review
-        </button>
-      ) : (
-        <div className=""></div>
-      )}
+      <button className="btn btn-primary" onClick={onOpen}>
+        Add Review
+      </button>
 
       <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
         <ModalOverlay />
