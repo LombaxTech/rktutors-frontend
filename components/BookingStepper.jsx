@@ -278,6 +278,8 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
   const [boookingRequests, setBookingRequests] = useState([]);
   const [bookedTimesLoading, setBookedTimesLoading] = useState(true);
 
+  const [bookingProcessing, setBookingProcessing] = useState(false);
+
   useEffect(() => {
     async function init() {
       setBookedTimesLoading(true);
@@ -403,6 +405,8 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
   };
 
   const confirmBooking = async () => {
+    setBookingProcessing(true);
+
     try {
       const bookingRequest = {
         student: {
@@ -455,10 +459,12 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
       console.log(res);
 
       console.log("created req...");
+      setBookingProcessing(false);
       setBookingSuccess(true);
       successMessageRef.current?.scrollIntoView();
     } catch (error) {
       console.log(error);
+      setBookingProcessing(false);
       setBookingError(true);
     }
   };
@@ -603,9 +609,10 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                 <button
                   className="btn btn-primary"
                   onClick={confirmBooking}
-                  disabled={bookingSuccess}
+                  disabled={bookingSuccess || bookingProcessing}
                 >
-                  Confirm Booking
+                  Confirm Booking{" "}
+                  {bookingProcessing && <Spinner className="ml-2" />}
                 </button>
                 <div className="w-1/3">
                   {bookingError && (
