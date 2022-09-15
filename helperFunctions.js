@@ -47,3 +47,5 @@ export const toTitleCase = (phrase) =>
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+export const diffHours = (date1, date2) => Math.abs(date1 - date2) / 36e5;
