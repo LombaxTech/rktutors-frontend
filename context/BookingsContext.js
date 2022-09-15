@@ -9,7 +9,7 @@ import {
   orderBy,
 } from "firebase/firestore";
 
-import { isToday } from "../helperFunctions";
+import { isToday, isPast } from "../helperFunctions";
 
 export const BookingsContext = createContext();
 
@@ -45,7 +45,10 @@ export const BookingsProvider = ({ children }) => {
           setAllBookings(allBookings);
 
           // get active bookings
-          let activeBookings = allBookings.filter((b) => b.status === "active");
+          let activeBookings = allBookings.filter(
+            (b) => b.status === "active" && !isPast(b.selectedTime.toDate())
+          );
+
           setActiveBookings(activeBookings);
 
           // get todays bookings
