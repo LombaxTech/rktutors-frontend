@@ -32,7 +32,12 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 
-import { formatDate, smallBigString } from "../../helperFunctions";
+import {
+  formatDate,
+  smallBigString,
+  isPast,
+  diffHours,
+} from "../../helperFunctions";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -192,7 +197,7 @@ const Booking = ({ booking, user }) => {
                 </div>
               )}
 
-              {status === "active" && (
+              {status === "active" && !isPast(selectedTime.toDate()) && (
                 <div className="flex gap-2">
                   <button
                     className={`btn ${
