@@ -392,6 +392,20 @@ function AcceptModal({ request, user }) {
         console.log("payment saved...");
       }
 
+      // send email to
+      let mailRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-request-accepted`,
+        {
+          studentEmail: student.email,
+          tutorName: tutor.fullName,
+          subject,
+          date: formatDate(selectedTime.toDate()),
+        }
+      );
+
+      mailRes = mailRes.data;
+      console.log(mailRes);
+
       setLoading(false);
       onClose();
     } catch (error) {
@@ -440,19 +454,39 @@ function AcceptModal({ request, user }) {
 
 function DeclineModal({ request, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { subject, note, selectedTime, student, paymentMethodId, status } =
-    request;
+  const {
+    subject,
+    note,
+    selectedTime,
+    student,
+    tutor,
+    paymentMethodId,
+    status,
+  } = request;
 
-  const [cancelReason, setCancelReason] = useState("");
+  const [declineReason, setDeclineReason] = useState("");
 
   const declineBooking = async () => {
     try {
-      // todo: are you sure modal
       // todo: send a note to student why decline
       // update booking status
       await updateDoc(doc(db, "bookingRequests", request.id), {
         status: "declined",
+        ...(declineReason && { declineReason }),
       });
+
+      let mailRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-request-declined`,
+        {
+          studentEmail: student.email,
+          tutorName: tutor.fullName,
+          subject,
+          date: formatDate(selectedTime.toDate()),
+        }
+      );
+
+      mailRes = mailRes.data;
+      console.log(mailRes);
 
       onClose();
     } catch (error) {
@@ -474,9 +508,9 @@ function DeclineModal({ request, user }) {
             <div className="p-8 flex flex-col gap-8">
               <span>Are you sure you want to decline?</span>
               <Textarea
-                value={cancelReason}
-                onChange={(e) => setCancelReason(e.target.value)}
-                placeholder="Send a message to the student (optional)"
+                value={declineReason}
+                onChange={(e) => setDeclineReason(e.target.value)}
+                placeholder="Reason for declining (optional)"
                 size="sm"
               />
               <div className="flex gap-2">

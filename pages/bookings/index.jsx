@@ -333,6 +333,30 @@ function CancelModal({ booking, user }) {
         });
       }
 
+      let userName;
+      let toEmail;
+
+      if (user.uid === tutor.id) {
+        userName = tutor.fullName;
+        toEmail = student.email;
+      } else if (user.uid === student.id) {
+        userName = student.fullName;
+        toEmail = tutor.email;
+      }
+
+      let emailRes = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-cancelled`,
+        {
+          toEmail,
+          userName,
+          subject,
+          date: formatDate(selectedTime.toDate()),
+        }
+      );
+
+      emailRes = emailRes.data;
+      console.log(emailRes);
+
       setLoading(false);
       onClose();
     } catch (error) {

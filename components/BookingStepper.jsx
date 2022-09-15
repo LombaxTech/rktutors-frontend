@@ -435,11 +435,24 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
         createdAt: serverTimestamp(),
       };
 
-      console.log(bookingRequest);
-
-      // return;
+      // console.log(bookingRequest);
 
       await addDoc(collection(db, "bookingRequests"), bookingRequest);
+
+      // send email to tutor
+      let res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-request-received`,
+        {
+          tutorEmail: tutor.email,
+          studentName: user.fullName,
+          lesson: subject,
+          lessonTime: formatDate(selectedTime),
+          price: hasPrevBooked ? `£${lessonPrice}` : "Free Trial",
+        }
+      );
+
+      res = res.data;
+      console.log(res);
 
       console.log("created req...");
       setBookingSuccess(true);

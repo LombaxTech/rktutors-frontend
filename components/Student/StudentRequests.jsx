@@ -38,6 +38,7 @@ import {
 } from "firebase/firestore";
 
 import Link from "next/link";
+import axios from "axios";
 
 const NoBookingRequests = () => (
   <div className="flex-1 flex flex-col items-center gap-6 mt-16">
@@ -289,8 +290,15 @@ function MoreInfoModal({ request }) {
 
 function CancelModal({ request, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { subject, note, selectedTime, student, paymentMethodId, status } =
-    request;
+  const {
+    subject,
+    note,
+    selectedTime,
+    student,
+    tutor,
+    paymentMethodId,
+    status,
+  } = request;
 
   const [success, setSuccess] = useState(false);
 
@@ -303,6 +311,20 @@ function CancelModal({ request, user }) {
 
       console.log("cancelled booking...");
       // todo: send email
+
+      let res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-request-cancelled`,
+        {
+          tutorEmail: tutor.email,
+          studentName: student.fullName,
+          lesson: subject,
+          time: formatDate(selectedTime.toDate()),
+        }
+      );
+
+      res = res.data;
+      console.log(res);
+
       onClose();
     } catch (error) {
       console.log(error);
