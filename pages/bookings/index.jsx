@@ -371,6 +371,9 @@ function CancelModal({ booking, user }) {
     }
   };
 
+  const lessThan3HoursLeft = diffHours(new Date(), selectedTime.toDate()) <= 3;
+  console.log(lessThan3HoursLeft);
+
   return (
     <div>
       <button className="btn btn-ghost" onClick={onOpen}>
@@ -389,15 +392,35 @@ function CancelModal({ booking, user }) {
           {!loading && <ModalCloseButton />}
           <ModalBody>
             <div className="p-8 flex flex-col gap-8">
-              Are you sure you want to cancel the lesson?
-              <button
-                className="btn btn-ghost"
-                onClick={cancelLesson}
-                disabled={loading}
-              >
-                Cancel Lesson
-                {loading && <Spinner className="ml-2" />}
-              </button>
+              {lessThan3HoursLeft ? (
+                <div>
+                  You cannot cancel a lesson 3 hours before it starts. Please
+                  contact your tutor if you are not able to make it. If you
+                  require help, please{" "}
+                  <Link
+                    href={`/chats/${smallBigString(
+                      user.uid,
+                      "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
+                    )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+                  >
+                    <span className="text-blue-500 underline cursor-pointer">
+                      contact us
+                    </span>
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  Are you sure you want to cancel the lesson?
+                  <button
+                    className="btn btn-ghost"
+                    onClick={cancelLesson}
+                    disabled={loading}
+                  >
+                    Cancel Lesson
+                    {loading && <Spinner className="ml-2" />}
+                  </button>
+                </>
+              )}
             </div>
           </ModalBody>
         </ModalContent>
