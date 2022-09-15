@@ -216,6 +216,104 @@ export default function TutorPage() {
       </div>
     );
   }
+
+  // IF NOT LOGGED IN AND JUST VIEWING
+  if (tutor && !user) {
+    let ratingNumbers = tutor.ratings?.map((r) => r.rating);
+    const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
+
+    const { lessonPrices } = tutor;
+
+    return (
+      <div className="flex-1 bg-gray-200 p-4 overflow-hidden flex sm:p-0 sm:overflow-auto">
+        <div className="flex-1 flex bg-white rounded-md shadow-md sm:flex-col sm:overflow-y-auto">
+          <div className="p-8 px-12 min-w-[300px] border-r flex flex-col items-center gap-4 sm:p-2 sm:px-2">
+            <Avatar
+              src={tutor.profilePictureUrl}
+              name={tutor.fullName}
+              size={"2xl"}
+            />
+            <h1 className="text-2xl font-semibold">{tutor.fullName}</h1>
+
+            <Link href={`/login`}>
+              <div className="text-blue-500 underline cursor-pointer">
+                Add to saved tutors
+              </div>
+            </Link>
+
+            {ratingNumbers.length === 0 ? (
+              <div className="flex items-center gap-2 font-bold text-lg text-teal-500"></div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <StarRatings
+                  rating={tutorRating}
+                  starRatedColor="gold"
+                  starDimension={"20px"}
+                  starSpacing={"2px"}
+                />
+                <span className="">
+                  ({ratingNumbers.length} Review
+                  {ratingNumbers.length === 1 ? "" : "s"})
+                </span>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-4">
+              <Link href={`/login`}>
+                <button className="btn btn-secondary w-full">
+                  Book Free trial lesson
+                </button>
+              </Link>
+              <Link href={`/login`}>
+                <button className="btn btn-accent">Send Message</button>
+              </Link>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-8 flex flex-col">
+            <div className="flex flex-col gap-4 w-3/4 mx-auto">
+              <div className="flex flex-col p-8 border-2 rounded-md w-fit">
+                <div className="flex gap-4 items-center">
+                  <div className="w-3 h-3 rounded-full bg-green-600"></div>
+                  <div className="">
+                    GCSE - £{lessonPrices["GCSE"]} per lesson
+                  </div>
+                </div>
+                <div className="flex gap-4 items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                  <div className="">
+                    A-Level - £{lessonPrices["A-Level"]} per lesson
+                  </div>
+                </div>
+              </div>
+              <div className="text-4xl font-bold">Subjects Offered</div>
+              <div className="flex gap-4 flex-wrap">
+                {tutor.profile.teachingSubjects &&
+                  tutor.profile.teachingSubjects.map((subject, i) => (
+                    <Tag
+                      size={"lg"}
+                      variant="solid"
+                      colorScheme={subject.level === "GCSE" ? "green" : "blue"}
+                      key={i}
+                    >
+                      {`${subject.subject} ${subject.level}`}
+                    </Tag>
+                  ))}
+              </div>
+
+              <hr className="my-6" />
+              <div className="text-4xl font-bold">About Me</div>
+              <div className="">{tutor.profile.aboutMe}</div>
+              <hr className="my-6" />
+              <div className="text-4xl font-bold">About My Lessons</div>
+              <div className="">{tutor.profile.aboutMyLessons}</div>
+              <hr className="my-6" />
+              <Reviews tutor={tutor} user={null} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 const Reviews = ({ tutor, user }) => {
@@ -248,7 +346,7 @@ const Reviews = ({ tutor, user }) => {
   return (
     <>
       <div className="text-4xl font-bold">Reviews</div>
-      <AddReviewModal tutor={tutor} user={user} />
+      {user && <AddReviewModal tutor={tutor} user={user} />}
       {reviews.length === 0 && <div>No Reviews Found</div>}
       {reviews.length > 0 && (
         <div className="flex flex-col gap-4">
