@@ -49,7 +49,12 @@ export default function Saved() {
   }
 }
 
-function TutorProfile({ tutor, user }) {
+function TutorProfile({ tutor }) {
+  const { user } = useContext(AuthContext);
+
+  let ratingNumbers = tutor.ratings?.map((r) => r.rating);
+  const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
+
   const tutorSaved = user.savedTutors?.some((t) => t.id === tutor.id);
 
   const saveTutor = async () => {
@@ -89,7 +94,7 @@ function TutorProfile({ tutor, user }) {
 
   return (
     <Box
-      maxW={"320px"}
+      maxW={"440px"}
       w={"full"}
       bg="white"
       boxShadow={"xl"}
@@ -98,6 +103,8 @@ function TutorProfile({ tutor, user }) {
       textAlign={"center"}
       display={"flex"}
       flexDirection="column"
+      border={"1px"}
+      borderColor={"gray.200"}
     >
       <div className="flex-1">
         <Avatar
@@ -127,20 +134,30 @@ function TutorProfile({ tutor, user }) {
           </div>
         )}
 
-        <Stack align={"center"} justify={"center"} direction={"row"} my={4}>
+        <div className="text-center">
+          <span className="font-bold text-lg mr-1">
+            £{tutor.lessonPrices["GCSE"]}
+          </span>
+          per lesson
+        </div>
+
+        {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
+
+        <div className="flex gap-1 flex-wrap my-4 overflow-x-auto">
           {tutor.profile.teachingSubjects &&
             tutor.profile.teachingSubjects.map((subject, i) => (
               <Tag
-                size={"md"}
+                size={"sm"}
                 variant="solid"
-                colorScheme="blue"
+                colorScheme={subject.level === "GCSE" ? "green" : "blue"}
                 key={i}
                 className="p-2"
               >
-                {`${subject.subject} ${subject.level}`}
+                {`${subject.subject}`}
               </Tag>
             ))}
-        </Stack>
+        </div>
+        {/* </Stack> */}
         <Text textAlign={"center"} bg={"white"} px={3}>
           {tutor.profile.aboutMe}
         </Text>
