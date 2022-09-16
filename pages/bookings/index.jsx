@@ -14,6 +14,7 @@ import {
   setDoc,
   query,
   where,
+  increment,
 } from "firebase/firestore";
 
 import {
@@ -361,6 +362,11 @@ function CancelModal({ booking, user }) {
 
       emailRes = emailRes.data;
       console.log(emailRes);
+
+      let completedLessons = tutor.completedLessons || 0;
+      await updateDoc(doc(db, "users", tutor.id), {
+        completedLessons: increment(-1),
+      });
 
       setLoading(false);
       onClose();

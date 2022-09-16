@@ -39,6 +39,7 @@ import {
   updateDoc,
   orderBy,
   serverTimestamp,
+  increment,
 } from "firebase/firestore";
 
 import Link from "next/link";
@@ -405,6 +406,12 @@ function AcceptModal({ request, user }) {
 
       mailRes = mailRes.data;
       console.log(mailRes);
+
+      // update tutors completed lessons
+
+      await updateDoc(doc(db, "users", tutor.id), {
+        completedLessons: increment(1),
+      });
 
       setLoading(false);
       onClose();
