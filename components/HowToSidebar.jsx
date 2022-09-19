@@ -41,7 +41,7 @@ const TutorLinks = [
 ];
 
 const StudentLinks = [
-  { name: "General", icon: FiHome, href: "#general" },
+  { name: "How To Book A Lesson", icon: FiHome, href: "#how-to-book-a-lesson" },
   { name: "Password", icon: FiTrendingUp, href: "#password" },
   { name: "Payment Methods", icon: FiCompass, href: "#payment-methods" },
 ];
