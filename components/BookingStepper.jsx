@@ -478,6 +478,11 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
           <Steps activeStep={activeStep}>
             {/* Time Picking */}
             <Step label="Choose A Time">
+              <div className="hidden sm:block">
+                <Alert status="warning">
+                  It is recommended to book using a laptop/desktop
+                </Alert>
+              </div>
               <div className="mt-6">
                 {!bookedTimesLoading && (
                   <FunctionalCalendar
