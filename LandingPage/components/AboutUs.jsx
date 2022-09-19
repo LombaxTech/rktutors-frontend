@@ -4,7 +4,7 @@ const data = [
   {
     icon: <FaComments />,
     title: "Quality Tutors From £15/hr",
-    text: "At RKTutors, we work hard to find the best tutors that meet your needs at prices you can afford. Our team of tutors are from top universities across the UK and are experts in their fields. So you can be rest assured you are in good hands!.",
+    text: "At RKTutors, we work hard to find the best tutors that meet your needs at prices you can afford. Our team of tutors are from top universities across the UK and are experts in their fields. So you can be rest assured you are in good hands!",
   },
   {
     icon: <FaGraduationCap />,
