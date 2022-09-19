@@ -191,6 +191,9 @@ export default function Navbar() {
                       </Link>
                     </>
                   )}
+                  <Link href={"/howto"}>
+                    <MenuItem>Tutorial</MenuItem>
+                  </Link>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
