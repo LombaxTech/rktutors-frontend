@@ -33,6 +33,16 @@ const TutorLinks = [
     icon: FiHome,
     href: "#tutor-settings",
   },
+  {
+    name: "Join A Lesson",
+    icon: FiHome,
+    href: "#join-lesson",
+  },
+  {
+    name: "Share A Whiteboard",
+    icon: FiHome,
+    href: "#online-whiteboard",
+  },
 
   {
     name: "Cancel A Lesson",
@@ -43,6 +53,11 @@ const TutorLinks = [
 
 const StudentLinks = [
   { name: "Book A Lesson", icon: FiHome, href: "#how-to-book-a-lesson" },
+  {
+    name: "Join A Lesson",
+    icon: FiHome,
+    href: "#join-lesson",
+  },
   {
     name: "Refunds",
     icon: FiHome,

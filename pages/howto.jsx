@@ -17,8 +17,10 @@ export default function HowTo() {
       <HowToSideBar>
         <div className="flex flex-col p-8 bg-white">
           {isStudent && <HowToBookALesson />}
-          {isStudent && <Refunds />}
           {isTutor && <TutorSettings />}
+          <JoinLesson />
+          {isTutor && <OnlineWhiteboard />}
+          {isStudent && <Refunds />}
           <CancelBooking />
           {isStudent && <AddPaymentMethods />}
           <ContactUs />
@@ -110,6 +112,104 @@ const HowToBookALesson = () => {
     </div>
   );
 };
+
+const JoinLesson = () => (
+  <div id="join-lesson" className="flex flex-col gap-4">
+    <h1 className="text-2xl font-semibold">How to join a lesson</h1>
+
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/joinLesson/p1.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">
+          From BOOKINGS, find your lesson and click JOIN LESSON. This will take
+          you to a Jitsi Meet page.
+        </h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/joinLesson/p2.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">Click allow to allow mic and camera access.</h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/joinLesson/p3.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">
+          Make sure your mic and camera is turned on and click Join meeting.
+        </h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/joinLesson/p4.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">Toggle any other settings using the bottom bar.</h1>
+      </div>
+    </div>
+    <hr className="my-8" />
+  </div>
+);
+
+const OnlineWhiteboard = () => (
+  <div id="online-whiteboard" className="flex flex-col gap-4">
+    <h1 className="text-2xl font-semibold">How to share a whiteboard</h1>
+    <h2>
+      We recommend using{" "}
+      <Link href="https://webwhiteboard.com/home/">
+        <span className="underline cursor-pointer">Web whiteboard</span>
+      </Link>{" "}
+      as an online collaborative whiteboard to teach your students.
+    </h2>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/whiteboard/p1.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">Click on Start a whiteboard.</h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/whiteboard/p2.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">Click on share.</h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/whiteboard/p3.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">Copy the link.</h1>
+      </div>
+      <div className="flex flex-col gap-4">
+        <img
+          src={"/img/howTo/whiteboard/p4.PNG"}
+          alt=""
+          className="rounded-md shadow-md brightness-75"
+        />
+        <h1 className="">
+          Share the link with your student by clicking on the chat icon to open
+          chat. Alternatively send the link using RKTutors chat.
+        </h1>
+      </div>
+    </div>
+    <hr className="my-8" />
+  </div>
+);
 
 const AddPaymentMethods = () => (
   <div id="add-payment-methods" className="flex flex-col gap-4">
