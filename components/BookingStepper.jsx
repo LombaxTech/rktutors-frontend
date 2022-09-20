@@ -663,6 +663,15 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                         Booking request completed successfully. You will receive
                         an email shortly with confirmation details.
                       </Alert>
+                      <div className="text-center">
+                        Check out our{" "}
+                        <Link href="/howto#join-lesson">
+                          <span className="underline cursor-pointer">
+                            Guide
+                          </span>
+                        </Link>{" "}
+                        on how to join your lessons.
+                      </div>
                       <div className="flex gap-4 mx-auto">
                         <Link href={`/bookings/requests`}>
                           <button className="btn btn-primary">
