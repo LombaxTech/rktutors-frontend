@@ -34,6 +34,7 @@ import {
   query,
   where,
   addDoc,
+  getDoc,
   setDoc,
   deleteDoc,
   updateDoc,
@@ -345,31 +346,6 @@ function AcceptModal({ request, user }) {
 
       console.log("accepted booking...");
 
-      // add tutor to student prevbooked tutors
-      const hasPrevBooked = tutor.prevBookedStudents.some(
-        (student) => student.id === user.uid
-      );
-
-      if (!hasPrevBooked) {
-        const newPrevBookedStudents = [
-          ...tutor.prevBookedStudents,
-          { id: student.id, fullName: student.fullName },
-        ];
-
-        await updateDoc(doc(db, "users", tutor.id), {
-          prevBookedStudents: newPrevBookedStudents,
-        });
-
-        const newPrevBookedTutors = [
-          ...student.prevBookedTutors,
-          { id: tutor.id, fullName: tutor.fullName },
-        ];
-
-        await updateDoc(doc(db, "users", student.id), {
-          prevBookedTutors: newPrevBookedTutors,
-        });
-      }
-
       // create a payment record if payment
       if (!isFreeTrial) {
         const paymentDetails = {
@@ -469,9 +445,29 @@ function DeclineModal({ request, user }) {
     tutor,
     paymentMethodId,
     status,
+    isFreeTrial,
   } = request;
 
   const [declineReason, setDeclineReason] = useState("");
+
+  const [upToDateStudent, setUpToDateStudent] = useState(null);
+  const [upToDateTutor, setUpToDateTutor] = useState(null);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        let studentDoc = await getDoc(doc(db, "users", student.id));
+        setUpToDateStudent({ id: studentDoc.id, ...studentDoc.data() });
+
+        let tutorDoc = await getDoc(doc(db, "users", tutor.id));
+        setUpToDateTutor({ id: tutorDoc.id, ...tutorDoc.data() });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (user && tutor) init();
+  }, []);
 
   const declineBooking = async () => {
     try {
@@ -495,46 +491,65 @@ function DeclineModal({ request, user }) {
       mailRes = mailRes.data;
       console.log(mailRes);
 
+      // if free trial, remove prev booked
+      if (isFreeTrial) {
+        const newPrevBookedStudents = upToDateTutor.prevBookedStudents.filter(
+          (s) => s.id !== student.id
+        );
+
+        await updateDoc(doc(db, "users", tutor.id), {
+          prevBookedStudents: newPrevBookedStudents,
+        });
+
+        const newPrevBookedTutors = upToDateStudent.prevBookedTutors.filter(
+          (t) => t.id !== tutor.id
+        );
+        await updateDoc(doc(db, "users", student.id), {
+          prevBookedTutors: newPrevBookedTutors,
+        });
+      }
+
       onClose();
     } catch (error) {
       console.log(error);
     }
   };
 
-  return (
-    <div>
-      <button className="btn btn-ghost" onClick={onOpen}>
-        Decline Lesson
-      </button>
+  if (upToDateStudent && upToDateTutor)
+    return (
+      <div>
+        <button className="btn btn-ghost" onClick={onOpen}>
+          Decline Lesson
+        </button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalBody className="flex flex-col">
-            <div className="p-8 flex flex-col gap-8">
-              <span>Are you sure you want to decline?</span>
-              <Textarea
-                value={declineReason}
-                onChange={(e) => setDeclineReason(e.target.value)}
-                placeholder="Reason for declining (optional)"
-                size="sm"
-              />
-              <div className="flex gap-2">
-                <button
-                  className="btn btn-ghost flex-1"
-                  onClick={declineBooking}
-                >
-                  Decline booking
-                </button>
-                <button className="btn btn-primary flex-1" onClick={onClose}>
-                  close
-                </button>
+        <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalCloseButton />
+            <ModalBody className="flex flex-col">
+              <div className="p-8 flex flex-col gap-8">
+                <span>Are you sure you want to decline?</span>
+                <Textarea
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                  placeholder="Reason for declining (optional)"
+                  size="sm"
+                />
+                <div className="flex gap-2">
+                  <button
+                    className="btn btn-ghost flex-1"
+                    onClick={declineBooking}
+                  >
+                    Decline booking
+                  </button>
+                  <button className="btn btn-primary flex-1" onClick={onClose}>
+                    close
+                  </button>
+                </div>
               </div>
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </div>
-  );
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </div>
+    );
 }

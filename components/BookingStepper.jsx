@@ -20,6 +20,7 @@ import {
   updateDoc,
   doc,
   addDoc,
+  getDoc,
   collection,
   query,
   where,
@@ -457,6 +458,31 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
 
       res = res.data;
       console.log(res);
+
+      // if free trial, add user n tutor to prevBooked
+      if (!hasPrevBooked) {
+        const newPrevBookedStudents = tutor.prevBookedStudents
+          ? [
+              ...tutor.prevBookedStudents,
+              { id: user.uid, fullName: user.fullName },
+            ]
+          : [{ id: user.uid, fullName: user.fullName }];
+
+        await updateDoc(doc(db, "users", tutor.id), {
+          prevBookedStudents: newPrevBookedStudents,
+        });
+
+        const newPrevBookedTutors = user.prevBookedTutors
+          ? [
+              ...user.prevBookedTutors,
+              { id: tutor.id, fullName: tutor.fullName },
+            ]
+          : [{ id: tutor.id, fullName: tutor.fullName }];
+
+        await updateDoc(doc(db, "users", user.uid), {
+          prevBookedTutors: newPrevBookedTutors,
+        });
+      }
 
       console.log("created req...");
       setBookingProcessing(false);

@@ -10,6 +10,7 @@ import {
   collection,
   doc,
   updateDoc,
+  getDoc,
   addDoc,
   setDoc,
   query,
@@ -303,6 +304,25 @@ function CancelModal({ booking, user }) {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [upToDateTutor, setUpToDateTutor] = useState(null);
+  const [upToDateStudent, setUpToDateStudent] = useState(null);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        let tutorDoc = await getDoc(doc(db, "users", tutor.id));
+        setUpToDateTutor({ id: tutorDoc.id, ...tutorDoc.data() });
+
+        let studentDoc = await getDoc(doc(db, "users", student.id));
+        setUpToDateStudent({ id: studentDoc.id, ...studentDoc.data() });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (booking) init();
+  }, []);
+
   const cancelLesson = async () => {
     setError(false);
     setLoading(true);
@@ -332,13 +352,33 @@ function CancelModal({ booking, user }) {
       });
       console.log("updated booking status to cancelled");
 
+      // update payment status
       if (!isFreeTrial) {
-        // update payment status
         await updateDoc(doc(db, "payments", booking.id), {
           status: "refunded",
         });
       }
 
+      // if free trial, reset free trial allowance
+      // todo: remove prevBookedStudents etcs
+      if (isFreeTrial) {
+        const newPrevBookedStudents = upToDateTutor.prevBookedStudents.filter(
+          (s) => s.id !== student.id
+        );
+
+        await updateDoc(doc(db, "users", tutor.id), {
+          prevBookedStudents: newPrevBookedStudents,
+        });
+
+        const newPrevBookedTutors = upToDateStudent.prevBookedTutors.filter(
+          (t) => t.id !== tutor.id
+        );
+        await updateDoc(doc(db, "users", student.id), {
+          prevBookedTutors: newPrevBookedTutors,
+        });
+      }
+
+      // send email
       let userName;
       let toEmail;
 
@@ -380,59 +420,60 @@ function CancelModal({ booking, user }) {
   const lessThan3HoursLeft = diffHours(new Date(), selectedTime.toDate()) <= 3;
   console.log(lessThan3HoursLeft);
 
-  return (
-    <div>
-      <button className="btn btn-ghost" onClick={onOpen}>
-        Cancel
-      </button>
+  if (upToDateTutor && upToDateStudent)
+    return (
+      <div>
+        <button className="btn btn-ghost" onClick={onOpen}>
+          Cancel
+        </button>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        size={"lg"}
-        isCentered
-        closeOnOverlayClick={loading ? false : true}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          {!loading && <ModalCloseButton />}
-          <ModalBody>
-            <div className="p-8 flex flex-col gap-8">
-              {lessThan3HoursLeft ? (
-                <div>
-                  You cannot cancel a lesson 3 hours before it starts. Please
-                  contact your tutor if you are not able to make it. If you
-                  require help, please{" "}
-                  <Link
-                    href={`/chats/${smallBigString(
-                      user.uid,
-                      "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
-                    )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
-                  >
-                    <span className="text-blue-500 underline cursor-pointer">
-                      contact us
-                    </span>
-                  </Link>
-                </div>
-              ) : (
-                <>
-                  Are you sure you want to cancel the lesson?
-                  <button
-                    className="btn btn-ghost"
-                    onClick={cancelLesson}
-                    disabled={loading}
-                  >
-                    Cancel Lesson
-                    {loading && <Spinner className="ml-2" />}
-                  </button>
-                </>
-              )}
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </div>
-  );
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          size={"lg"}
+          isCentered
+          closeOnOverlayClick={loading ? false : true}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            {!loading && <ModalCloseButton />}
+            <ModalBody>
+              <div className="p-8 flex flex-col gap-8">
+                {lessThan3HoursLeft ? (
+                  <div>
+                    You cannot cancel a lesson 3 hours before it starts. Please
+                    contact your tutor if you are not able to make it. If you
+                    require help, please{" "}
+                    <Link
+                      href={`/chats/${smallBigString(
+                        user.uid,
+                        "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
+                      )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+                    >
+                      <span className="text-blue-500 underline cursor-pointer">
+                        contact us
+                      </span>
+                    </Link>
+                  </div>
+                ) : (
+                  <>
+                    Are you sure you want to cancel the lesson?
+                    <button
+                      className="btn btn-ghost"
+                      onClick={cancelLesson}
+                      disabled={loading}
+                    >
+                      Cancel Lesson
+                      {loading && <Spinner className="ml-2" />}
+                    </button>
+                  </>
+                )}
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </div>
+    );
 }
 
 const NoBookings = () => (
