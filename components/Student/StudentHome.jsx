@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { smallBigString } from "../../helperFunctions";
 
 const quickLinks = [
+  { title: "Guide", href: "/howto" },
   { title: "Saved Tutors", href: "/tutors/saved" },
   { title: "Profile Settings ", href: "/profile-settings" },
 ];

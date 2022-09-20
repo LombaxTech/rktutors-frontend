@@ -10,6 +10,7 @@ import { smallBigString } from "../../helperFunctions";
 
 // todo: finish
 const quickLinks = [
+  { title: "Guide", href: "/howto" },
   { title: "Profile Settings ", href: "/profile-settings" },
   { title: "Payment Settings", href: "/profile-settings/#payment-settings" },
 ];
