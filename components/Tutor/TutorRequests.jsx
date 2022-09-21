@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { BookingRequestsContext } from "../../context/BookingRequestsContext";
 
 import {
+  Alert,
   Select,
   Modal,
   ModalOverlay,
@@ -17,6 +18,8 @@ import {
   Avatar,
   Tag,
 } from "@chakra-ui/react";
+
+import { AiFillCloseCircle } from "react-icons/ai";
 
 import {
   formatDate,
@@ -63,6 +66,7 @@ export default function TutorRequests() {
     cancelledRequests,
   } = useContext(BookingRequestsContext);
 
+  const [success, setSuccess] = useState(false);
   const [bookingType, setBookingType] = useState("Pending Requests");
 
   return (
@@ -103,6 +107,7 @@ export default function TutorRequests() {
                   key={bookingRequest.id}
                   request={bookingRequest}
                   user={user}
+                  setSuccess={setSuccess}
                 />
               ))}
             {bookingType === "Accepted Requests" &&
@@ -135,8 +140,31 @@ export default function TutorRequests() {
                   key={bookingRequest.id}
                   request={bookingRequest}
                   user={user}
+                  setSuccess={setSuccess}
                 />
               ))}
+          </div>
+        </div>
+      )}
+      {success && (
+        <div className="fixed bottom-0 right-0 m-10 shadow-2xl">
+          <div className="relative bg-green-200 p-8">
+            <div className="absolute top-0 right-0 p-2">
+              <AiFillCloseCircle
+                className="text-2xl cursor-pointer"
+                onClick={() => setSuccess(false)}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="font-bold">Booking accepted!</div>
+              <div className="">
+                View our{" "}
+                <Link href="/howto#join-lesson">
+                  <span className="underline cursor-pointer">Guide</span>
+                </Link>{" "}
+                on lessons
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -144,7 +172,7 @@ export default function TutorRequests() {
   );
 }
 
-const BookingRequest = ({ request, user }) => {
+const BookingRequest = ({ request, user, setSuccess }) => {
   const {
     subject,
     note,
@@ -196,7 +224,11 @@ const BookingRequest = ({ request, user }) => {
         <div className="flex gap-1 items-center justify-center h-full">
           {status == "pending" && !isPast(selectedTime.toDate()) && (
             <div className="flex  gap-1">
-              <AcceptModal request={request} user={user} />
+              <AcceptModal
+                request={request}
+                user={user}
+                setSuccess={setSuccess}
+              />
               <DeclineModal request={request} user={user} />
             </div>
           )}
@@ -284,7 +316,7 @@ function MoreInfoModal({ request }) {
   );
 }
 
-function AcceptModal({ request, user }) {
+function AcceptModal({ request, user, setSuccess }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     subject,
@@ -298,7 +330,6 @@ function AcceptModal({ request, user }) {
     price,
   } = request;
 
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const acceptBooking = async () => {
@@ -390,6 +421,7 @@ function AcceptModal({ request, user }) {
       });
 
       setLoading(false);
+      setSuccess(true);
       onClose();
     } catch (error) {
       console.log(error);
