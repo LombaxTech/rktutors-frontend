@@ -22,7 +22,8 @@ import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useRouter } from "next/router";
-import { formatMsgDate } from "../../helperFunctions";
+import { formatMsgDate, diffHours } from "../../helperFunctions";
+import axios from "axios";
 
 export default function Chat() {
   const router = useRouter();
@@ -135,6 +136,24 @@ export default function Chat() {
         [`read.${partner.id}`]: false,
       });
       console.log("updated last message and read status");
+
+      // if first message send email
+
+      if (!chattedBefore) {
+        let emailRes = await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER}/sg/message-received`,
+          {
+            toEmail: partner.email,
+            userName: user.fullName,
+          }
+        );
+
+        emailRes = emailRes.data;
+        console.log(emailRes);
+        console.log("sent email...");
+      }
+
+      // todo:or last message is more than 3 hrs ago,
 
       reset();
     } catch (error) {
