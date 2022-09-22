@@ -283,8 +283,8 @@ const ContactUs = () => {
           <Link
             href={`/chats/${smallBigString(
               user.uid,
-              "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
-            )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+              process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+            )}?partnerId=${process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID}`}
           >
             <span className="cursor-pointer underline">
               send us a message here.

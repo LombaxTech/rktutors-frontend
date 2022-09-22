@@ -40,8 +40,10 @@ export default function StudentHome() {
             <Link
               href={`/chats/${smallBigString(
                 user.uid,
-                "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
-              )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+                process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+              )}?partnerId=${
+                process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+              }`}
             >
               <div className="flex flex-col gap-2 text-blue-700 w-3/4 mx-auto mt-1 cursor-pointer">
                 Contact Us

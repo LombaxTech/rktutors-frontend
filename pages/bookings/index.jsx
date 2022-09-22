@@ -447,8 +447,10 @@ function CancelModal({ booking, user }) {
                     <Link
                       href={`/chats/${smallBigString(
                         user.uid,
-                        "m4PhQsgOqYb5eWwNBXr5xxMnjGz1"
-                      )}?partnerId=m4PhQsgOqYb5eWwNBXr5xxMnjGz1`}
+                        process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+                      )}?partnerId=${
+                        process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+                      }`}
                     >
                       <span className="text-blue-500 underline cursor-pointer">
                         contact us

@@ -78,7 +78,7 @@ const Chat = ({ chat, user }) => {
             }}
           />
           <div className="font-bold text-lg">{partner.fullName}</div>
-          {partner.id === "m4PhQsgOqYb5eWwNBXr5xxMnjGz1" && (
+          {partner.id === process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID && (
             <div className="font-bold text-teal-500 text-sm">
               RKTutors Support Account
             </div>
