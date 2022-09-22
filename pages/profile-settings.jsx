@@ -97,7 +97,7 @@ const LessonPriceSettings = ({ user }) => {
         </div>
       </div>
       <EditPricesModal user={user} />
-      <p className="text-sm font-light">£1 platform fee per lesson</p>
+      <p className="text-sm font-light">£2 commission fee per lesson</p>
     </div>
   );
 };
@@ -238,11 +238,11 @@ const PaymentSettings = ({ user }) => {
       <h1 className="">
         View your payments and settings through your Stripe dashboard
       </h1>
-      <Tooltip label="Stripe is a world famouse online payment processing and commerce solutions for internet businesses of all sizes.">
+      {/* <Tooltip label="Stripe is a world famouse online payment processing and commerce solutions for internet businesses of all sizes.">
         <div className="text-blue-500 font-normal cursor-pointer underline">
           What is Stripe?
         </div>
-      </Tooltip>
+      </Tooltip> */}
       <button
         className="btn btn-secondary w-3/12"
         onClick={goToStripeDashboard}

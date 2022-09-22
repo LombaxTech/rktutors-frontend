@@ -87,7 +87,7 @@ export default function TutorSignup() {
         prevBookedStudents: [],
         ratings: [],
         lessonPrices: {
-          GCSE: 10,
+          GCSE: 12,
           "A-Level": 15,
         },
       };
