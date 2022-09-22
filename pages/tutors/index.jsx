@@ -270,7 +270,7 @@ function TutorProfile({ tutor }) {
 
         {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
 
-        <div className="flex gap-1 flex-wrap my-4 overflow-x-auto">
+        <div className="flex gap-1 justify-center flex-wrap my-4 overflow-x-auto">
           {tutor.profile.teachingSubjects &&
             tutor.profile.teachingSubjects.map((subject, i) => (
               <Tag
