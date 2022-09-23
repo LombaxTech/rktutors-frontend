@@ -18,6 +18,8 @@ export default function ContactUs(props) {
     setSuccess(false);
     try {
       console.log(name, email, message);
+
+      console.log(`${process.env.NEXT_PUBLIC_SERVER}/sg/lp-contact-us`);
       let res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER}/sg/lp-contact-us`,
         {
