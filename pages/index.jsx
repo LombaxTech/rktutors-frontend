@@ -27,7 +27,7 @@ export default function Home() {
     } else if (user.type === "admin") {
       return <AdminDashboard />;
     } else {
-      return <LoadingPage />;
+      return <LoadingPage message={"Your account is being prepared"} />;
     }
   }
 }
