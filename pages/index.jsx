@@ -22,14 +22,12 @@ export default function Home() {
   if (!userLoading && user) {
     if (user.type === "student") {
       return <StudentHome />;
-    }
-
-    if (user.type === "tutor") {
+    } else if (user.type === "tutor") {
       return <TutorHome />;
-    }
-
-    if (user.type === "admin") {
+    } else if (user.type === "admin") {
       return <AdminDashboard />;
+    } else {
+      return <LoadingPage />;
     }
   }
 }

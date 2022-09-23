@@ -56,6 +56,7 @@ export default function TutorSignup() {
     // console.log({ fullName, email, password });
 
     try {
+      router.push("/");
       // Create Auth User
       let userCred = await createUserWithEmailAndPassword(
         auth,
@@ -97,7 +98,6 @@ export default function TutorSignup() {
       setSuccessMessage("Succesfully created account");
       console.log("created user");
       setLoading(false);
-      router.push("/");
     } catch (error) {
       setLoading(false);
       console.log(error.code);
@@ -112,6 +112,8 @@ export default function TutorSignup() {
       }
     }
   };
+
+  if (loading) return <SignupLoading />;
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg="gray.50">
@@ -212,3 +214,10 @@ export default function TutorSignup() {
     </Flex>
   );
 }
+
+const SignupLoading = () => (
+  <div className="flex justify-center items-center mt-48">
+    <span className="font-bold text-3xl">Creating Your Account...</span>
+    <Spinner className="ml-2" size={"xl"} />
+  </div>
+);
