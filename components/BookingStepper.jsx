@@ -601,7 +601,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                   </div>
                   <div className="">
                     <span className="">Additional Notes: </span>
-                    {note}
+                    {note ? note : "No notes provided"}
                     {!bookingSuccess && (
                       <span
                         className="ml-2 underline text-blue-500 cursor-pointer"
@@ -611,28 +611,32 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                       </span>
                     )}
                   </div>
-                  {hasPrevBooked ? (
-                    <div className="">
-                      <span className="">Paying with: </span>
-                      Card ending in{" "}
-                      <span>**** {paymentMethod?.card.last4}</span>
-                      {!bookingSuccess && (
-                        <span
-                          className="ml-2 underline text-blue-500 cursor-pointer"
-                          onClick={() => setStep(2)}
-                        >
-                          Edit
-                        </span>
+                  {!bookingSuccess && (
+                    <div>
+                      {hasPrevBooked ? (
+                        <div className="">
+                          <span className="">Paying with: </span>
+                          Card ending in{" "}
+                          <span>**** {paymentMethod?.card.last4}</span>
+                          {!bookingSuccess && (
+                            <span
+                              className="ml-2 underline text-blue-500 cursor-pointer"
+                              onClick={() => setStep(2)}
+                            >
+                              Edit
+                            </span>
+                          )}
+                          <div className="mt-2">
+                            <span className="">Price: </span>
+                            <span className="font-bold">£{lessonPrice}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="">
+                          <span className="">Price: </span>
+                          <span className="font-bold">FREE Trial</span>
+                        </div>
                       )}
-                      <div className="mt-2">
-                        <span className="">Price: </span>
-                        <span className="font-bold">£{lessonPrice}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="">
-                      <span className="">Price: </span>
-                      <span className="font-bold">FREE Trial</span>
                     </div>
                   )}
                 </div>
@@ -660,8 +664,7 @@ export default function BookingStepper({ tutor, hasPrevBooked }) {
                     >
                       <Alert status="success">
                         <AlertIcon />
-                        Booking request completed successfully. You will receive
-                        an email shortly with confirmation details.
+                        Booking request completed successfully.
                       </Alert>
                       <div className="text-center">
                         Check out our{" "}
