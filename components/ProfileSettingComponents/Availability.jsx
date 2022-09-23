@@ -28,7 +28,14 @@ const Availablity = ({ user }) => {
   return (
     <div id="availablity" className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold">Availablity</h1>
-      <h1 className="">Account Active Status: </h1>
+      <h1 className="flex gap-2 items-center">
+        Account Active Status:
+        {isUserActive ? (
+          <span className="text-lg font-bold text-teal-500">ACTIVE</span>
+        ) : (
+          <span className="text-lg font-bold text-pink-500">INACTIVE</span>
+        )}
+      </h1>
       {isUserActive && (
         <h1>Your account is currently active and open for student booking</h1>
       )}

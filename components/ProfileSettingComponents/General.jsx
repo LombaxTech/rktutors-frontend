@@ -25,6 +25,9 @@ import { db, storage } from "../../firebase/firebaseClient";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import Link from "next/link";
+import { smallBigString } from "../../helperFunctions";
+
 const General = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -45,7 +48,17 @@ const General = ({ user }) => {
       </div>
       <div className="font-normal">
         Something wrong with these details?{" "}
-        <span className="text-blue-300 underline">Contact us</span> for help
+        <Link
+          href={`/chats/${smallBigString(
+            user.uid,
+            process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID
+          )}?partnerId=${process.env.NEXT_PUBLIC_RKTUTOR_TEAM_FIRESTORE_ID}`}
+        >
+          <span className=" text-blue-700 underline cursor-pointer">
+            Contact Us
+          </span>
+        </Link>
+        {/* <span className="text-blue-300 underline">Contact us</span> for help */}
       </div>
       <div className="flex flex-col gap-3 w-5/12">
         <div className="flex items-center gap-3">

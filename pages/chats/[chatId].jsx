@@ -22,6 +22,8 @@ import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useRouter } from "next/router";
+import { formatMsgDate, diffHours } from "../../helperFunctions";
+import axios from "axios";
 
 export default function Chat() {
   const router = useRouter();
@@ -135,6 +137,24 @@ export default function Chat() {
       });
       console.log("updated last message and read status");
 
+      // if first message send email
+
+      if (!chattedBefore) {
+        let emailRes = await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER}/sg/message-received`,
+          {
+            toEmail: partner.email,
+            userName: user.fullName,
+          }
+        );
+
+        emailRes = emailRes.data;
+        console.log(emailRes);
+        console.log("sent email...");
+      }
+
+      // todo:or last message is more than 3 hrs ago,
+
       reset();
     } catch (error) {
       console.log(error);
@@ -144,7 +164,9 @@ export default function Chat() {
   const MyMessage = ({ msg }) => (
     <li className="flex justify-start">
       {/* <Tooltip label={msg.sentAt.toString()}> */}
-      <Tooltip label={"aa"}>
+      <Tooltip
+        label={msg && msg.sentAt ? formatMsgDate(msg.sentAt.toDate()) : ""}
+      >
         <div className="relative max-w-xl px-4 py-2 text-gray-700 rounded shadow">
           <span className="block">{msg.text}</span>
         </div>
@@ -153,15 +175,17 @@ export default function Chat() {
   );
   const YourMessage = ({ msg }) => (
     <li className="flex justify-end">
-      <div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
-        <span className="block">{msg.text}</span>
-      </div>
+      <Tooltip label={formatMsgDate(msg.sentAt.toDate())}>
+        <div className="relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow">
+          <span className="block">{msg.text}</span>
+        </div>
+      </Tooltip>
     </li>
   );
 
   const UserProfile = () => {
     return (
-      <div className="bg-white p-10 rounded-md shadow-md min-w-[200px] flex flex-col gap-4 items-center ">
+      <div className="bg-white p-10 rounded-md shadow-md min-w-[200px] flex flex-col gap-4 items-center sm:p-4">
         {partner && partner.type === "tutor" && (
           <>
             <Link href={`/tutors/${partner.id}`}>
@@ -173,7 +197,9 @@ export default function Chat() {
               />
             </Link>
             <div className="text-xl font-semibold">{partner.fullName}</div>
-            <button className="btn btn-secondary">Book Lesson</button>
+            <Link href={`/tutors/${partner.id}`}>
+              <button className="btn btn-secondary"> Visit tutor page</button>
+            </Link>
           </>
         )}
         {partner && partner.type === "student" && (
@@ -187,12 +213,27 @@ export default function Chat() {
             <div className="text-xl font-semibold">{partner.fullName}</div>
           </>
         )}
+        {partner && partner.type === "admin" && (
+          <>
+            <Avatar src={"/img/logos/biggerIcon.png"} size={"xl"} />
+            <div className="text-xl font-semibold">{partner.fullName}</div>
+            <div className="text-base text-teal-500 font-semibold">
+              RKTutors Support Account
+            </div>
+            <div className="text-base text-teal-500 font-semibold">
+              +44 (0) 7419 206020
+            </div>
+            <div className="text-base text-teal-500 font-semibold">
+              tutors@rktutors.co.uk
+            </div>
+          </>
+        )}
       </div>
     );
   };
 
   return (
-    <div className="flex-1 flex gap-4 max-h-full overflow-hidden p-4 bg-gray-200">
+    <div className="flex-1 flex gap-4 max-h-full overflow-hidden p-4 bg-gray-200 sm:flex-col sm:p-0 sm:gap-1 sm:overflow-y-auto">
       <UserProfile />
       {/* message and input */}
       <div className="flex-1 flex flex-col bg-white rounded-md shadow-md">
@@ -213,7 +254,7 @@ export default function Chat() {
             </ul>
           )}
         </div>
-        <div className="w-full ">
+        <div className="w-full sm:fixed sm:bottom-0 sm:left-0">
           {/* <MessageInput /> */}
           <form
             className="flex items-center justify-between w-full p-3 border-t border-gray-300"

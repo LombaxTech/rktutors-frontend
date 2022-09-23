@@ -28,8 +28,12 @@ import TutorDashboard from "./TutorDashoard";
 export default function TutorHome() {
   const { user, userLoading } = useContext(AuthContext);
 
-  if (user && !user.active) {
+  const { stripeConnectedAccount, profile } = user;
+
+  const accountSetup = stripeConnectedAccount.setup && profile.setup;
+
+  if (user && !accountSetup) {
     return <SetupAccount />;
   }
-  if (user && user.active) return <TutorDashboard />;
+  if (user && accountSetup) return <TutorDashboard />;
 }

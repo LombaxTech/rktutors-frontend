@@ -1,4 +1,5 @@
 import {
+  Spinner,
   Flex,
   Box,
   FormControl,
@@ -12,7 +13,6 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Link,
   IconButton,
   Alert,
   AlertIcon,
@@ -29,7 +29,10 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { firebaseApp, db } from "../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
+import Link from "next/link";
+
 import axios from "axios";
+import { toTitleCase } from "../helperFunctions";
 
 const auth = getAuth(firebaseApp);
 
@@ -43,10 +46,14 @@ export default function Signup() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const signup = async () => {
+    setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
+
+    // fix up name
 
     try {
       // Create Auth User
@@ -62,7 +69,7 @@ export default function Signup() {
       let stripeCustomer = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER}/stripe/stripe-customer`,
         {
-          name: fullName,
+          name: toTitleCase(fullName),
           email,
         }
       );
@@ -74,19 +81,34 @@ export default function Signup() {
       // create firestore user
       let firestoreUserDetails = {
         type: "student",
-        fullName,
+        fullName: toTitleCase(fullName),
+        email,
         stripeCustomerId: stripeCustomer.id,
         createdAt: serverTimestamp(),
+        prevBookedTutors: [],
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);
 
       setSuccessMessage("Succesfully created account");
       console.log("created user");
+
+      setLoading(false);
+
       router.push("/");
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      setLoading(false);
+
+      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMessage("Email has already been used");
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage("Please enter a valid email address");
+      } else if (error.code === "auth/internal-error") {
+        setErrorMessage("Something went wrong");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
 
@@ -108,8 +130,10 @@ export default function Signup() {
             </div>
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
-            <Link color={"blue.400"} href="/tutorsignup">
-              Tutors sign up here
+            <Link href="/tutorsignup">
+              <div className="text-teal-500 cursor-pointer">
+                Tutors sign up here
+              </div>
             </Link>
           </Text>
         </Stack>
@@ -174,13 +198,18 @@ export default function Signup() {
                   bg: "blue.500",
                 }}
                 onClick={signup}
+                disabled={loading}
               >
                 Sign up
+                {loading && <Spinner className="ml-2" />}
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already have an account? <Link color={"blue.400"}>Login</Link>
+                Already have an account?{" "}
+                <Link href="/login">
+                  <div className="text-teal-500 cursor-pointer">Login</div>
+                </Link>
               </Text>
             </Stack>
           </Stack>

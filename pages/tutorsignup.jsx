@@ -1,4 +1,5 @@
 import {
+  Spinner,
   Flex,
   Box,
   FormControl,
@@ -12,8 +13,9 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Link,
   IconButton,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -27,7 +29,10 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { firebaseApp, db } from "../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
+import Link from "next/link";
 import axios from "axios";
+
+import { toTitleCase } from "../helperFunctions";
 
 const auth = getAuth(firebaseApp);
 
@@ -41,14 +46,17 @@ export default function TutorSignup() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const signup = async () => {
+    setLoading(true);
     setErrorMessage("");
     setSuccessMessage("");
 
     // console.log({ fullName, email, password });
 
     try {
+      router.push("/");
       // Create Auth User
       let userCred = await createUserWithEmailAndPassword(
         auth,
@@ -67,7 +75,7 @@ export default function TutorSignup() {
       // create firestore user
       let firestoreUserDetails = {
         type: "tutor",
-        fullName,
+        fullName: toTitleCase(fullName),
         email,
         createdAt: serverTimestamp(),
         active: false,
@@ -77,18 +85,35 @@ export default function TutorSignup() {
           remaining_requirements: [],
         },
         // TODO: Fill in more details
+        prevBookedStudents: [],
+        ratings: [],
+        lessonPrices: {
+          GCSE: 12,
+          "A-Level": 15,
+        },
       };
 
       await setDoc(doc(db, "users", userCred.user.uid), firestoreUserDetails);
 
       setSuccessMessage("Succesfully created account");
       console.log("created user");
-      router.push("/");
+      setLoading(false);
     } catch (error) {
-      console.log(error);
-      setErrorMessage(error.message);
+      setLoading(false);
+      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMessage("Email has already been used");
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage("Please enter a valid email address");
+      } else if (error.code === "auth/internal-error") {
+        setErrorMessage("Something went wrong");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
+
+  if (loading) return <SignupLoading />;
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg="gray.50">
@@ -108,6 +133,18 @@ export default function TutorSignup() {
             </Heading>
           </div>
         </Stack>
+        {errorMessage && (
+          <Alert status="error">
+            <AlertIcon />
+            {errorMessage}
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert status="success">
+            <AlertIcon />
+            {successMessage}
+          </Alert>
+        )}
         <Box rounded={"lg"} bg="white" boxShadow={"lg"} p={8}>
           <Stack spacing={4}>
             <FormControl isRequired>
@@ -157,13 +194,18 @@ export default function TutorSignup() {
                   bg: "blue.500",
                 }}
                 onClick={signup}
+                disabled={loading}
               >
                 Sign up
+                {loading && <Spinner className="ml-2" />}
               </Button>
             </Stack>
             <Stack pt={6}>
               <Text align={"center"}>
-                Already have an account? <Link color={"blue.400"}>Login</Link>
+                Already have an account?
+                <Link href="/login">
+                  <div className="text-teal-500 cursor-pointer">Login</div>
+                </Link>
               </Text>
             </Stack>
           </Stack>
@@ -172,3 +214,10 @@ export default function TutorSignup() {
     </Flex>
   );
 }
+
+const SignupLoading = () => (
+  <div className="flex justify-center items-center mt-48">
+    <span className="font-bold text-3xl">Creating Your Account...</span>
+    <Spinner className="ml-2" size={"xl"} />
+  </div>
+);

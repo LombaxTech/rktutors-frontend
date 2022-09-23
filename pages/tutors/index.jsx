@@ -21,7 +21,8 @@ import { db } from "../../firebase/firebaseClient";
 import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
-import { smallBigString } from "../../helperFunctions";
+import { smallBigString, getMean } from "../../helperFunctions";
+import StarRatings from "react-star-ratings";
 
 const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
   const [subject, setSubject] = useState("");
@@ -44,17 +45,17 @@ const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
   return (
     <div className="flex gap-6 justify-around">
       {/* Image */}
-      <div className="w-4/12">
+      <div className="w-4/12 sm:hidden">
         <img src="img/user-profiles.svg" alt="" className="h-56" />
       </div>
       {/* Title and Filter */}
-      <div className="w-6/12 flex flex-col">
+      <div className="w-6/12 flex flex-col sm:w-full">
         <h1 className="text-5xl font-bold text-center">Find a Tutor </h1>
-        <hr className="my-6" />
+        <hr className="my-6 sm:my-1" />
 
         {/* Filter */}
-        <div className="flex gap-4 mt-8 w-full">
-          <div className="flex gap-4 flex-1">
+        <div className="flex gap-4 mt-8 w-full sm:flex-col">
+          <div className="flex gap-4 flex-1 sm:w-10/12 sm:flex-col sm:mx-auto">
             <select
               className="flex-1 select max-w-xs outline text-center"
               // value={subject}
@@ -164,7 +165,7 @@ export default function Tutors() {
   }, [searchedSubject, searchedAcademicLevel]);
 
   return (
-    <div className="flex-1 p-8 bg-gray-200">
+    <div className="flex-1 p-8 bg-gray-200 sm:p-0">
       <div className="bg-white rounded-md shadow-md p-8">
         <ImageAndFilter
           setSearchedSubject={setSearchedSubject}
@@ -186,7 +187,7 @@ export default function Tutors() {
             )}
             {/* <span className="text-blue-700">Physics</span> Tutors */}
           </h1>
-          <div className="flex flex-col ml-10 p-8 border-2 rounded-md shadow-md w-fit">
+          <div className="flex flex-col ml-10 p-8 border-2 rounded-md  w-fit">
             <div className="flex gap-4 items-center">
               <div className="w-3 h-3 rounded-full bg-green-600"></div>
               <div className="">GCSE</div>
@@ -213,9 +214,12 @@ export default function Tutors() {
 function TutorProfile({ tutor }) {
   const { user } = useContext(AuthContext);
 
+  let ratingNumbers = tutor.ratings?.map((r) => r.rating);
+  const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
+
   return (
     <Box
-      maxW={"320px"}
+      maxW={"440px"}
       w={"full"}
       bg="white"
       boxShadow={"xl"}
@@ -224,6 +228,8 @@ function TutorProfile({ tutor }) {
       textAlign={"center"}
       display={"flex"}
       flexDirection="column"
+      border={"1px"}
+      borderColor={"gray.200"}
     >
       <div className="flex-1">
         <Avatar
@@ -235,10 +241,36 @@ function TutorProfile({ tutor }) {
         <Heading fontSize={"2xl"} fontFamily={"body"}>
           {tutor.fullName}
         </Heading>
+        <div className="flex justify-center">
+          {ratingNumbers.length === 0 ? (
+            <div className="flex items-center gap-2 font-bold text-sm text-teal-500">
+              NEW Tutor
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <StarRatings
+                rating={tutorRating}
+                starRatedColor="gold"
+                starDimension={"20px"}
+                starSpacing={"2px"}
+              />
+              <span className="">
+                ({ratingNumbers.length} Review
+                {ratingNumbers.length === 1 ? "" : "s"})
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="text-center">
+          <span className="font-bold text-lg mr-1">
+            £{tutor.lessonPrices["GCSE"]}
+          </span>
+          per lesson
+        </div>
 
         {/* <Stack align={"center"} justify={"center"} direction={"row"} my={4}> */}
 
-        <div className="flex gap-1 flex-wrap my-4">
+        <div className="flex gap-1 justify-center flex-wrap my-4 overflow-x-auto">
           {tutor.profile.teachingSubjects &&
             tutor.profile.teachingSubjects.map((subject, i) => (
               <Tag

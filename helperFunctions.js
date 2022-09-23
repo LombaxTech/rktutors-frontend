@@ -16,7 +16,12 @@ export const isToday = (someDate) => {
   );
 };
 
-export const formatDate = (date) => moment(date).format("ha DD/MM/YYYY");
+export const isPast = (date) => date < new Date();
+
+export const formatDate = (date) => moment(date).format("ha DD/MM/YY");
+
+export const formatMsgDate = (date) =>
+  moment(date).format("hh:mma  DD/MM/YYYY");
 
 export function makeId(length) {
   var result = "";
@@ -28,3 +33,19 @@ export function makeId(length) {
   }
   return result;
 }
+
+export const getMean = (array) => array.reduce((a, b) => a + b) / array.length;
+
+export const hasStudentBookedTutor = (studentId, tutor) =>
+  tutor.prevBookedStudents?.some((student) => student.id === studentId);
+
+export const getLastNChars = (string, n) => string.substr(string.length - n);
+
+export const toTitleCase = (phrase) =>
+  phrase
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+export const diffHours = (date1, date2) => Math.abs(date1 - date2) / 36e5;

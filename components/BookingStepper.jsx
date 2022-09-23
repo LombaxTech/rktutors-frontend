@@ -20,16 +20,18 @@ import {
   updateDoc,
   doc,
   addDoc,
+  getDoc,
   collection,
   query,
   where,
   onSnapshot,
   getDocs,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseClient";
 import { FaPlusCircle } from "react-icons/fa";
 
-import { formatDate } from "../helperFunctions";
+import { formatDate, getLastNChars } from "../helperFunctions";
 import Link from "next/link";
 import moment from "moment";
 
@@ -220,12 +222,12 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
       )}
 
       {paymentMethods?.length > 0 && (
-        <div className="flex gap-16 justify-between">
+        <div className="flex gap-16 justify-between sm:flex-col sm:p-0 sm:justify-center">
           {/* Cards */}
           <div className="flex flex-col gap-8">
             {/* Title */}
             <div className="flex flex-col gap-4">
-              <h1 className="text-3xl font-bold text-center">
+              <h1 className="text-3xl font-bold text-center sm:text-xl">
                 Choose payment method
               </h1>
               <h1 className="text-sm font-bold text-center">
@@ -256,7 +258,7 @@ const SelectPaymentMethod = ({ user, paymentMethodId, setPaymentMethodId }) => {
   );
 };
 
-export default function BookingStepper({ tutor }) {
+export default function BookingStepper({ tutor, hasPrevBooked }) {
   const { user, userLoading } = useContext(AuthContext);
 
   const { nextStep, prevStep, setStep, reset, activeStep } = useSteps({
@@ -276,6 +278,8 @@ export default function BookingStepper({ tutor }) {
   const [bookings, setBookings] = useState([]);
   const [boookingRequests, setBookingRequests] = useState([]);
   const [bookedTimesLoading, setBookedTimesLoading] = useState(true);
+
+  const [bookingProcessing, setBookingProcessing] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -297,8 +301,16 @@ export default function BookingStepper({ tutor }) {
         let bookings = [];
         let reqs = [];
 
-        bookingsSnapshot.forEach((b) => bookings.push(b.data()));
-        reqsSnapshot.forEach((r) => reqs.push(r.data()));
+        bookingsSnapshot.forEach((b) => {
+          const { status } = b.data();
+          if (status === "cancelled") return;
+
+          bookings.push(b.data());
+        });
+        reqsSnapshot.forEach((r) => {
+          const { status } = r.data();
+          if (status === "pending") reqs.push(r.data());
+        });
 
         let newBookedTimes = bookings.map((booking) =>
           moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
@@ -307,7 +319,47 @@ export default function BookingStepper({ tutor }) {
           moment(r.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
         );
 
-        let bookedTimes = [...newBookedTimes, ...newReqsTime];
+        // todo: do same for student bookings and reqs
+        let studentBookingsQuery = query(
+          bookingsRef,
+          where("student.id", "==", user.uid)
+        );
+
+        let studentReqsQuery = query(
+          reqsRef,
+          where("student.id", "==", user.uid)
+        );
+
+        let studentBookingsSnapshot = await getDocs(studentBookingsQuery);
+        let studentReqsSnapshot = await getDocs(studentReqsQuery);
+
+        let studentBookings = [];
+        let studentReqs = [];
+
+        studentBookingsSnapshot.forEach((b) => {
+          const { status } = b.data();
+          if (status === "cancelled") return;
+
+          studentBookings.push(b.data());
+        });
+        studentReqsSnapshot.forEach((r) => {
+          const { status } = r.data();
+          if (status === "pending") studentReqs.push(r.data());
+        });
+
+        let newStudentBookedTimes = studentBookings.map((booking) =>
+          moment(booking.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
+        );
+        let newStudentReqsTimes = studentReqs.map((r) =>
+          moment(r.selectedTime.toDate()).format("YYYY-MM-DD HH:mm")
+        );
+
+        let bookedTimes = [
+          ...newBookedTimes,
+          ...newReqsTime,
+          ...newStudentBookedTimes,
+          ...newStudentReqsTimes,
+        ];
         // console.log(bookedTimes);
         setBookedTimes(bookedTimes);
         setBookedTimesLoading(false);
@@ -326,18 +378,36 @@ export default function BookingStepper({ tutor }) {
     }
   }, [paymentMethodId]);
 
-  const isNextDisabled = () => {
-    if (activeStep == 0 && !selectedTime) return true;
-    if (activeStep == 1 && !subject) return true;
+  const [lessonPrice, setLessonPrice] = useState();
 
-    // todo: make sure payment method is selected
-    if (activeStep == 2 && !paymentMethod) return true;
-    if (activeStep == 3) return true;
+  useEffect(() => {
+    if (getLastNChars(subject, 4) === "GCSE") {
+      setLessonPrice(tutor.lessonPrices["GCSE"]);
+    } else if (getLastNChars(subject, 7) === "A-Level") {
+      setLessonPrice(tutor.lessonPrices["A-Level"]);
+    }
+  }, [subject]);
+
+  const isNextDisabled = () => {
+    if (hasPrevBooked) {
+      if (activeStep == 0 && !selectedTime) return true;
+      if (activeStep == 1 && !subject) return true;
+
+      // todo: make sure payment method is selected
+      if (activeStep == 2 && !paymentMethod) return true;
+      if (activeStep == 3) return true;
+    } else if (!hasPrevBooked) {
+      if (activeStep == 0 && !selectedTime) return true;
+      if (activeStep == 1 && !subject) return true;
+      if (activeStep == 3) return true;
+    }
 
     if (bookingSuccess) return true;
   };
 
   const confirmBooking = async () => {
+    setBookingProcessing(true);
+
     try {
       const bookingRequest = {
         student: {
@@ -348,6 +418,7 @@ export default function BookingStepper({ tutor }) {
           ...(user.profilePictureUrl && {
             profilePictureUrl: user.profilePictureUrl,
           }),
+          prevBookedTutors: user.prevBookedTutors || [],
         },
         tutor: {
           id: tutor.id,
@@ -357,27 +428,69 @@ export default function BookingStepper({ tutor }) {
             profilePictureUrl: tutor.profilePictureUrl,
           }),
           connectedAccountId: tutor.stripeConnectedAccount.id,
+          prevBookedStudents: tutor.prevBookedStudents || [],
         },
         subject,
         selectedTime,
         note,
-        paymentMethodId,
-        // todo: fix up price stuff
-        price: 20,
+        ...(hasPrevBooked && { paymentMethodId }),
+        price: hasPrevBooked ? lessonPrice : 0,
         status: "pending",
+        isFreeTrial: hasPrevBooked ? false : true,
+        createdAt: serverTimestamp(),
       };
 
-      console.log(bookingRequest);
-
-      // return;
+      // console.log(bookingRequest);
 
       await addDoc(collection(db, "bookingRequests"), bookingRequest);
 
+      // send email to tutor
+      let res = await axios.post(
+        `${process.env.NEXT_PUBLIC_SERVER}/sg/booking-request-received`,
+        {
+          tutorEmail: tutor.email,
+          studentName: user.fullName,
+          lesson: subject,
+          lessonTime: formatDate(selectedTime),
+          price: hasPrevBooked ? `£${lessonPrice}` : "Free Trial",
+        }
+      );
+
+      res = res.data;
+      console.log(res);
+
+      // if free trial, add user n tutor to prevBooked
+      if (!hasPrevBooked) {
+        const newPrevBookedStudents = tutor.prevBookedStudents
+          ? [
+              ...tutor.prevBookedStudents,
+              { id: user.uid, fullName: user.fullName },
+            ]
+          : [{ id: user.uid, fullName: user.fullName }];
+
+        await updateDoc(doc(db, "users", tutor.id), {
+          prevBookedStudents: newPrevBookedStudents,
+        });
+
+        const newPrevBookedTutors = user.prevBookedTutors
+          ? [
+              ...user.prevBookedTutors,
+              { id: tutor.id, fullName: tutor.fullName },
+            ]
+          : [{ id: tutor.id, fullName: tutor.fullName }];
+
+        await updateDoc(doc(db, "users", user.uid), {
+          prevBookedTutors: newPrevBookedTutors,
+        });
+      }
+
       console.log("created req...");
+      setBookingProcessing(false);
       setBookingSuccess(true);
       successMessageRef.current?.scrollIntoView();
     } catch (error) {
       console.log(error);
+      setBookingProcessing(false);
       setBookingError(true);
     }
   };
@@ -391,6 +504,11 @@ export default function BookingStepper({ tutor }) {
           <Steps activeStep={activeStep}>
             {/* Time Picking */}
             <Step label="Choose A Time">
+              <div className="hidden sm:block">
+                <Alert status="warning">
+                  It is recommended to book using a laptop/desktop
+                </Alert>
+              </div>
               <div className="mt-6">
                 {!bookedTimesLoading && (
                   <FunctionalCalendar
@@ -410,7 +528,7 @@ export default function BookingStepper({ tutor }) {
             <Step label="Choose Subject">
               <div className="flex flex-col justify-center items-center mt-4 gap-8">
                 <h1 className="text-3xl font-bold">Choose Subject</h1>
-                <div className="w-5/12 flex flex-col gap-4">
+                <div className="w-5/12 flex flex-col gap-4 sm:w-full">
                   <Select
                     value={subject}
                     placeholder="Select Subject"
@@ -439,11 +557,17 @@ export default function BookingStepper({ tutor }) {
             {/* Payment */}
             <Step label="Payment Details">
               <div className="flex flex-col justify-center items-center mt-4">
-                <SelectPaymentMethod
-                  user={user}
-                  paymentMethodId={paymentMethodId}
-                  setPaymentMethodId={setPaymentMethodId}
-                />
+                {hasPrevBooked ? (
+                  <SelectPaymentMethod
+                    user={user}
+                    paymentMethodId={paymentMethodId}
+                    setPaymentMethodId={setPaymentMethodId}
+                  />
+                ) : (
+                  <h1 className="text-3xl font-bold mt-6">
+                    You May Skip This Step (Free Trial)
+                  </h1>
+                )}
               </div>
             </Step>
 
@@ -487,26 +611,39 @@ export default function BookingStepper({ tutor }) {
                       </span>
                     )}
                   </div>
-                  <div className="">
-                    <span className="">Paying with: </span>
-                    Card ending in <span>**** {paymentMethod?.card.last4}</span>
-                    {!bookingSuccess && (
-                      <span
-                        className="ml-2 underline text-blue-500 cursor-pointer"
-                        onClick={() => setStep(2)}
-                      >
-                        Edit
-                      </span>
-                    )}
-                  </div>
+                  {hasPrevBooked ? (
+                    <div className="">
+                      <span className="">Paying with: </span>
+                      Card ending in{" "}
+                      <span>**** {paymentMethod?.card.last4}</span>
+                      {!bookingSuccess && (
+                        <span
+                          className="ml-2 underline text-blue-500 cursor-pointer"
+                          onClick={() => setStep(2)}
+                        >
+                          Edit
+                        </span>
+                      )}
+                      <div className="mt-2">
+                        <span className="">Price: </span>
+                        <span className="font-bold">£{lessonPrice}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="">
+                      <span className="">Price: </span>
+                      <span className="font-bold">FREE Trial</span>
+                    </div>
+                  )}
                 </div>
 
                 <button
                   className="btn btn-primary"
                   onClick={confirmBooking}
-                  disabled={bookingSuccess}
+                  disabled={bookingSuccess || bookingProcessing}
                 >
-                  Confirm Booking
+                  Confirm Booking{" "}
+                  {bookingProcessing && <Spinner className="ml-2" />}
                 </button>
                 <div className="w-1/3">
                   {bookingError && (
@@ -526,6 +663,15 @@ export default function BookingStepper({ tutor }) {
                         Booking request completed successfully. You will receive
                         an email shortly with confirmation details.
                       </Alert>
+                      <div className="text-center">
+                        Check out our{" "}
+                        <Link href="/howto#join-lesson">
+                          <span className="underline cursor-pointer">
+                            Guide
+                          </span>
+                        </Link>{" "}
+                        on how to join your lessons.
+                      </div>
                       <div className="flex gap-4 mx-auto">
                         <Link href={`/bookings/requests`}>
                           <button className="btn btn-primary">

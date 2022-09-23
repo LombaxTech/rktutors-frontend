@@ -7,6 +7,7 @@ import LoadingPage from "../components/LoadingPage";
 
 import TutorHome from "../components/Tutor/TutorHome";
 import StudentHome from "../components/Student/StudentHome";
+import AdminDashboard from "../components/Admin/AdminDashboard";
 
 export default function Home() {
   const router = useRouter();
@@ -21,10 +22,12 @@ export default function Home() {
   if (!userLoading && user) {
     if (user.type === "student") {
       return <StudentHome />;
-    }
-
-    if (user.type === "tutor") {
+    } else if (user.type === "tutor") {
       return <TutorHome />;
+    } else if (user.type === "admin") {
+      return <AdminDashboard />;
+    } else {
+      return <LoadingPage message={"Your account is being prepared"} />;
     }
   }
 }

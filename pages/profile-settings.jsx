@@ -12,6 +12,19 @@ import {
   Textarea,
   Spinner,
   Tooltip,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import { SmallCloseIcon, DeleteIcon } from "@chakra-ui/icons";
 import { FaTrash } from "react-icons/fa";
@@ -53,13 +66,14 @@ export default function ProfileSettings() {
     return (
       <div>
         <Sidebar>
-          <div className="flex flex-col p-8 bg-white">
+          <div className="flex flex-col p-8 bg-white w-9/12">
             <General user={user} />
             <Password user={user} />
             {isTutor && <TutoringSubjects user={user} />}
             {isTutor && <ProfileInformation user={user} />}
             {isTutor && <Availablity user={user} />}
             {isTutor && <PaymentSettings user={user} />}
+            {isTutor && <LessonPriceSettings user={user} />}
             {isStudent && <PaymentMethods user={user} />}
           </div>
         </Sidebar>
@@ -67,6 +81,142 @@ export default function ProfileSettings() {
     );
   }
 }
+
+const LessonPriceSettings = ({ user }) => {
+  const { lessonPrices } = user;
+
+  return (
+    <div id="lesson-price-settings" className="flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold">Your Lesson Prices</h1>
+      <div className="w-3/12">
+        <div className="flex justify-between">
+          GCSE: <span> £{lessonPrices["GCSE"]} per lesson</span>{" "}
+        </div>
+        <div className="flex justify-between">
+          A-Level: <span> £{lessonPrices["A-Level"]} per lesson</span>
+        </div>
+      </div>
+      <EditPricesModal user={user} />
+      <p className="text-sm font-light">£2 commission fee per lesson</p>
+    </div>
+  );
+};
+
+const EditPricesModal = ({ user }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { lessonPrices } = user;
+
+  const [gcsePrice, setGcsePrice] = useState(lessonPrices.GCSE);
+  const [aLevelPrice, setALevelPrice] = useState(lessonPrices["A-Level"]);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+
+  const updatePrices = async () => {
+    setSuccess(false);
+    setError(false);
+    try {
+      setLoading(true);
+      // console.log(aLevelPrice);
+
+      await updateDoc(doc(db, "users", user.uid), {
+        lessonPrices: {
+          "A-Level": aLevelPrice,
+          GCSE: gcsePrice,
+        },
+      });
+
+      setLoading(false);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 5000);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(true);
+      setTimeout(() => setError(false), 5000);
+    }
+  };
+
+  return (
+    <>
+      <button onClick={onOpen} className="btn btn-primary w-3/12">
+        Edit Prices
+      </button>
+
+      <Modal isOpen={isOpen} onClose={onClose} size={"lg"} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update lesson prices</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="p-8 flex flex-col items-center gap-8">
+              <div className="w-11/12">
+                <div className="flex items-center justify-between gap-1">
+                  <span className="">GCSE </span>
+
+                  <span className="flex items-center gap-1">
+                    £
+                    <NumberInput
+                      value={gcsePrice}
+                      min={10}
+                      max={50}
+                      onChange={(n) => setGcsePrice(Math.floor(n))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-1">
+                  <span className="">A-Level </span>
+                  <span className="flex items-center gap-1">
+                    £
+                    <NumberInput
+                      value={aLevelPrice}
+                      min={10}
+                      max={50}
+                      onChange={(n) => setALevelPrice(Math.floor(n))}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </span>
+                </div>
+              </div>
+              <button
+                className="btn btn-primary "
+                onClick={updatePrices}
+                disabled={loading}
+              >
+                Update prices
+                {loading && <Spinner className="ml-4" />}
+              </button>
+              {error && (
+                <Alert status="error">
+                  <AlertIcon />
+                  An error has occurred
+                </Alert>
+              )}
+              {success && (
+                <Alert status="success">
+                  <AlertIcon />
+                  Your prices have been updated successfully
+                </Alert>
+              )}
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
 const PaymentSettings = ({ user }) => {
   const goToStripeDashboard = async () => {
@@ -88,17 +238,18 @@ const PaymentSettings = ({ user }) => {
       <h1 className="">
         View your payments and settings through your Stripe dashboard
       </h1>
-      <Tooltip label="Stripe is a world famouse online payment processing and commerce solutions for internet businesses of all sizes.">
+      {/* <Tooltip label="Stripe is a world famouse online payment processing and commerce solutions for internet businesses of all sizes.">
         <div className="text-blue-500 font-normal cursor-pointer underline">
           What is Stripe?
         </div>
-      </Tooltip>
+      </Tooltip> */}
       <button
         className="btn btn-secondary w-3/12"
         onClick={goToStripeDashboard}
       >
         Payment Dashboard
       </button>
+      <hr className="my-4" />
     </div>
   );
 };

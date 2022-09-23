@@ -28,22 +28,51 @@ import Link from "next/link";
 import { AuthContext } from "../context/AuthContext";
 
 const TutorLinks = [
-  { name: "General", icon: FiHome, href: "#general" },
-  { name: "Password", icon: FiTrendingUp, href: "#password" },
-  { name: "Tutoring Subjects", icon: FiCompass, href: "#tutoring-subjects" },
   {
-    name: "Profile Information",
-    icon: FiCompass,
-    href: "#profile-information",
+    name: "Settings",
+    icon: FiHome,
+    href: "#tutor-settings",
   },
-  { name: "Availability", icon: FiCompass, href: "#availablity" },
-  { name: "Payment Settings", icon: FiCompass, href: "#payment-settings" },
+  {
+    name: "Join A Lesson",
+    icon: FiHome,
+    href: "#join-lesson",
+  },
+  {
+    name: "Share A Whiteboard",
+    icon: FiHome,
+    href: "#online-whiteboard",
+  },
+
+  {
+    name: "Cancel A Lesson",
+    icon: FiHome,
+    href: "#how-to-cancel-a-lesson",
+  },
 ];
 
 const StudentLinks = [
-  { name: "General", icon: FiHome, href: "#general" },
-  { name: "Password", icon: FiTrendingUp, href: "#password" },
-  { name: "Payment Methods", icon: FiCompass, href: "#payment-methods" },
+  { name: "Book A Lesson", icon: FiHome, href: "#how-to-book-a-lesson" },
+  {
+    name: "Join A Lesson",
+    icon: FiHome,
+    href: "#join-lesson",
+  },
+  {
+    name: "Refunds",
+    icon: FiHome,
+    href: "#refunds",
+  },
+  {
+    name: "Cancel A Lesson",
+    icon: FiHome,
+    href: "#how-to-cancel-a-lesson",
+  },
+  {
+    name: "Add payment methods",
+    icon: FiHome,
+    href: "#add-payment-methods",
+  },
 ];
 
 export default function HowToSideBar({ children }) {
@@ -119,6 +148,11 @@ const SidebarContent = ({ onClose, ...rest }) => {
                 </div>
               </Link>
             ))}
+          <Link href={`#contact-us`}>
+            <div className="cursor-pointer uppercase font-semibold hover:underline">
+              Contact us
+            </div>
+          </Link>
         </div>
       </Box>
     );

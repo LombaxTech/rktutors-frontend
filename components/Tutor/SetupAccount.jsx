@@ -36,16 +36,21 @@ const SetupAccount = () => {
 
     return (
       <div className="flex-1 p-8 bg-gray-200">
+        <div className="hidden sm:block">
+          <Alert status="warning" className="flex justify-center">
+            It is recommended to complete this step using a computer or laptop
+          </Alert>
+        </div>
         <div className=" bg-white shadow-lg p-8 prose flex flex-col gap-8">
-          <div className="flex">
-            <div className="w-6/12">
+          <div className="flex sm:flex-col">
+            <div className="w-6/12 sm:w-full">
               <img
                 src="img/personal_settings.svg"
                 alt=""
                 className="h-[300px] mx-auto"
               />
             </div>
-            <div className="w-6/12">
+            <div className="w-6/12 sm:w-full">
               <div className=" mx-auto">
                 {(!stripeSetUp || !profileSetUp) && (
                   <Alert status="warning" className="flex justify-center">

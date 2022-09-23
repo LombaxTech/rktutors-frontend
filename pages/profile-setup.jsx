@@ -134,9 +134,9 @@ export default function ProfileSetup() {
     return (
       <div className="bg-gray-200 flex-1 p-8 flex">
         <div className="bg-white rounded-md shadow-md p-8 flex-1 flex flex-col">
-          <div className="flex gap-4 justify-between">
+          <div className="flex gap-4 justify-between sm:flex-col">
             {/* Title and fields */}
-            <div className="w-6/12 flex flex-col gap-6">
+            <div className="w-6/12 flex flex-col gap-6 sm:w-full">
               <h1 className="text-4xl font-bold">Profile Setup</h1>
               <hr className="" />
               {/* Add Subjects */}
@@ -247,8 +247,11 @@ export default function ProfileSetup() {
             </div>
 
             {/* Image */}
-            <div className="w-5/12">
+            <div className="w-5/12 sm:hidden">
               <img src="img/profile.svg" alt="" />
+              <h1 className="text-2xl font-medium mt-4">
+                This information will be displayed to students.
+              </h1>
             </div>
           </div>
         </div>

@@ -82,9 +82,10 @@ export default function StripeConnectStatusCheck() {
       )}
       {!loading && setupError && (
         <div className="flex flex-col gap-4">
-          <h1 className="text-4xl font-bold">Set up Incomplete</h1>
+          <h1 className="text-4xl font-bold">Set up incomplete</h1>
+          <h1 className="text-2xl font-medium">Please go back and try again</h1>
           <Link href="/">
-            <button className="btn btn-primary">Finish</button>
+            <button className="btn btn-primary">Go Back</button>
           </Link>
         </div>
       )}

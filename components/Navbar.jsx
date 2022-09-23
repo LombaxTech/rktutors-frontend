@@ -46,6 +46,12 @@ const TutorLinks = [
   { title: "Messages", href: "/chats" },
 ];
 
+const AdminLinks = [
+  { title: "Users", href: "/admin/users" },
+  { title: "Messages", href: "/chats" },
+  { title: "Bookings", href: "/admin/bookings" },
+];
+
 const Links = ["Dashboard", "Projects", "Team"];
 
 export default function Navbar() {
@@ -87,13 +93,6 @@ export default function Navbar() {
         boxShadow="lg"
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <IconButton
-            size={"md"}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={"Open Menu"}
-            display={{ md: "none" }}
-            onClick={isOpen ? onClose : onOpen}
-          />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
               <Link href="/">
@@ -146,6 +145,18 @@ export default function Navbar() {
                   </Link>
                 ))}
 
+              {user.type === "admin" &&
+                AdminLinks.map((link) => (
+                  <Link key={link} href={link.href}>
+                    <a className="uppercase font-medium tracking-wide flex items-center gap-1">
+                      <div className="">{link.title}</div>
+                      {link.title === "Messages" && chatsUnread && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      )}
+                    </a>
+                  </Link>
+                ))}
+
               <Menu>
                 <MenuButton
                   as={Button}
@@ -175,13 +186,27 @@ export default function Navbar() {
                       <Link href={"/tutors/saved"}>
                         <MenuItem>Saved Tutors</MenuItem>
                       </Link>
+                      <Link href={"/payments"}>
+                        <MenuItem>Payments</MenuItem>
+                      </Link>
                     </>
                   )}
+                  <Link href={"/howto"}>
+                    <MenuItem>Tutorial</MenuItem>
+                  </Link>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             </HStack>
           </Flex>
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+            style={{ backgroundColor: "transparent" }}
+          />
         </Flex>
 
         {isOpen ? (
@@ -200,6 +225,15 @@ export default function Navbar() {
                     {link.title}
                   </Link>
                 ))}
+
+              {user.type === "admin" &&
+                AdminLinks.map((link) => (
+                  <Link key={link} href={link.href}>
+                    {link.title}
+                  </Link>
+                ))}
+
+              <div onClick={signout}>Log out</div>
             </Stack>
           </Box>
         ) : null}
