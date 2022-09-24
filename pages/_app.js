@@ -50,8 +50,8 @@ function MyApp({ Component, pageProps }) {
                 <Head>
                   <title>RKTutors</title>
                   <meta
-                    name="viewport"
-                    content="initial-scale=1.0, width=device-width"
+                    name="description"
+                    content="Grade Boosting Online GCSE and A-Level Tutors at cheap prices."
                   />
                 </Head>
                 <Layout>
