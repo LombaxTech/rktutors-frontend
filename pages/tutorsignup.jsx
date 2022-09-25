@@ -113,7 +113,7 @@ export default function TutorSignup() {
     }
   };
 
-  if (loading) return <SignupLoading />;
+  if (!loading) return <SignupLoading />;
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg="gray.50">
@@ -216,8 +216,19 @@ export default function TutorSignup() {
 }
 
 const SignupLoading = () => (
-  <div className="flex justify-center items-center mt-48">
-    <span className="font-bold text-3xl">Creating Your Account...</span>
-    <Spinner className="ml-2" size={"xl"} />
+  <div className="flex flex-col justify-center items-center mt-48 gap-32">
+    <div className="flex items-center">
+      <div className="flex flex-col">
+        <span className="font-bold text-3xl">Preparing Your Account...</span>
+        <span className="font-medium text-xl">
+          Do not click away or refresh the page
+        </span>
+      </div>
+      <Spinner className="ml-2" size={"xl"} />
+    </div>
+    <span className="font-normal text-sm text-blue-500 flex flex-col justify-center items-center">
+      <div>Need help?</div>
+      Contact us at tutors@rktutors.co.uk or +44 7419 206020
+    </span>
   </div>
 );
