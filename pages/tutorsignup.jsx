@@ -113,7 +113,7 @@ export default function TutorSignup() {
     }
   };
 
-  if (!loading) return <SignupLoading />;
+  if (loading) return <SignupLoading />;
 
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg="gray.50">
