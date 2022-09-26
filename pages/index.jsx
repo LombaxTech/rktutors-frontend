@@ -9,6 +9,8 @@ import TutorHome from "../components/Tutor/TutorHome";
 import StudentHome from "../components/Student/StudentHome";
 import AdminDashboard from "../components/Admin/AdminDashboard";
 
+import { Spinner } from "@chakra-ui/react";
+
 export default function Home() {
   const router = useRouter();
   const { user, userLoading } = useContext(AuthContext);
