@@ -185,7 +185,9 @@ const OnlineWhiteboard = () => (
           alt=""
           className="rounded-md shadow-md brightness-75"
         />
-        <h1 className="">Click on share.</h1>
+        <h1 className="">
+          Click on share. (This may not appear if you are in cognito mode)
+        </h1>
       </div>
       <div className="flex flex-col gap-4">
         <img
