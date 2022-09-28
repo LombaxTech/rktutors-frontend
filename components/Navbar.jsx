@@ -80,7 +80,7 @@ export default function Navbar() {
     }
 
     const isTutor = user.type === "tutor";
-    const isSetup = user.stripeConnectedAccount.setup && user.profile.setup;
+    const isSetup = user.stripeConnectedAccount?.setup && user.profile?.setup;
 
     return (
       <Box
