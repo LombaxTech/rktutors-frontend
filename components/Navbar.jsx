@@ -80,7 +80,7 @@ export default function Navbar() {
     }
 
     const isTutor = user.type === "tutor";
-    const isActive = user.active;
+    const isSetup = user.stripeConnectedAccount.setup && user.profile.setup;
 
     return (
       <Box
@@ -129,7 +129,7 @@ export default function Navbar() {
                 ))}
 
               {isTutor &&
-                isActive &&
+                isSetup &&
                 TutorLinks.map((link) => (
                   <Link key={link} href={link.href}>
                     <a className="uppercase font-medium tracking-wide flex items-center gap-1">
@@ -173,7 +173,7 @@ export default function Navbar() {
                 </MenuButton>
 
                 <MenuList color={"gray.800"}>
-                  {isTutor && isActive && (
+                  {isTutor && isSetup && (
                     <>
                       <Link href={"/profile-settings"}>
                         <MenuItem>Settings</MenuItem>
