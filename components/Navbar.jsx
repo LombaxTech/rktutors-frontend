@@ -174,9 +174,14 @@ export default function Navbar() {
 
                 <MenuList color={"gray.800"}>
                   {isTutor && isActive && (
-                    <Link href={"/profile-settings"}>
-                      <MenuItem>Settings</MenuItem>
-                    </Link>
+                    <>
+                      <Link href={"/profile-settings"}>
+                        <MenuItem>Settings</MenuItem>
+                      </Link>
+                      <Link href={"/profile-settings/#payment-settings"}>
+                        <MenuItem>Payments</MenuItem>
+                      </Link>
+                    </>
                   )}
                   {user.type === "student" && (
                     <>
@@ -194,9 +199,7 @@ export default function Navbar() {
                   <Link href={"/howto"}>
                     <MenuItem>Tutorial</MenuItem>
                   </Link>
-                  <Link href={"/profile-settings/#payment-settings"}>
-                    <MenuItem>Payments</MenuItem>
-                  </Link>
+
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </MenuList>
               </Menu>
