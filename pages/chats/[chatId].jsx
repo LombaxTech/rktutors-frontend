@@ -22,7 +22,12 @@ import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useRouter } from "next/router";
-import { formatMsgDate, diffHours } from "../../helperFunctions";
+import {
+  formatMsgDate,
+  diffHours,
+  makeId,
+  getLastNChars,
+} from "../../helperFunctions";
 import axios from "axios";
 
 export default function Chat() {
@@ -86,9 +91,12 @@ export default function Chat() {
 
   const sendMessage = async (data) => {
     const { message } = data;
-    console.log(message);
-    console.log(partner.id);
-    console.log(user.uid);
+    // console.log(message);
+    // console.log(partner.id);
+    // console.log(user.uid);
+
+    if (!message) return;
+
     try {
       // note: Create a chat if doesnt exit
       if (!chattedBefore) {
@@ -155,6 +163,26 @@ export default function Chat() {
 
       // todo:or last message is more than 3 hrs ago,
 
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const createCallMessage = async () => {
+    try {
+      // note: Create a chat if doesnt exit
+      if (!chattedBefore) {
+        return console.log("must send a message first...");
+      }
+
+      // note: add message
+      const m = {
+        callLink: `https://meet.jit.si/${makeId(7)}`,
+        sentAt: serverTimestamp(),
+      };
+
+      await addDoc(collection(db, "chats", chatId, "messages"), m);
       reset();
     } catch (error) {
       console.log(error);
@@ -232,6 +260,23 @@ export default function Chat() {
     );
   };
 
+  const CallLinkMessage = ({ msg }) => (
+    <li className="flex justify-end">
+      {msg.sentAt && (
+        <Tooltip label={formatMsgDate(msg.sentAt.toDate())}>
+          <Link href={msg.callLink}>
+            <button
+              onClick={() => console.log(msg.sentAt.toDate())}
+              className="btn btn-success text-white normal-case"
+            >
+              Join call ({getLastNChars(msg.callLink, 7)})
+            </button>
+          </Link>
+        </Tooltip>
+      )}
+    </li>
+  );
+
   return (
     <div className="flex-1 flex gap-4 max-h-full overflow-hidden p-4 bg-gray-200 sm:flex-col sm:p-0 sm:gap-1 sm:overflow-y-auto">
       <UserProfile />
@@ -245,9 +290,10 @@ export default function Chat() {
           {messages && user && partner && (
             <ul className="space-y-2">
               {messages.map((msg, i) => {
-                if (msg.senderId == user.uid)
+                if (msg.callLink) return <CallLinkMessage msg={msg} key={i} />;
+                else if (msg.senderId == user.uid)
                   return <MyMessage msg={msg} key={i} />;
-                if (msg.senderId == partner.id)
+                else if (msg.senderId == partner.id)
                   return <YourMessage msg={msg} key={i} />;
               })}
               <div ref={lastMessageRef}></div>
@@ -266,10 +312,17 @@ export default function Chat() {
               className="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700"
               {...register("message")}
             />
-
             <button type="submit" className="btn btn-primary">
               Send Message
             </button>
+            {user.type === "admin" && (
+              <button
+                onClick={createCallMessage}
+                className="btn btn-success ml-2"
+              >
+                Create call
+              </button>
+            )}
           </form>
         </div>
       </div>
