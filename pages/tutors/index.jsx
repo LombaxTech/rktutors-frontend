@@ -22,6 +22,7 @@ import Link from "next/link";
 import { AuthContext } from "../../context/AuthContext";
 
 import { smallBigString, getMean } from "../../helperFunctions";
+import subjectData from "../../data/subjects.json";
 import StarRatings from "react-star-ratings";
 
 const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
@@ -64,12 +65,11 @@ const ImageAndFilter = ({ setSearchedSubject, setSearchedAcademicLevel }) => {
               <option disabled selected className="text-center">
                 Subject
               </option>
-              <option>Mathematics</option>
-              <option>Physics</option>
-              <option>Chemistry</option>
-              <option>Biology</option>
-              <option>English Language</option>
-              <option>English Literature</option>
+              {subjectData.subjects.map((subject) => (
+                <option value={subject} key={subject}>
+                  {subject}
+                </option>
+              ))}
             </select>
 
             <select

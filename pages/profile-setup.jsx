@@ -36,6 +36,8 @@ import { FaFileImage } from "react-icons/fa";
 import Dropzone from "react-dropzone";
 import AvatarEditor from "react-avatar-editor";
 
+import subjectData from "../data/subjects.json";
+
 export default function ProfileSetup() {
   const router = useRouter();
   const { user, userLoading } = useContext(AuthContext);
@@ -150,11 +152,11 @@ export default function ProfileSetup() {
                     placeholder="Select Subject"
                     onChange={(e) => setSubject(e.target.value)}
                   >
-                    <option value="Mathematics">Math</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="Biology">Biology</option>
-                    <option value="English">English</option>
+                    {subjectData.subjects.map((subject) => (
+                      <option value={subject} key={subject}>
+                        {subject}
+                      </option>
+                    ))}
                   </Select>
                   <Select
                     placeholder="Select Level"
