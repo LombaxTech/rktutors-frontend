@@ -56,7 +56,6 @@ export default function TutorSignup() {
     // console.log({ fullName, email, password });
 
     try {
-      router.push("/");
       // Create Auth User
       let userCred = await createUserWithEmailAndPassword(
         auth,
@@ -65,6 +64,8 @@ export default function TutorSignup() {
       );
       console.log("created user");
       console.log(userCred);
+
+      router.push("/");
 
       let accountRes = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER}/stripe/connected-account`

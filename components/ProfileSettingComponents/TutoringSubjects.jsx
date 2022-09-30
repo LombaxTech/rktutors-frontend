@@ -18,6 +18,8 @@ import { db } from "../../firebase/firebaseClient";
 import { updateDoc, doc } from "firebase/firestore";
 import { AuthContext } from "../../context/AuthContext";
 
+import subjectData from "../../data/subjects.json";
+
 const TutoringSubjects = ({ user }) => {
   const [subject, setSubject] = useState("");
   const [level, setLevel] = useState("");
@@ -113,11 +115,11 @@ const TutoringSubjects = ({ user }) => {
             placeholder="Select Subject"
             onChange={(e) => setSubject(e.target.value)}
           >
-            <option value="Mathematics">Math</option>
-            <option value="Physics">Physics</option>
-            <option value="Chemistry">Chemistry</option>
-            <option value="Biology">Biology</option>
-            <option value="English">English</option>
+            {subjectData.subjects.map((subject) => (
+              <option value={subject} key={subject}>
+                {subject}
+              </option>
+            ))}
           </Select>
           <Select
             placeholder="Select Level"

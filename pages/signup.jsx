@@ -131,7 +131,7 @@ export default function Signup() {
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
             <Link href="/tutorsignup">
-              <div className="text-teal-500 cursor-pointer">
+              <div className="text-teal-500 font-bold uppercase underline cursor-pointer">
                 Tutors sign up here
               </div>
             </Link>
