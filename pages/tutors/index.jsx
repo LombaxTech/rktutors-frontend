@@ -217,6 +217,8 @@ function TutorProfile({ tutor }) {
   let ratingNumbers = tutor.ratings?.map((r) => r.rating);
   const tutorRating = ratingNumbers.length === 0 ? 0 : getMean(ratingNumbers);
 
+  const { aboutMe } = tutor.profile;
+
   return (
     <Box
       maxW={"440px"}
@@ -286,7 +288,19 @@ function TutorProfile({ tutor }) {
         </div>
         {/* </Stack> */}
         <Text textAlign={"center"} bg={"white"} px={3}>
-          {tutor.profile.aboutMe}
+          {aboutMe.length < 200 ? (
+            aboutMe
+          ) : (
+            <span>
+              {aboutMe.slice(0, 200)}
+              {"..."}
+              <Link href={`/tutors/${tutor.id}`}>
+                <div className="text-blue-500 underline cursor-pointer">
+                  Read more
+                </div>
+              </Link>
+            </span>
+          )}
         </Text>
       </div>
 
