@@ -26,13 +26,13 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { firebaseApp, db } from "../firebase/firebaseClient";
+import { firebaseApp, db } from "../../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 import Link from "next/link";
 import axios from "axios";
 
-import { toTitleCase } from "../helperFunctions";
+import { toTitleCase } from "../../helperFunctions";
 
 const auth = getAuth(firebaseApp);
 
@@ -127,7 +127,7 @@ export default function TutorSignup() {
               color={"white"}
               weight="bold"
               icon={<ArrowBackIcon weight="bold" />}
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/signup")}
             />{" "}
             <Heading fontSize={"4xl"} textAlign={"center"}>
               Become a Tutor
