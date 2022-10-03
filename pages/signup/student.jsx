@@ -26,17 +26,17 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { firebaseApp, db } from "../firebase/firebaseClient";
+import { firebaseApp, db } from "../../firebase/firebaseClient";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 
 import Link from "next/link";
 
 import axios from "axios";
-import { toTitleCase } from "../helperFunctions";
+import { toTitleCase } from "../../helperFunctions";
 
 const auth = getAuth(firebaseApp);
 
-export default function Signup() {
+export default function StudentSignup() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -124,13 +124,13 @@ export default function Signup() {
                 color={"white"}
                 weight="bold"
                 icon={<ArrowBackIcon weight="bold" />}
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/signup")}
               />{" "}
               <div>Student Sign Up</div>
             </div>
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
-            <Link href="/tutorsignup">
+            <Link href="/signup/tutor">
               <div className="text-teal-500 font-bold uppercase underline cursor-pointer">
                 Tutors sign up here
               </div>
