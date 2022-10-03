@@ -161,7 +161,24 @@ export default function Chat() {
         console.log("sent email...");
       }
 
-      // todo:or last message is more than 3 hrs ago,
+      // todo:or last message is more than 1 hrs ago,
+      let lastMessage = messages[messages.length - 1];
+      // diff time is in hours
+      const diffTime = diffHours(lastMessage.sentAt.toDate(), new Date());
+
+      if (diffTime >= 1) {
+        let emailRes = await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER}/sg/message-received`,
+          {
+            toEmail: partner.email,
+            userName: user.fullName,
+          }
+        );
+
+        emailRes = emailRes.data;
+        console.log(emailRes);
+        console.log("sent email dT >= 1");
+      }
 
       reset();
     } catch (error) {
