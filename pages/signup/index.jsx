@@ -25,7 +25,7 @@ export default function Signup() {
         </div>
       </Heading>
 
-      <div className="flex gap-8">
+      <div className="flex gap-8 sm:flex-col">
         <div className="bg-white p-4 flex flex-col gap-8 rounded-md shadow-md">
           <img src="img/student.svg" alt="" className="h-52 w-72" />
           <Link href={`/signup/student`}>
