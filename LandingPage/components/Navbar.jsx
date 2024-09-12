@@ -20,10 +20,10 @@ const Links = [
     title: "About us",
     href: "#about-us",
   },
-  {
-    title: "Tutors",
-    href: "/tutors",
-  },
+  // {
+  //   title: "Tutors",
+  //   href: "/tutors",
+  // },
   {
     title: "How It Works",
     href: "#how-it-works",
