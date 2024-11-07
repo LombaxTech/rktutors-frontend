@@ -3,7 +3,7 @@ export default function Footer() {
     <div id="footer" className="py-16 border-t border-gray-300">
       <div className="container text-center">
         <p>
-          &copy; 2022 All rights reserved{" "}
+          &copy; 2024 All rights reserved{" "}
           <a href="#" rel="nofollow">
             RKTUTORS
           </a>
