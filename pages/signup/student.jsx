@@ -1,37 +1,34 @@
 import {
-  Spinner,
-  Flex,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  HStack,
-  InputRightElement,
-  Stack,
-  Button,
-  Heading,
-  Text,
-  useColorModeValue,
-  IconButton,
   Alert,
   AlertIcon,
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Spinner,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
 
 import { ArrowBackIcon } from "@chakra-ui/icons";
 
-import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { useState } from "react";
 
 import { useRouter } from "next/router";
 
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { firebaseApp, db } from "../../firebase/firebaseClient";
-import { setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { db, firebaseApp } from "../../firebase/firebaseClient";
 
 import Link from "next/link";
 
-import axios from "axios";
 import { toTitleCase } from "../../helperFunctions";
 
 const auth = getAuth(firebaseApp);
@@ -66,24 +63,24 @@ export default function StudentSignup() {
       console.log(userCred);
 
       // Create Stripe User
-      let stripeCustomer = await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER}/stripe/stripe-customer`,
-        {
-          name: toTitleCase(fullName),
-          email,
-        }
-      );
-      stripeCustomer = stripeCustomer.data;
+      // let stripeCustomer = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_SERVER}/stripe/stripe-customer`,
+      //   {
+      //     name: toTitleCase(fullName),
+      //     email,
+      //   }
+      // );
+      // stripeCustomer = stripeCustomer.data;
 
-      console.log("stripe customer");
-      console.log(stripeCustomer);
+      // console.log("stripe customer");
+      // console.log(stripeCustomer);
 
       // create firestore user
       let firestoreUserDetails = {
         type: "student",
         fullName: toTitleCase(fullName),
         email,
-        stripeCustomerId: stripeCustomer.id,
+        // stripeCustomerId: stripeCustomer.id,
         createdAt: serverTimestamp(),
         prevBookedTutors: [],
       };
